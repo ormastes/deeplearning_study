@@ -1,0 +1,18 @@
+google-auth-oauthlib==0.5.0
+pygame==2.5.2
+gymnasium==0.29.1
+protobuf==4.25.3 # Set PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION=python
+blinker==1.7.0 # use next pip3 install  --ignore-installed --force-reinstall -v  blinker==1.7.0
+flask==3.0.2
+numpy==1.23.5 # 1.26.4
+setuptools
+tensorflow-estimator==2.15.0 # 2.3.0
+tiktoken==0.6.0
+apache_beam==2.54.0
+mwparserfromhell==0.6.6
+datasets==2.18.0
+# next does not cause a problem.
+transformers[torch]
+ctransformers[cuda]
+optimum[onnxruntime-gpu]
+#auto-gptq #pip3 install auto-gptq --extra-index-url https://huggingface.github.io/autogptq-index/whl/cu118/  # Use cu117 if on CUDA 11.7
