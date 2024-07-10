@@ -11,7 +11,7 @@ import urllib.request
 
 # Import from local files
 from base.Util import *
-
+from base.Config import GPT2_CONFIG_124M_TRAIN, OTHER_SETTINGS
 from base.GPT2 import GPT2Model
 from base.SimpleDataset import create_dataloader_with_worker
 
@@ -94,41 +94,25 @@ def main(gpt_config, settings):
 
 
 if __name__ == "__main__":
-    class GPT2_CONFIG_124M(object):
-        vocab_size = 50257
-        context_length = 256  #
-        # context_length = 1024
-        embed_dim = 768
-        embed_dim_ff_dim = 768 * 4  # 3072
-        num_heads = 12
-        num_layers = 12
-        drop_rate = 0.1
-        qkv_bias = False
 
-
-    class OTHER_SETTINGS(object):
-        learning_rate = 5e-4
-        num_epochs = 10
-        batch_size = 2
-        weight_decay = 0.1
 
 
     ###########################
     # Initiate training
     ###########################
 
-    train_losses, val_losses, tokens_seen, model = main(GPT2_CONFIG_124M, OTHER_SETTINGS)
+    train_losses, val_losses, tokens_seen, model = main(GPT2_CONFIG_124M_TRAIN(), OTHER_SETTINGS())
 
     ###########################
     # After training
     ###########################
 
     # Plot results
-    epochs_tensor = torch.linspace(0, OTHER_SETTINGS.num_epochs, len(train_losses))
+    epochs_tensor = torch.linspace(0, OTHER_SETTINGS().num_epochs, len(train_losses))
     plot_losses(epochs_tensor, tokens_seen, train_losses, val_losses)
     plt.savefig("loss.pdf")
 
     # Save and load model
     torch.save(model.state_dict(), "model.pth")
-    model = GPT2Model(GPT2_CONFIG_124M)
+    model = GPT2Model(GPT2_CONFIG_124M_TRAIN())
     model.load_state_dict(torch.load("model.pth"))

@@ -6,7 +6,7 @@ class Linear(nn.Module):
         super().__init__()
         self.in_features = in_features
         self.out_features = out_features
-        self.weight = torch.nn.Parameter(torch.rand(self.in_features, self.out_features))
+        self.weight = torch.nn.Parameter(torch.rand(self.out_features, self.in_features))
         self.bias_enabled = bias
         if self.bias_enabled:
             self.bias = torch.nn.Parameter(torch.rand(self.out_features))
@@ -21,7 +21,8 @@ class Linear(nn.Module):
             nn.init.uniform_(self.bias, -bound, bound)
 
     def forward(self, inputs):
+        # `y = xA^T + b`.
         if self.bias_enabled:
-            return inputs @ self.weight + self.bias
+            return inputs @ self.weight.t() + self.bias
         else:
-            return inputs @ self.weight
+            return inputs @ self.weight.t()

@@ -1,4 +1,6 @@
 import torch
+from base.CommonConstants import CommonConstants
+
 
 def generate_text_simple(model, idx, max_new_tokens, context_size):
     for _ in range(max_new_tokens):
@@ -17,15 +19,112 @@ def generate_text_simple(model, idx, max_new_tokens, context_size):
     return idx
 
 
-def text_to_token_ids(text, tokenizer, max_len):
+def generate_text(model, idx, max_new_tokens, context_size, tokenizer, temperature=0.0, top_k=None,
+             eos_id=CommonConstants.END_OF_TEXT, is_org=False):
+    EOS = max(tokenizer.encode(eos_id))
+    # For-loop is the same as before: Get logits, and only focus on last time step
+    for _ in range(max_new_tokens):
+        idx_cond = idx[:, -context_size:]
+
+        with torch.no_grad():
+            if is_org:
+                logits = model.generate(idx_cond, max_length=1)
+            else:
+                logits = model(idx_cond)
+                # print("GPT2 output shape:", logits.shape)
+                # probas = torch.nn.functional.softmax(logits[:, -1, :], dim=-1)
+                logits = logits[:, -1, :]
+
+        # New: Filter logits with top_k sampling
+        logits = filter_topk(logits, top_k)
+
+        # New: Apply temperature scaling
+        if temperature > 0.0:
+            idx_next = apply_temp(logits, temperature)
+
+        # Otherwise same as before: get idx of the vocab entry with the highest logits value
+        else:
+            idx_next = torch.argmax(logits, dim=-1, keepdim=True)  # (batch_size, 1)
+
+        if idx_next == EOS:  # Stop generating early if end-of-sequence token is encountered and eos_id is specified
+            break
+
+        # Same as before: append sampled index to the running sequence
+        idx = torch.cat((idx, idx_next), dim=1)  # (batch_size, num_tokens+1)
+        #next_token = torch.argmax(logits, dim=-1)
+        #idx = torch.cat([idx, next_token], dim=-1)
+    flat = idx.squeeze(0)  # remove batch dimension
+    return tokenizer.decode(flat.tolist())
+
+
+def generate(model, idx, max_new_tokens, context_size, temperature=0.0, top_k=None, eos_id=None):
+
+    # For-loop is the same as before: Get logits, and only focus on last time step
+    for _ in range(max_new_tokens):
+        idx_cond = idx[:, -context_size:]
+        with torch.no_grad():
+            logits = model(idx_cond)
+        logits = logits[:, -1, :]
+
+        # New: Filter logits with top_k sampling
+        if top_k is not None:
+            # Keep only top_k values
+            top_logits, _ = torch.topk(logits, top_k)
+            min_val = top_logits[:, -1]
+            logits = torch.where(logits < min_val, torch.tensor(float('-inf')).to(logits.device), logits)
+
+        # New: Apply temperature scaling
+        if temperature > 0.0:
+            logits = logits / temperature
+
+            # Apply softmax to get probabilities
+            probs = torch.softmax(logits, dim=-1)  # (batch_size, context_len)
+
+            # Sample from the distribution
+            idx_next = torch.multinomial(probs, num_samples=1)  # (batch_size, 1)
+
+        # Otherwise same as before: get idx of the vocab entry with the highest logits value
+        else:
+            idx_next = torch.argmax(logits, dim=-1, keepdim=True)  # (batch_size, 1)
+
+        if idx_next == eos_id:  # Stop generating early if end-of-sequence token is encountered and eos_id is specified
+            break
+
+        # Same as before: append sampled index to the running sequence
+        idx = torch.cat((idx, idx_next), dim=1)  # (batch_size, num_tokens+1)
+
+    return idx
+
+
+def apply_temp(logits, temperature):
+    logits = logits / temperature
+    # Apply softmax to get probabilities
+    probs = torch.softmax(logits, dim=-1)  # (batch_size, context_len)
+    # Sample from the distribution
+    idx_next = torch.multinomial(probs, num_samples=1)  # (batch_size, 1)
+    return idx_next
+
+
+def filter_topk(logits, top_k):
+    if top_k is not None:
+        # Keep only top_k values
+        top_logits, _ = torch.topk(logits, top_k)
+        min_val = top_logits[:, -1]
+        logits = torch.where(logits < min_val, torch.tensor(float('-inf')).to(logits.device), logits)
+    return logits
+
+
+def text_to_token_ids(text, tokenizer):
     token_ids = tokenizer.encode(text)
     #token_ids = token_ids + [0] * (max_len - len(token_ids))
 
     return torch.tensor(token_ids).unsqueeze(0)
 
+
 def token_ids_to_text(token_ids, tokenizer):
     flat = token_ids.squeeze(0)  # remove batch dimension
     return tokenizer.decode(flat.tolist())
+
 
 def calc_loss_batch(inputs, targets, model):
     inputs = inputs.to(model.device)
@@ -51,11 +150,12 @@ def calc_loss_loader(dataloader, model, num_batches=None):
             break
     return total_loss / num_batches
 
+
 def evaluate_model(model, train_loader, val_loader, eval_iter):
     model.eval()
     with torch.no_grad():
         train_loss = calc_loss_loader(train_loader, model, num_batches=eval_iter)
-        val_loss = calc_loss_loader(val_loader, model,  num_batches=eval_iter)
+        val_loss = calc_loss_loader(val_loader, model, num_batches=eval_iter)
     model.train()
     return train_loss, val_loss
 
@@ -73,6 +173,7 @@ def generate_and_print_sample(model, tokenizer, start_context):
         print(decoded_text.replace("\n", " "))  # Compact print format
     model.train()
 
+
 def train_model_simple(model, train_loader, val_loader, optimizer, num_epochs,
                        eval_freq, eval_iter, start_context, tokenizer):
     # Initialize lists to track losses and tokens seen
@@ -85,7 +186,7 @@ def train_model_simple(model, train_loader, val_loader, optimizer, num_epochs,
 
         for input_batch, target_batch in train_loader:
             # Optional evaluation step
-            if False:#global_step % eval_freq == 0:
+            if False:  #global_step % eval_freq == 0:
                 input_1 = input_batch[0]
                 target_1 = target_batch[0]
                 print("Input text:", token_ids_to_text(input_1, tokenizer))
@@ -117,7 +218,9 @@ def train_model_simple(model, train_loader, val_loader, optimizer, num_epochs,
 
     return train_losses, val_losses, track_tokens_seen
 
+
 import matplotlib.pyplot as plt
+
 
 def plot_losses(epochs_seen, tokens_seen, train_losses, val_losses):
     fig, ax1 = plt.subplots(figsize=(5, 3))

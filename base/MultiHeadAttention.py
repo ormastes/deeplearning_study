@@ -19,7 +19,10 @@ class MultiHeadAttention(nn.Module):
         self.head_out = d_out // head_cnt
         assert (d_out % head_cnt == 0)
 
-        self.attn_weight = Linear(d_in, d_out * 3, bias=qkv_bias)
+        #self.attn_weight = Linear(d_in, d_out * 3, bias=qkv_bias)
+        self.W_query = Linear(d_in, d_out, bias=qkv_bias)
+        self.W_key = Linear(d_in, d_out, bias=qkv_bias)
+        self.W_value = Linear(d_in, d_out, bias=qkv_bias)
         self.proj = Linear(d_out, d_out, bias=True)
         self.dropout = nn.Dropout(dropout)
         self.register_buffer("mask", torch.triu(torch.ones(context_length, context_length), diagonal=1))
@@ -27,13 +30,16 @@ class MultiHeadAttention(nn.Module):
 
     def forward(self, x):
         b, token_cnt, d_in = x.size()
-        self.log.debug("attn_weight shape:", self.attn_weight.weight.shape)
-        qkv = self.attn_weight(x)
-        q, k, v = qkv.chunk(3, dim=-1)
+        #self.log.debug("attn_weight shape:", self.attn_weight.weight.shape)
+        #qkv = self.attn_weight(x)
+        #q, k, v = qkv.chunk(3, dim=-1)
+        q = self.W_query(x)
+        k = self.W_key(x)  # Shape: (b, num_tokens, d_out)
+        v = self.W_value(x)
         self.log.debug("q_k_v shape:", q.shape)
 
-        keys = k.view(b, token_cnt, self.head_cnt, self.head_out).transpose(1, 2)
         queries = q.view(b, token_cnt, self.head_cnt, self.head_out).transpose(1, 2)
+        keys = k.view(b, token_cnt, self.head_cnt, self.head_out).transpose(1, 2)
         values = v.view(b, token_cnt, self.head_cnt, self.head_out).transpose(1, 2)
         self.log.debug("keys shape:", keys.shape)
         self.log.debug("queries shape:", queries.shape)
@@ -42,19 +48,24 @@ class MultiHeadAttention(nn.Module):
         # Compute scaled dot-product attention (aka self-attention) with a causal mask
         attention_scores = queries @ keys.transpose(2, 3)
         self.log.debug("q@k attention_scores shape:", attention_scores.shape)
+
         # Original mask truncated to the number of tokens and converted to boolean
         mask_bool = self.mask.bool()[:token_cnt, :token_cnt]
+        # Use the mask to fill attention scores
         attention_scores.masked_fill_(mask_bool, -torch.inf)
-        attention_scores = attention_scores / (k.shape[-1] ** 0.5)
+        attention_scores = attention_scores / (keys.shape[-1] ** 0.5)
         attention_weights = torch.nn.functional.softmax(attention_scores, dim=-1)
         attention_weights = self.dropout(attention_weights)
+        # Shape: (b, num_tokens, num_heads, head_dim)
         self.log.debug("attention_weights shape:", attention_weights.shape)
         context = (attention_weights @ values).transpose(1, 2)
+        # Combine heads, where self.d_out = self.num_heads * self.head_dim
         self.log.debug("aw@v context shape:", context.shape)
-        context = context.contiguous().view(b, token_cnt, self.d_out)
+        context = context.contiguous().view(b, token_cnt, self.d_out) # context.reshape(b, token_cnt, self.d_out)
         self.log.debug("context transposed shape:", context.shape)
         result = self.proj(context)
         self.log.debug("result shape:", result.shape)
+
         return result
 
 

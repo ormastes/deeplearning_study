@@ -17,13 +17,18 @@ from base.LayerNorm import LayerNorm
 from base.MultiHeadAttention import MultiHeadAttention
 from base.FeedForward import FeedForward
 from base.TransformerBlock import TransformerBlock
+#from basic_model.previous_chapters import TransformerBlock
 
 
 class GPT2Model(nn.Module):
     def __init__(self, config):
         super().__init__()
-        self.tok_emb = nn.Embedding(config.vocab_size, config.embed_dim)
-        self.pos_emb = nn.Embedding(config.context_length, config.embed_dim)
+        self.log = Logger.get_instance()
+        self.config = config
+        # token embeddings
+        self.tok_emb = Embedding(config.vocab_size, config.embed_dim)  # embeddings does not have size
+        # position embeddings
+        self.pos_emb = SequencePositionEmbedding(config.context_length, config.embed_dim)
         self.drop_emb = nn.Dropout(config.drop_rate)
 
         self.trf_blocks = nn.Sequential(
@@ -33,9 +38,8 @@ class GPT2Model(nn.Module):
         self.out_head = nn.Linear(config.embed_dim, config.vocab_size, bias=False)
 
     def forward(self, in_idx):
-        batch_size, seq_len = in_idx.shape
         tok_embeds = self.tok_emb(in_idx)
-        pos_embeds = self.pos_emb(torch.arange(seq_len, device=in_idx.device))
+        pos_embeds = self.pos_emb(in_idx)
         x = tok_embeds + pos_embeds  # Shape [batch_size, num_tokens, emb_size]
         x = self.drop_emb(x)
         x = self.trf_blocks(x)
