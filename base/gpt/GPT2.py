@@ -1,4 +1,7 @@
 import os
+
+from base.gpt.SimpleGPT2Embedding import SimpleGPT2Embedding
+
 os.environ['PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION'] = 'python'
 from torch import nn
 
@@ -19,10 +22,8 @@ class GPT2Model(nn.Module):
         super().__init__()
         self.log = Logger.get_instance()
         self.config = config
-        # token embeddings
-        self.tok_emb = Embedding(config.vocab_size, config.embed_dim)  # embeddings does not have size
-        # position embeddings
-        self.pos_emb = SequencePositionEmbedding(config.context_length, config.embed_dim)
+
+        self.embedded = SimpleGPT2Embedding(config.vocab_size, config.embed_dim, config.context_length)
         self.drop_emb = nn.Dropout(config.drop_rate)
 
         self.trf_blocks = nn.Sequential(
@@ -31,45 +32,23 @@ class GPT2Model(nn.Module):
         self.final_norm = LayerNorm(config.embed_dim)
         self.out_head = nn.Linear(config.embed_dim, config.vocab_size, bias=False)
 
-    def forward(self, in_idx):
-        tok_embeds = self.tok_emb(in_idx)
-        pos_embeds = self.pos_emb(tok_embeds)
-        x = tok_embeds + pos_embeds  # Shape [batch_size, num_tokens, emb_size]
+    def forward_emb(self, x):
+        self.log.info("Embedding shape:", x.shape)
         x = self.drop_emb(x)
         x = self.trf_blocks(x)
         x = self.final_norm(x)
+        return x
+
+    def forward(self, tokens):
+        x = self.embedded(tokens)  # Shape [batch_size, num_tokens, emb_size]
+        x = self.forward_emb(x)
         logits = self.out_head(x)
         return logits
-    def x__init__(self, config):
-        super().__init__()
-        self.log = Logger.get_instance()
-        self.config = config
-        # token embeddings
-        self.tok_emb = Embedding(config.vocab_size, config.embed_dim)  # embeddings does not have size
-        # position embeddings
-        self.pos_emb = SequencePositionEmbedding(config.context_length, config.embed_dim)
-        self.drop = nn.Dropout(config.drop_rate)
-        # hidden attention layers
-        self.h = nn.Sequential(*[TransformerBlock(config) for _ in range(config.num_layers)])  # list to elements
-        self.final_layer_norm = LayerNorm(config.embed_dim)
-        self.final_ln_f = Linear(config.embed_dim, config.vocab_size, bias=False)
 
     # device attribute to return self.h device
     @property
     def device(self):
         return next(self.parameters()).device
-
-    def xforward(self, x):
-        self.log.info("Input shape:", x.shape)
-        token_embed = self.tok_emb(x)
-        self.log.info("Token embeddings shape:", token_embed.shape)
-        pos = self.pos_emb(x)
-        x = self.drop(token_embed + pos)
-        self.log.info("Embedding shape:", x.shape)
-        x = self.h(x)
-        x = self.final_layer_norm(x)
-        logits = self.final_ln_f(x)
-        return logits
 
 
 if __name__ == "__main__":
