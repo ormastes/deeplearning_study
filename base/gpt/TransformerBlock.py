@@ -1,10 +1,9 @@
-import torch
 from torch import nn
 
-from base.FeedForward import FeedForward
-from base.LayerNorm import LayerNorm
-from base.MultiHeadAttention import MultiHeadAttention
-from base.Log import Logger
+from base.prim.FeedForward import FeedForward
+from base.prim.LayerNorm import LayerNorm
+from base.gpt.MultiHeadAttention import MultiHeadAttention
+from base.util.Log import Logger
 
 
 class TransformerBlock(nn.Module):

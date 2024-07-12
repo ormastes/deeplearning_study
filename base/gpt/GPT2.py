@@ -1,22 +1,16 @@
 import os
 os.environ['PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION'] = 'python'
-import torch
 from torch import nn
 
-from base.BPETokenizer import GPT2TikTokenizer
-from base.Embedding import Embedding
-from base.GPTConfig import GPT2_CONFIG_124M
-from base.LayerNorm import LayerNorm
-from base.Linear import Linear
-from base.SequencePostionEmbedding import SequencePositionEmbedding
-from base.TransformerBlock import TransformerBlock
-from base.Util import *
-from base.Log import *
-from base.Activator import GELU
-from base.LayerNorm import LayerNorm
-from base.MultiHeadAttention import MultiHeadAttention
-from base.FeedForward import FeedForward
-from base.TransformerBlock import TransformerBlock
+from base.gpt.BPETokenizer import GPT2TikTokenizer
+from base.prim.Embedding import Embedding
+from base.config.GPTConfig import GPT2_CONFIG_124M
+from base.prim.Linear import Linear
+from base.prim.SequencePostionEmbedding import SequencePositionEmbedding
+from base.util.Util import *
+from base.util.Log import *
+from base.prim.LayerNorm import LayerNorm
+from base.gpt.TransformerBlock import TransformerBlock
 #from basic_model.previous_chapters import TransformerBlock
 
 

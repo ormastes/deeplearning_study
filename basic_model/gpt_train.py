@@ -15,8 +15,8 @@ import tiktoken
 from previous_chapters import generate_text_simple
 from previous_chapters import create_dataloader_v1
 
-from base.GPT2 import GPT2Model
-from base.SimpleDataset import create_dataloader_with_worker
+from base.gpt.GPT2 import GPT2Model
+
 
 def text_to_token_ids(text, tokenizer):
     encoded = tokenizer.encode(text)
@@ -133,7 +133,7 @@ def plot_losses(epochs_seen, tokens_seen, train_losses, val_losses):
 
 
 def main(gpt_config, settings):
-    from base.Log import Logger, LogLevel
+    from base.util.Log import Logger, LogLevel
     Logger.get_instance().level = LogLevel.ERROR
     torch.manual_seed(123)
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")

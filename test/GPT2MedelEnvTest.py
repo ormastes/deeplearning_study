@@ -1,5 +1,6 @@
+import os
+os.environ['PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION'] = 'python'
 import unittest
-from torchsummary import summary
 import torch
 from transformers import GPT2Tokenizer, GPT2Model
 
@@ -20,19 +21,16 @@ class GPT2ModelEvnTest(unittest.TestCase):
 
     def test_gpt2_model_simple_response(self):
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-        tokenizer = GPT2Tokenizer.from_pretrained('gpt2').to(device)
+        tokenizer = GPT2Tokenizer.from_pretrained('gpt2')
         model = GPT2Model.from_pretrained('gpt2').to(device)
         text = "Replace me by any text you'd like."
-        encoded_input = tokenizer(text, return_tensors='pt').to(device)
-        output = model(**encoded_input)
-        print("Output shape:", output.shape)
-        response_text = tokenizer.decode(output.logits.argmax(dim=-1))
-        print("Response text:", response_text)
+        encoded_input = tokenizer(text, return_tensors='pt').input_ids.to(device)
+        output = model(encoded_input)
+        self.assertTrue(output is not None)
 
 
     def test_gpt2_homemade(self):
-        from base.GPT2 import GPT2Model, GPT2_CONFIG_124M, GPT2TikTokenizer
-        from base.GPT2 import TransformerBlock
+        from base.gpt.GPT2 import GPT2Model, GPT2_CONFIG_124M
         config = GPT2_CONFIG_124M()
         model = GPT2Model(config)
         total_params = sum(p.numel() for p in model.parameters())

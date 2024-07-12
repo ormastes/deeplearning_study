@@ -1,5 +1,5 @@
 import torch
-from base.SimpleDataset import create_data_loader
+from base.dataset.SimpleDataset import create_data_loader
 
 # embedding is an efficient way to implement one-hot encoding by using a matrix multiplication.
 

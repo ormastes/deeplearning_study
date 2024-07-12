@@ -1,8 +1,8 @@
 import torch
 from torch import nn
 
-from base.Log import Logger
-from base.Linear import Linear
+from base.util.Log import Logger
+from base.prim.Linear import Linear
 
 
 class MultiHeadAttention(nn.Module):

@@ -1,10 +1,8 @@
-
-import torch
 from torch import nn
 
-from base.Activator import GELU
-from base.Linear import Linear
-from base.Log import Logger
+from base.prim.Activator import GELU
+from base.prim.Linear import Linear
+from base.util.Log import Logger
 
 class FeedForward(nn.Module):
     def __init__(self, config):

@@ -1,6 +1,6 @@
 import torch
 from torch import nn
-from base.Linear import Linear
+from base.prim.Linear import Linear
 
 class CasualAttention(nn.Module):
     def __init__(self, d_in, d_out, block_size, dropout, qkv_bias=False):

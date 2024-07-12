@@ -1,10 +1,7 @@
-from typing import Iterator, Tuple
-
 import torch
-from torch.nn import Parameter
 
-from base.SimpleDataset import create_data_loader
-from base.Log import Logger
+from base.dataset.SimpleDataset import create_data_loader
+from base.util.Log import Logger
 
 # embedding is an efficient way to implement one-hot encoding by using a matrix multiplication.
 

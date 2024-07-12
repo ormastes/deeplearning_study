@@ -1,6 +1,86 @@
 import torch
-from base.CommonConstants import CommonConstants
+import os
+from base.config.CommonConstants import CommonConstants
 
+
+def train(gpt_config, settings):
+    import urllib.request
+    from base.gpt.GPT2 import GPT2Model
+    from base.dataset.SimpleDataset import create_dataloader_with_worker
+    from base.util.Log import Logger, LogLevel
+    Logger.get_instance().level = LogLevel.ERROR
+    torch.manual_seed(123)
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+    ##############################
+    # Download data if necessary
+    ##############################
+
+    file_path = "the-verdict.txt"
+    url = "https://raw.githubusercontent.com/rasbt/LLMs-from-scratch/main/ch02/01_main-chapter-code/the-verdict.txt"
+
+    if not os.path.exists(file_path):
+        with urllib.request.urlopen(url) as response:
+            text_data = response.read().decode('utf-8')
+        with open(file_path, "w", encoding="utf-8") as file:
+            file.write(text_data)
+    else:
+        with open(file_path, "r", encoding="utf-8") as file:
+            text_data = file.read()
+
+    ##############################
+    # Initialize model
+    ##############################
+
+
+    model = GPT2Model(gpt_config)
+    model.to(device)  # no assignment model = model.to(device) necessary for nn.Module classes
+    optimizer = torch.optim.AdamW(
+        model.parameters(), lr=settings.learning_rate, weight_decay=settings.weight_decay
+    )
+
+    ##############################
+    # Set up dataloaders
+    ##############################
+
+    # Train/validation ratio
+    train_ratio = 0.90
+    split_idx = int(train_ratio * len(text_data))
+    from base.gpt.BPETokenizer import GPT2TikTokenizer
+    tokenizer = GPT2TikTokenizer() #tiktoken.get_encoding("gpt2")
+
+    train_loader = create_dataloader_with_worker(
+        text_data[:split_idx], tokenizer,
+        batch_size=settings.batch_size,
+        max_length=gpt_config.context_length,
+        stride=gpt_config.context_length,
+        drop_last=True,
+        shuffle=True,
+        num_workers=0
+    )
+
+    val_loader = create_dataloader_with_worker(
+        text_data[split_idx:], tokenizer,
+        batch_size=settings.batch_size,
+        max_length=gpt_config.context_length,
+        stride=gpt_config.context_length,
+        drop_last=False,
+        shuffle=False,
+        num_workers=0
+    )
+
+    ##############################
+    # Train model
+    ##############################
+
+
+    train_losses, val_losses, tokens_seen = train_model_simple(
+        model, train_loader, val_loader, optimizer,
+        num_epochs=settings.num_epochs, eval_freq=5, eval_iter=1,
+        start_context="Every effort moves you", tokenizer=tokenizer
+    )
+
+    return train_losses, val_losses, tokens_seen, model
 
 def generate_text_simple(model, idx, max_new_tokens, context_size):
     for _ in range(max_new_tokens):
@@ -163,7 +243,7 @@ def evaluate_model(model, train_loader, val_loader, eval_iter):
 def generate_and_print_sample(model, tokenizer, start_context):
     model.eval()
     context_size = model.pos_emb.weight.shape[0]
-    encoded = text_to_token_ids(start_context, tokenizer, context_size).to(model.device)
+    encoded = text_to_token_ids(start_context, tokenizer).to(model.device)
     with torch.no_grad():
         token_ids = generate_text_simple(
             model=model, idx=encoded,

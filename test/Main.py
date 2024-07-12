@@ -1,16 +1,10 @@
 import torch
 from torch import nn
-from torchsummary  import summary
 
-from BPETokenizer import GPT2TikTokenizer
-from DatasetWiki import load_wikipedia_dataset
-from GPT2 import GPT2Model
-from GPTConfig import GPT2_CONFIG_124M
-from TransformerBlock import TransformerBlock
-from Util import generate_text_simple
-
-from datasets import load_dataset
-from torch.utils.data import DataLoader
+from base.gpt.BPETokenizer import GPT2TikTokenizer
+from base.gpt.GPT2 import GPT2Model
+from base.config.GPTConfig import GPT2_CONFIG_124M
+from base.util.Util import generate_text_simple
 
 
 def train(model, n_epochs, save_freq, dataloader, device, config):

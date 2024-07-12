@@ -1,8 +1,6 @@
 import torch
-from torch import nn
 
-
-from base.Embedding import Embedding
+from base.prim.Embedding import Embedding
 
 
 class SequencePositionEmbedding(Embedding):

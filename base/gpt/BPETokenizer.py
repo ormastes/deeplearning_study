@@ -1,7 +1,7 @@
 import importlib
 import tiktoken
-from base.CommonConstants import CommonConstants
-from base.Log import Logger
+from base.config.CommonConstants import CommonConstants
+from base.util.Log import Logger
 
 # Byte Pair Encoding (BPE) Tokenizer
 # Byte Pair Encoding (BPE) is a simple form of subword tokenization. It is based on the frequency of the subword units
