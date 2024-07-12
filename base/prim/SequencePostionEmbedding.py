@@ -11,5 +11,5 @@ class SequencePositionEmbedding(Embedding):
 
 
     def forward(self, x):
-        _, seq_len = x.size()
+        _, seq_len, _ = x.size()
         return super().forward(torch.arange(seq_len).to(x.device))

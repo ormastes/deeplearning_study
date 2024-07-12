@@ -3,7 +3,7 @@ os.environ['PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION'] = 'python'
 import torch
 from torch.utils.data import Dataset, DataLoader
 import tiktoken
-
+from base.gpt.BPETokenizer import GPT2TikTokenizer
 class GPTDatasetV1(Dataset):
     def __init__(self, txt, tokenizer, max_length, stride):
         self.tokenizer = tokenizer
@@ -45,7 +45,6 @@ def create_dataloader_with_worker(txt, tokenizer, max_length=256, stride=128, ba
     return dataloader
 
 if __name__ == "__main__":
-    from BPETokenizer import GPT2TikTokenizer
     tokenizer = GPT2TikTokenizer()
     with open("the-verdict.txt", "r", encoding="utf-8") as file:
         text = file.read()

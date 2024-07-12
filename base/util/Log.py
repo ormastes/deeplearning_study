@@ -5,10 +5,10 @@ from functools import total_ordering
 @total_ordering
 class LogLevel(Enum):
     VERBOSE = 1
-    INFO = 2
-    NOTICE = 3
-    WARNING = 4
-    DEBUG = 5
+    DEBUG = 2
+    INFO = 3
+    NOTICE = 4
+    WARNING = 5
     ERROR = 6
     def __lt__(self, other):
         if self.__class__ is other.__class__:
@@ -23,13 +23,14 @@ class Logger:
         if cls.instance is None:
             cls.instance = super(Logger, cls).__new__(cls)
             cls.name = "Logger"
-            cls.instance.level = LogLevel.NOTICE
+            cls.instance.level = LogLevel.WARNING
         return cls.instance
 
     @classmethod
-    def get_instance(cls):
+    def get_instance(cls, level=LogLevel.WARNING):
         if cls.instance is None:
             cls.instance = Logger()
+            cls.instance.level = level
         return cls.instance
 
     # takes multiple parameters

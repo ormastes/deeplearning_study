@@ -33,7 +33,7 @@ class GPT2Model(nn.Module):
 
     def forward(self, in_idx):
         tok_embeds = self.tok_emb(in_idx)
-        pos_embeds = self.pos_emb(in_idx)
+        pos_embeds = self.pos_emb(tok_embeds)
         x = tok_embeds + pos_embeds  # Shape [batch_size, num_tokens, emb_size]
         x = self.drop_emb(x)
         x = self.trf_blocks(x)
