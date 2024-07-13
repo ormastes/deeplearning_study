@@ -20,6 +20,9 @@ class GPT2_CONFIG_124M(object):
         self.num_layers = num_layers
         self.drop_rate = drop_rate
         self.qkv_bias = qkv_bias
+        self.reverse_position_embedding = False
+        self.prim_mum_layers = None
+        self.is_alibi = False
 
 
 model_configs = {
@@ -41,6 +44,7 @@ class GPT2_CONFIG_124M_TRAIN(GPT2_CONFIG_124M):
                  drop_rate=0.1, qkv_bias=False):
         super().__init__(vocab_size, context_length, embed_dim, embed_dim_ff_dim, num_heads, num_layers, drop_rate, qkv_bias)
 
+
 class OTHER_SETTINGS(object):
     def __init__(self, learning_rate=5e-4, num_epochs=10,
                  batch_size=2, weight_decay=0.1):
@@ -48,3 +52,4 @@ class OTHER_SETTINGS(object):
         self.num_epochs = num_epochs
         self.batch_size = batch_size
         self.weight_decay = weight_decay
+

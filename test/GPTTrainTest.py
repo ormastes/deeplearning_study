@@ -17,25 +17,91 @@ class GPT2Train(unittest.TestCase):
         ###########################
         # Initiate training
         ###########################
+        config = GPT2_CONFIG_124M_TRAIN()
+        from base.gpt.BPETokenizer import GPT2TikTokenizer
+        tokenizer = GPT2TikTokenizer()
 
-        train_losses, val_losses, tokens_seen, model = train(GPT2_CONFIG_124M_TRAIN(), OTHER_SETTINGS())
+        setting = OTHER_SETTINGS(num_epochs=10)
 
-        self.assertTrue(train_losses[-1] < 2)
+        train_losses, val_losses, tokens_seen, model = train(config, setting, tokenizer)
+
+        self.assertTrue(train_losses[-1] < 1)
         self.assertTrue(val_losses[-1] < 16)
 
+    def test_alibi_train(self):
+        ###########################
+        # Initiate training
+        ###########################
+        config = GPT2_CONFIG_124M_TRAIN()
+        config.is_alibi = True
+
+        from base.gpt.BPETokenizer import GPT2TikTokenizer
+        tokenizer = GPT2TikTokenizer()
+
+        setting = OTHER_SETTINGS(num_epochs=6)
+
+        train_losses, val_losses, tokens_seen, model = train(config, setting, tokenizer)
+
+        self.assertTrue(train_losses[-1] < 3)
+        self.assertTrue(val_losses[-1] < 16)
+
+        self.logging_after_train(config, model, setting, tokens_seen, train_losses, val_losses)
+
+
+    def test_alibi_tokenizer_train(self):
+        ###########################
+        # Initiate training
+        ###########################
+        config = GPT2_CONFIG_124M_TRAIN()
+        config.vocab_size = 49125 # "bigcode/starcoder2-15b" token
+        config.is_alibi = True
+
+        from base.gpt.BPETokenizer import StarCoder2Tokenizer
+        tokenizer = StarCoder2Tokenizer()
+
+        setting = OTHER_SETTINGS(num_epochs=6)
+
+        train_losses, val_losses, tokens_seen, model = train(config, setting, tokenizer)
+
+        self.assertTrue(train_losses[-1] < 3)
+        self.assertTrue(val_losses[-1] < 16)
+
+        self.logging_after_train(config, model, setting, tokens_seen, train_losses, val_losses)
+
+
+    def test_train_shared(self):
+        ###########################
+        # Initiate training
+        ###########################
+        config = GPT2_CONFIG_124M_TRAIN()
+        config.reverse_position_embedding = True
+        config.prim_mum_layers = 5
+        config.num_layers = config.prim_mum_layers * config.prim_mum_layers * config.prim_mum_layers
+
+        from base.gpt.BPETokenizer import GPT2TikTokenizer
+        tokenizer = GPT2TikTokenizer()
+
+        setting = OTHER_SETTINGS(num_epochs=50)
+
+        train_losses, val_losses, tokens_seen, model = train(config, setting, tokenizer)
+
+        self.assertTrue(train_losses[-1] < 2)
+        self.assertTrue(val_losses[-1] < 21)
+
+        self.logging_after_train(config, model, setting, tokens_seen, train_losses, val_losses)
+
+    def logging_after_train(self, config, model, setting, tokens_seen, train_losses, val_losses):
         # compare last train loss with
         ###########################
         # After training
         ###########################
-
         # Plot results
-        epochs_tensor = torch.linspace(0, OTHER_SETTINGS().num_epochs, len(train_losses))
+        epochs_tensor = torch.linspace(0, setting.num_epochs, len(train_losses))
         plot_losses(epochs_tensor, tokens_seen, train_losses, val_losses)
         plt.savefig("loss.pdf")
-
         # Save and load model
         torch.save(model.state_dict(), "model.pth")
-        model = GPT2Model(GPT2_CONFIG_124M_TRAIN())
+        model = GPT2Model(config)
         model.load_state_dict(torch.load("model.pth"))
 
     def test_activity_train(self):

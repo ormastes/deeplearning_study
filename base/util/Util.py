@@ -3,7 +3,7 @@ import os
 from base.config.CommonConstants import CommonConstants
 
 
-def train(gpt_config, settings):
+def train(gpt_config, settings, tokenizer):
     import urllib.request
     from base.gpt.GPT2 import GPT2Model
     from base.dataset.SimpleDataset import create_dataloader_with_worker
@@ -11,6 +11,7 @@ def train(gpt_config, settings):
     Logger.get_instance().level = LogLevel.ERROR
     torch.manual_seed(123)
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
 
     ##############################
     # Download data if necessary
@@ -46,8 +47,6 @@ def train(gpt_config, settings):
     # Train/validation ratio
     train_ratio = 0.90
     split_idx = int(train_ratio * len(text_data))
-    from base.gpt.BPETokenizer import GPT2TikTokenizer
-    tokenizer = GPT2TikTokenizer() #tiktoken.get_encoding("gpt2")
 
     train_loader = create_dataloader_with_worker(
         text_data[:split_idx], tokenizer,
@@ -242,7 +241,7 @@ def evaluate_model(model, train_loader, val_loader, eval_iter):
 
 def generate_and_print_sample(model, tokenizer, start_context):
     model.eval()
-    context_size = model.pos_emb.weight.shape[0]
+    context_size = model.embedded.config.context_length
     encoded = text_to_token_ids(start_context, tokenizer).to(model.device)
     with torch.no_grad():
         token_ids = generate_text_simple(

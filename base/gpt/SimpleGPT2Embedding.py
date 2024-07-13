@@ -3,25 +3,30 @@ import torch
 from base.dataset.SimpleDataset import create_data_loader
 from base.gpt.BPETokenizer import GPT2TikTokenizer
 from base.prim.Embedding import Embedding
-from base.prim.SequencePostionEmbedding import SequencePositionEmbedding
+from base.prim.SequencePositionalEmbedding import SinusoidalPositionalEmbedding
 from base.util.Log import Logger
 
 
 class SimpleGPT2Embedding(torch.nn.Module):
-    def __init__(self, vocab_size, embedded_dim, context_length):
+    def __init__(self, vocab_size, embedded_dim, context_length, config):
         super(SimpleGPT2Embedding, self).__init__()
+        self.config = config
         self.vocab_size = vocab_size
         self.embedded_dim = embedded_dim
         self.context_length = context_length
         self.token_embed = Embedding(vocab_size, embedded_dim)
-        self.pos_embed = SequencePositionEmbedding(context_length, embedded_dim)
+        if not  self.config.is_alibi:
+            self.pos_embed = SinusoidalPositionalEmbedding(context_length, embedded_dim, config)
         self.log = Logger.get_instance()
 
     def forward(self, input_ids):
         token_embeddings = self.token_embed(input_ids)
         self.log.debug("Token embeddings shape:", token_embeddings.shape)
-        pos_embeddings = self.pos_embed(token_embeddings)
-        self.log.debug("Position embeddings shape:", pos_embeddings.shape)
+        if not self.config.is_alibi:
+            pos_embeddings = self.pos_embed(token_embeddings)
+            self.log.debug("Position embeddings shape:", pos_embeddings.shape)
+        else:
+            pos_embeddings = torch.zeros_like(token_embeddings)
         return token_embeddings + pos_embeddings
 
     def __repr__(self):

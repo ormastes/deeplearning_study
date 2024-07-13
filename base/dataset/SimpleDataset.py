@@ -32,8 +32,6 @@ def create_data_loader(txt, tokenizer, max_length=256, stride=128, batch_size=4,
 
 def create_dataloader_with_worker(txt, tokenizer, max_length=256, stride=128, batch_size=4,
                          shuffle=True, drop_last=True, num_workers=0):
-    # Initialize the tokenizer
-    tokenizer = tiktoken.get_encoding("gpt2")
 
     # Create dataset
     dataset = GPTDatasetV1(txt, tokenizer, max_length, stride)

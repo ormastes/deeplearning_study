@@ -7,6 +7,7 @@ from base.util.Util import *
 from transformers import GPT2Model
 from base.util.LoadModel import load_weights
 from base.config.Config import *
+from base.gpt.BPETokenizer import GPT2TikTokenizer
 
 
 class MyTestCase(unittest.TestCase):
@@ -22,7 +23,7 @@ class MyTestCase(unittest.TestCase):
         load_weights(gpt, gpt_hf, BASE_CONFIG)
         torch.manual_seed(123)
 
-        tokenizer = tiktoken.get_encoding("gpt2")
+        tokenizer = GPT2TikTokenizer() # tiktoken.get_encoding("gpt2")
 
         # def generate_text(model, idx, max_new_tokens, context_size, tokenizer, temperature=0.0, top_k=None, eos_id=CommonConstants.END_OF_TEXT, is_org=False):
         token_ids = generate_text(

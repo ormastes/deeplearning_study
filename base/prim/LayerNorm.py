@@ -12,8 +12,9 @@ class LayerNorm(nn.Module):
         self.shift = nn.Parameter(torch.zeros(embed_dim))
 
     def forward(self, x):
+        size = x.shape[-1]
         mean = x.mean(dim=-1, keepdim=True)
         # unbiased=False to use the same normalization as GPT-2
         var = x.var(dim=-1, keepdim=True, unbiased=False)
         norm_x = (x - mean) / (var + self.eps).sqrt()
-        return norm_x * self.scale + self.shift
+        return norm_x * self.scale[:size] + self.shift[:size]

@@ -15,7 +15,7 @@ class TransformerBlock(nn.Module):
         self.norm1 = LayerNorm(config.embed_dim)
 
         self.attn = MultiHeadAttention(config.embed_dim, config.embed_dim, config.context_length,
-                                         config.drop_rate, config.num_heads, config.qkv_bias)
+                                         config.drop_rate, config.num_heads, config.qkv_bias, config=config)
 
         self.norm2 = LayerNorm(config.embed_dim)
 
@@ -31,17 +31,19 @@ class TransformerBlock(nn.Module):
         if self.front_norm :
             x = self.norm1(x)
         x = self.attn(x)  # Shape [batch_size, num_tokens, emb_size]
+        return self.forward_after_attn(x, shortcut)
+
+    def forward_after_attn(self, x, shortcut):
         self.log.info("Block Attention output shape:", x.shape)
         x = self.drop(x)
         x = x + shortcut
         if not self.front_norm:
             x = self.norm1(x)
-
         shortcut = x
         x = self.norm2(x)
         x = self.mlp(x)
         self.log.info("Block FF output shape:", x.shape)
         x = self.drop(x)
-        x = x+shortcut
+        x = x + shortcut
         self.log.info("Block output shape:", x.shape)
         return x

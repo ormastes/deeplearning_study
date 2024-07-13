@@ -4,11 +4,11 @@ import torch
 
 # implement embedding using a simple matrix multiplication with embedding itself.
 class Embedding(torch.nn.Module):
-    def __init__(self, vocab_size, output_dim):
+    def __init__(self, vocab_size, embedding_size):
         super(Embedding, self).__init__()
         self.vocab_size = vocab_size
-        self.output_dim = output_dim
-        self.weight = torch.randn(vocab_size, output_dim, requires_grad=True)
+        self.embedding_size = embedding_size
+        self.weight = torch.randn(vocab_size, embedding_size, requires_grad=True)
         self._parameters = {"weights": self.weight}
 
     def forward(self, input_ids):
@@ -18,7 +18,7 @@ class Embedding(torch.nn.Module):
         return one_hot @ self.weight
 
     def __repr__(self):
-        return f"SimpleEmbedding(vocab_size={self.vocab_size}, output_dim={self.output_dim})"
+        return f"SimpleEmbedding(vocab_size={self.vocab_size}, output_dim={self.embedding_size})"
 
 
 

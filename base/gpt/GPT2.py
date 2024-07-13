@@ -1,6 +1,7 @@
 import os
 
 from base.gpt.SimpleGPT2Embedding import SimpleGPT2Embedding
+from base.gpt.TransformerBlockSequence import SimpleTransformerBlockSequence, SharedTransformerBlockSequence
 
 os.environ['PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION'] = 'python'
 from torch import nn
@@ -9,12 +10,12 @@ from base.gpt.BPETokenizer import GPT2TikTokenizer
 from base.prim.Embedding import Embedding
 from base.config.GPTConfig import GPT2_CONFIG_124M
 from base.prim.Linear import Linear
-from base.prim.SequencePostionEmbedding import SequencePositionEmbedding
+from base.prim.SequencePositionalEmbedding import SinusoidalPositionalEmbedding
 from base.util.Util import *
 from base.util.Log import *
 from base.prim.LayerNorm import LayerNorm
 from base.gpt.TransformerBlock import TransformerBlock
-#from basic_model.previous_chapters import TransformerBlock
+
 
 
 class GPT2Model(nn.Module):
@@ -23,11 +24,13 @@ class GPT2Model(nn.Module):
         self.log = Logger.get_instance()
         self.config = config
 
-        self.embedded = SimpleGPT2Embedding(config.vocab_size, config.embed_dim, config.context_length)
+        self.embedded = SimpleGPT2Embedding(config.vocab_size, config.embed_dim, config.context_length, config)
         self.drop_emb = nn.Dropout(config.drop_rate)
 
-        self.trf_blocks = nn.Sequential(
-            *[TransformerBlock(config) for _ in range(config.num_layers)])
+        if config.prim_mum_layers is not None:
+            self.trf_blocks = SharedTransformerBlockSequence(config)
+        else:
+            self.trf_blocks = SimpleTransformerBlockSequence(config)
 
         self.final_norm = LayerNorm(config.embed_dim)
         self.out_head = nn.Linear(config.embed_dim, config.vocab_size, bias=False)
