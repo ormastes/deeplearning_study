@@ -17,6 +17,9 @@ class TransformerBlock(nn.Module):
         self.attn = MultiHeadAttention(config.embed_dim, config.embed_dim, config.context_length,
                                          config.drop_rate, config.num_heads, config.qkv_bias, config=config)
 
+        self.feature_attn = MultiHeadAttention(config.embed_dim, config.embed_dim, config.context_length,
+                                       config.drop_rate, config.num_heads, config.qkv_bias, config=config)
+
         self.norm2 = LayerNorm(config.embed_dim)
 
         # feed forward, mlp = multi-layer perceptron

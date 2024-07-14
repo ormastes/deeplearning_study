@@ -40,8 +40,8 @@ class SimpleLearnableAlibiPositionalEmbedding(torch.nn.Module):
         slopes = torch.tensor([(i + 1) for i in range(num_heads)]).float()
         self.slopes = torch.nn.Parameter(slopes, requires_grad=False)
         # initial value of b is 1
-        self.b = torch.nn.Parameter(torch.tensor(1.0), requires_grad=True)
-        self.b.register_hook(self.zero_grad_hook)
+        self.a = torch.nn.Parameter(torch.tensor(1.0), requires_grad=True)
+        self.a.register_hook(self.zero_grad_hook)
 
     def forward(self, seq_len):
         if seq_len > 1:
@@ -49,7 +49,7 @@ class SimpleLearnableAlibiPositionalEmbedding(torch.nn.Module):
         else:
             dynamic = torch.ones(1)
 
-        dynamic_b = dynamic.to(self.b.device) * self.b
+        dynamic_a = dynamic.to(self.a.device) * self.a
 
         alibi_bias_row = torch.arange(seq_len).to(self.slopes.device)
         alibi_bias_row = alibi_bias_row.unsqueeze(0)
@@ -57,7 +57,7 @@ class SimpleLearnableAlibiPositionalEmbedding(torch.nn.Module):
         alibi_bias_col = alibi_bias_col.unsqueeze(1)
         alibi_bias = alibi_bias_row - alibi_bias_col
 
-        alibi_bias = alibi_bias * dynamic_b
+        alibi_bias = alibi_bias * dynamic_a
 
         alibi_bias = alibi_bias.float().unsqueeze(0).unsqueeze(0) # (1, 1, seq_len, seq_len)
         slopes_view = self.slopes.view(1, self.num_heads, 1, 1) # (1, num_heads, 1, 1)
@@ -83,7 +83,9 @@ class ComplexLearnableAlibiPositionalEmbedding(torch.nn.Module):
         # Learnable node count
         self.learnable_node_count = 32
         self.a = torch.nn.Parameter(torch.tensor([1.0 if i==0 else 0.1 for i in range(self.learnable_node_count)]).float().unsqueeze(1), requires_grad=True)
-        self.b = torch.nn.Parameter(torch.tensor([(i) for i in range(self.learnable_node_count)]).float().unsqueeze(1), requires_grad=True)
+        self.a.register_hook(self.zero_grad_hook)
+        self.b = torch.nn.Parameter(torch.tensor([math.exp(i) for i in range(self.learnable_node_count)]).float().unsqueeze(1), requires_grad=True)
+        self.b.register_hook(self.zero_grad_hook)
 
     def forward(self, seq_len):
         if seq_len > 1:
@@ -92,7 +94,8 @@ class ComplexLearnableAlibiPositionalEmbedding(torch.nn.Module):
             dynamic = torch.ones(1)
 
         alibi_bias_ = dynamic.to(self.slopes.device) * torch.arange(seq_len).to(self.slopes.device)
-        alibi_bias_ = torch.nn.functional.relu(alibi_bias_.unsqueeze(0)*self.a.to(self.slopes.device)+ self.b.to(self.slopes.device))
+
+        alibi_bias_ = torch.nn.functional.relu(alibi_bias_.unsqueeze(0)*self.a.to(self.slopes.device) - self.b.to(self.slopes.device))
         # sum first dimension to get the 1D tensor
         alibi_bias_ = alibi_bias_.sum(dim=0)
         alibi_bias_row = alibi_bias_

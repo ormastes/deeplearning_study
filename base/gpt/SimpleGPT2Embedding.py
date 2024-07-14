@@ -3,7 +3,7 @@ import torch
 from base.dataset.SimpleDataset import create_data_loader
 from base.gpt.BPETokenizer import GPT2TikTokenizer
 from base.prim.Embedding import Embedding
-from base.prim.SequencePositionalEmbedding import SinusoidalPositionalEmbedding
+from base.embedding.SequencePositionalEmbedding import SinusoidalPositionalEmbedding
 from base.util.Log import Logger
 
 

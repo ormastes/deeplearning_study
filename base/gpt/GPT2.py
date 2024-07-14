@@ -7,10 +7,7 @@ os.environ['PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION'] = 'python'
 from torch import nn
 
 from base.gpt.BPETokenizer import GPT2TikTokenizer
-from base.prim.Embedding import Embedding
 from base.config.GPTConfig import GPT2_CONFIG_124M
-from base.prim.Linear import Linear
-from base.prim.SequencePositionalEmbedding import SinusoidalPositionalEmbedding
 from base.util.Util import *
 from base.util.Log import *
 from base.prim.LayerNorm import LayerNorm
