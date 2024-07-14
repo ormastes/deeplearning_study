@@ -69,6 +69,24 @@ class GPT2Train(unittest.TestCase):
         self.logging_after_train(config, model, setting, tokens_seen, train_losses, val_losses)
 
 
+    def test_complex_learnable_alibi_train(self):
+        ###########################
+        # Initiate training
+        ###########################
+        config = GPT2_CONFIG_124M_TRAIN()
+        config.alibi = ComplexLearnableAlibiPositionalEmbedding
+
+        from base.gpt.BPETokenizer import GPT2TikTokenizer
+        tokenizer = GPT2TikTokenizer()
+
+        setting = OTHER_SETTINGS(num_epochs=6)
+
+        train_losses, val_losses, tokens_seen, model = train(config, setting, tokenizer)
+
+        self.assertTrue(train_losses[-1] < 3)
+        self.assertTrue(val_losses[-1] < 16)
+
+        self.logging_after_train(config, model, setting, tokens_seen, train_losses, val_losses)
     def test_alibi_tokenizer_train(self):
         ###########################
         # Initiate training
