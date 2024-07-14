@@ -21,8 +21,7 @@ class MultiHeadAttention(nn.Module):
         self.head_out = d_out // head_cnt
         assert (d_out % head_cnt == 0)
 
-        if config.is_alibi:
-            self.alibi = AttentionLinearBiasPositionalEmbedding(head_cnt)
+        self.alibi = config.alibi(head_cnt)
 
         #self.attn_weight = Linear(d_in, d_out * 3, bias=qkv_bias)
         self.W_query = Linear(d_in, d_out, bias=qkv_bias)
@@ -71,7 +70,7 @@ class MultiHeadAttention(nn.Module):
         # Use the mask to fill attention scores
         attention_scores.masked_fill_(mask_bool, -torch.inf)
 
-        if self.config is not None and self.config.is_alibi:
+        if self.config is not None and self.config.alibi is not None:
             # (batch, num_heads, seq_len, seq_len) = (batch, num_heads, seq_len, seq_len) + (1, num_heads, seq_len, seq_len)
             attention_scores = attention_scores + self.alibi(token_cnt)
 

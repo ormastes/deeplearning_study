@@ -22,7 +22,7 @@ class GPT2_CONFIG_124M(object):
         self.qkv_bias = qkv_bias
         self.reverse_position_embedding = False
         self.prim_mum_layers = None
-        self.is_alibi = False
+        self.is_alibi = None
 
 
 model_configs = {

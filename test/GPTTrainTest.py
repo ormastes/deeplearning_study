@@ -10,6 +10,7 @@ from base.gpt.GPT2 import GPT2Model
 from base.config.GPTConfig import GPT2_CONFIG_124M
 from base.util.Util import *
 from base.util.Log import *
+from base.embedding.AttentionLinearBiasPositionalEmbedding import *
 
 
 class GPT2Train(unittest.TestCase):
@@ -33,7 +34,27 @@ class GPT2Train(unittest.TestCase):
         # Initiate training
         ###########################
         config = GPT2_CONFIG_124M_TRAIN()
-        config.is_alibi = True
+        config.alibi = AttentionLinearBiasPositionalEmbedding
+
+        from base.gpt.BPETokenizer import GPT2TikTokenizer
+        tokenizer = GPT2TikTokenizer()
+
+        setting = OTHER_SETTINGS(num_epochs=6)
+
+        train_losses, val_losses, tokens_seen, model = train(config, setting, tokenizer)
+
+        self.assertTrue(train_losses[-1] < 3)
+        self.assertTrue(val_losses[-1] < 16)
+
+        self.logging_after_train(config, model, setting, tokens_seen, train_losses, val_losses)
+
+
+    def test_simple_learnable_alibi_train(self):
+        ###########################
+        # Initiate training
+        ###########################
+        config = GPT2_CONFIG_124M_TRAIN()
+        config.alibi = SimpleLearnableAlibiPositionalEmbedding
 
         from base.gpt.BPETokenizer import GPT2TikTokenizer
         tokenizer = GPT2TikTokenizer()

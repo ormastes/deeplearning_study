@@ -15,14 +15,14 @@ class SimpleGPT2Embedding(torch.nn.Module):
         self.embedded_dim = embedded_dim
         self.context_length = context_length
         self.token_embed = Embedding(vocab_size, embedded_dim)
-        if not  self.config.is_alibi:
+        if self.config.alibi is None:
             self.pos_embed = SinusoidalPositionalEmbedding(context_length, embedded_dim, config)
         self.log = Logger.get_instance()
 
     def forward(self, input_ids):
         token_embeddings = self.token_embed(input_ids)
         self.log.debug("Token embeddings shape:", token_embeddings.shape)
-        if not self.config.is_alibi:
+        if self.config.alibi is None:
             pos_embeddings = self.pos_embed(token_embeddings)
             self.log.debug("Position embeddings shape:", pos_embeddings.shape)
         else:
