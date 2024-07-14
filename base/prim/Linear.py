@@ -20,6 +20,16 @@ class Linear(nn.Module):
             bound = 1 / math.sqrt(fan_in) if fan_in > 0 else 0
             nn.init.uniform_(self.bias, -bound, bound)
 
+    def dim_match_forward(self, inputs):
+        # `y = xA^T + b`.
+        inputs = inputs.transpose(1, 2)
+        weight = self.weight[:inputs.size(2), :]
+        inputs = inputs @ weight
+        inputs = inputs.transpose(1, 2)
+        if self.bias_enabled:
+            return inputs+ self.bias
+        else:
+            return inputs
     def forward(self, inputs):
         # `y = xA^T + b`.
         if self.bias_enabled:

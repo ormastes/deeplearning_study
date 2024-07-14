@@ -1,5 +1,6 @@
 from torch import nn
 
+from base.gpt.FeatureAttention import FeatureAttention
 from base.prim.FeedForward import FeedForward
 from base.prim.LayerNorm import LayerNorm
 from base.gpt.MultiHeadAttention import MultiHeadAttention
@@ -16,8 +17,8 @@ class TransformerBlock(nn.Module):
 
         self.attn = MultiHeadAttention(config.embed_dim, config.embed_dim, config.context_length,
                                          config.drop_rate, config.num_heads, config.qkv_bias, config=config)
-
-        self.feature_attn = MultiHeadAttention(config.embed_dim, config.embed_dim, config.context_length,
+        if self.config.is_feature_attention:
+            self.feature_attn = FeatureAttention(config.embed_dim, config.embed_dim, config.context_length,
                                        config.drop_rate, config.num_heads, config.qkv_bias, config=config)
 
         self.norm2 = LayerNorm(config.embed_dim)
@@ -34,6 +35,10 @@ class TransformerBlock(nn.Module):
         if self.front_norm :
             x = self.norm1(x)
         x = self.attn(x)  # Shape [batch_size, num_tokens, emb_size]
+        if self.config.is_feature_attention:
+            x_pre = x
+            x = self.feature_attn(x)
+            x = x_pre*0.9 + x*0.1
         return self.forward_after_attn(x, shortcut)
 
     def forward_after_attn(self, x, shortcut):

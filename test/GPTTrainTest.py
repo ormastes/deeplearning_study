@@ -1,5 +1,6 @@
 import unittest
 import os
+
 os.environ['PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION'] = 'python'
 
 # Import from local files
@@ -48,13 +49,52 @@ class GPT2Train(unittest.TestCase):
 
         self.logging_after_train(config, model, setting, tokens_seen, train_losses, val_losses)
 
-
     def test_simple_learnable_alibi_train(self):
         ###########################
         # Initiate training
         ###########################
         config = GPT2_CONFIG_124M_TRAIN()
         config.alibi = SimpleLearnableAlibiPositionalEmbedding
+
+        from base.gpt.BPETokenizer import GPT2TikTokenizer
+        tokenizer = GPT2TikTokenizer()
+
+        setting = OTHER_SETTINGS(num_epochs=10)
+
+        train_losses, val_losses, tokens_seen, model = train(config, setting, tokenizer)
+
+        self.assertTrue(train_losses[-1] < 3)
+        self.assertTrue(val_losses[-1] < 16)
+
+        self.logging_after_train(config, model, setting, tokens_seen, train_losses, val_losses)
+
+    def test_feature_attention_train(self):
+        ###########################
+        # Initiate training
+        ###########################
+        config = GPT2_CONFIG_124M_TRAIN()
+        config.alibi = SimpleLearnableAlibiPositionalEmbedding
+        config.is_feature_attention = True
+
+        from base.gpt.BPETokenizer import GPT2TikTokenizer
+        tokenizer = GPT2TikTokenizer()
+
+        setting = OTHER_SETTINGS(num_epochs=10)
+
+        train_losses, val_losses, tokens_seen, model = train(config, setting, tokenizer)
+
+        self.assertTrue(train_losses[-1] < 3)
+        self.assertTrue(val_losses[-1] < 16)
+
+        self.logging_after_train(config, model, setting, tokens_seen, train_losses, val_losses)
+
+    def test_feature_attention_train(self):
+        ###########################
+        # Initiate training
+        ###########################
+        config = GPT2_CONFIG_124M_TRAIN()
+        config.alibi = SimpleLearnableAlibiPositionalEmbedding
+        config.is_feature_attention = True
 
         from base.gpt.BPETokenizer import GPT2TikTokenizer
         tokenizer = GPT2TikTokenizer()
@@ -67,7 +107,6 @@ class GPT2Train(unittest.TestCase):
         self.assertTrue(val_losses[-1] < 16)
 
         self.logging_after_train(config, model, setting, tokens_seen, train_losses, val_losses)
-
 
     def test_complex_learnable_alibi_train(self):
         ###########################
@@ -87,12 +126,13 @@ class GPT2Train(unittest.TestCase):
         self.assertTrue(val_losses[-1] < 16)
 
         self.logging_after_train(config, model, setting, tokens_seen, train_losses, val_losses)
+
     def test_alibi_tokenizer_train(self):
         ###########################
         # Initiate training
         ###########################
         config = GPT2_CONFIG_124M_TRAIN()
-        config.vocab_size = 49125 # "bigcode/starcoder2-15b" token
+        config.vocab_size = 49125  # "bigcode/starcoder2-15b" token
         config.is_alibi = True
 
         from base.gpt.BPETokenizer import StarCoder2Tokenizer
@@ -106,7 +146,6 @@ class GPT2Train(unittest.TestCase):
         self.assertTrue(val_losses[-1] < 16)
 
         self.logging_after_train(config, model, setting, tokens_seen, train_losses, val_losses)
-
 
     def test_train_shared(self):
         ###########################
@@ -226,7 +265,6 @@ class GPT2Train(unittest.TestCase):
         train_text = text_data[:train_size]
         val_text = text_data[train_size:]
         torch.manual_seed(123)
-
 
         train_loader = create_dataloader_with_worker(train_text, tokenizer,
                                                      batch_size=20,
