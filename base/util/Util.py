@@ -1,9 +1,10 @@
 import torch
 import os
 from base.config.CommonConstants import CommonConstants
+from base.gpt.LongformerSelfAttention import LongformerSelfAttention
 
 
-def train(gpt_config, settings, tokenizer):
+def train(gpt_config, settings, tokenizer, global_attention_mask=None):
     import urllib.request
     from base.gpt.GPT2 import GPT2Model
     from base.dataset.SimpleDataset import create_dataloader_with_worker
@@ -81,12 +82,15 @@ def train(gpt_config, settings, tokenizer):
 
     return train_losses, val_losses, tokens_seen, model
 
-def generate_text_simple(model, idx, max_new_tokens, context_size):
+def generate_text_simple(model, idx, max_new_tokens, context_size, tokenizer):
     for _ in range(max_new_tokens):
         idx_cond = idx[:, -context_size:]
 
         with torch.no_grad():
-            logits = model(idx_cond)
+            if model.config.attention_window > 0:
+                logits = model(idx_cond, tokenizer)
+            else:
+                logits = model(idx_cond)
         #print("GPT2 output shape:", logits.shape)
         #probas = torch.nn.functional.softmax(logits[:, -1, :], dim=-1)
         logits = logits[:, -1, :]
@@ -205,17 +209,17 @@ def token_ids_to_text(token_ids, tokenizer):
     return tokenizer.decode(flat.tolist())
 
 
-def calc_loss_batch(inputs, targets, model):
+def calc_loss_batch(inputs, targets, model, tokenizer):
     inputs = inputs.to(model.device)
     targets = targets.to(model.device)
-    logits = model(inputs)
+    logits = model(inputs, tokenizer)
     logits_flat = logits.flatten(0, 1)
     targets_flat = targets.flatten()
     loss = torch.nn.functional.cross_entropy(logits_flat, targets_flat)
     return loss
 
 
-def calc_loss_loader(dataloader, model, num_batches=None):
+def calc_loss_loader(dataloader, model, tokenizer, num_batches=None):
     total_loss = 0
     if num_batches is None:
         num_batches = len(dataloader)
@@ -223,18 +227,18 @@ def calc_loss_loader(dataloader, model, num_batches=None):
         num_batches = min(num_batches, len(dataloader))
 
     for i, (inputs, targets) in enumerate(dataloader):
-        loss = calc_loss_batch(inputs, targets, model)
+        loss = calc_loss_batch(inputs, targets, model, tokenizer)
         total_loss += loss.item()
         if i >= num_batches:
             break
     return total_loss / num_batches
 
 
-def evaluate_model(model, train_loader, val_loader, eval_iter):
+def evaluate_model(model, train_loader, val_loader, tokenizer, eval_iter):
     model.eval()
     with torch.no_grad():
-        train_loss = calc_loss_loader(train_loader, model, num_batches=eval_iter)
-        val_loss = calc_loss_loader(val_loader, model, num_batches=eval_iter)
+        train_loss = calc_loss_loader(train_loader, model, tokenizer,  num_batches=eval_iter)
+        val_loss = calc_loss_loader(val_loader, model, tokenizer, num_batches=eval_iter)
     model.train()
     return train_loss, val_loss
 
@@ -246,7 +250,9 @@ def generate_and_print_sample(model, tokenizer, start_context):
     with torch.no_grad():
         token_ids = generate_text_simple(
             model=model, idx=encoded,
-            max_new_tokens=50, context_size=context_size
+            max_new_tokens=50, context_size=context_size,
+            tokenizer=tokenizer
+
         )
         decoded_text = token_ids_to_text(token_ids, tokenizer)
         print(decoded_text.replace("\n", " "))  # Compact print format
@@ -272,7 +278,7 @@ def train_model_simple(model, train_loader, val_loader, optimizer, num_epochs,
                 print("Target text:", token_ids_to_text(target_1, tokenizer))
                 print("")
             optimizer.zero_grad()  # Reset loss gradients from previous batch iteration
-            loss = calc_loss_batch(input_batch, target_batch, model)
+            loss = calc_loss_batch(input_batch, target_batch, model, tokenizer)
             loss.backward()  # Calculate loss gradients
             optimizer.step()  # Update model weights using loss gradients
             tokens_seen += input_batch.numel()
@@ -281,7 +287,7 @@ def train_model_simple(model, train_loader, val_loader, optimizer, num_epochs,
             # Optional evaluation step
             if global_step % eval_freq == 0:
                 train_loss, val_loss = evaluate_model(
-                    model, train_loader, val_loader, eval_iter)
+                    model, train_loader, val_loader, tokenizer, eval_iter)
                 train_losses.append(train_loss)
                 val_losses.append(val_loss)
                 track_tokens_seen.append(tokens_seen)

@@ -29,12 +29,15 @@ class TransformerBlock(nn.Module):
         self.drop = nn.Dropout(config.drop_rate)
         self.front_norm = True
 
-    def forward(self, x):
+    def forward(self, x, local_attention_scores=None):
         self.log.info("Block input shape:", x.shape)
         shortcut = x
         if self.front_norm :
             x = self.norm1(x)
-        x = self.attn(x)  # Shape [batch_size, num_tokens, emb_size]
+        if self.config.attention_window > 0:
+            x = self.attn(x, local_attention_scores)
+        else:
+            x = self.attn(x)  # Shape [batch_size, num_tokens, emb_size]
         if self.config.is_feature_attention:
             x_pre = x
             x = self.feature_attn(x)

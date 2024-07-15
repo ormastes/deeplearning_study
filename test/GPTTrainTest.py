@@ -1,6 +1,8 @@
 import unittest
 import os
 
+from base.gpt.LongformerSelfAttention import LongformerSelfAttention
+
 os.environ['PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION'] = 'python'
 
 # Import from local files
@@ -128,6 +130,30 @@ class GPT2Train(unittest.TestCase):
         train_losses, val_losses, tokens_seen, model = train(config, setting, tokenizer)
 
         self.assertTrue(train_losses[-1] < 3)
+        self.assertTrue(val_losses[-1] < 16)
+
+        self.logging_after_train(config, model, setting, tokens_seen, train_losses, val_losses)
+
+    def test_longformer_train(self):
+        ###########################
+        # Initiate training
+        ###########################
+        config = GPT2_CONFIG_124M_TRAIN()
+        config.alibi = SimpleLearnableAlibiPositionalEmbedding
+        config.is_feature_attention = True
+        config.linformer_factor = 4.0
+        config.attention_groups = 4
+        config.attention = LongformerSelfAttention
+        config.attention_window = 32  # 256
+
+        from base.gpt.BPETokenizer import GPT2TikTokenizer
+        tokenizer = GPT2TikTokenizer()
+
+        setting = OTHER_SETTINGS(num_epochs=10)
+
+        train_losses, val_losses, tokens_seen, model = train(config, setting, tokenizer)
+
+        self.assertTrue(train_losses[-1] < 5) # longformer cause
         self.assertTrue(val_losses[-1] < 16)
 
         self.logging_after_train(config, model, setting, tokens_seen, train_losses, val_losses)
@@ -317,8 +343,8 @@ class GPT2Train(unittest.TestCase):
                 print(x.shape, y.shape)
 
             with torch.no_grad():  # Disable gradient tracking for efficiency because we are not training, yet
-                train_loss = calc_loss_loader(train_loader, model)
-                val_loss = calc_loss_loader(val_loader, model)
+                train_loss = calc_loss_loader(train_loader, model, tokenizer)
+                val_loss = calc_loss_loader(val_loader, model, tokenizer)
 
             print("Training loss:", train_loss)
             print("Validation loss:", val_loss)

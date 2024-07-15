@@ -32,16 +32,19 @@ class GPT2Model(nn.Module):
         self.final_norm = LayerNorm(config.embed_dim)
         self.out_head = nn.Linear(config.embed_dim, config.vocab_size, bias=False)
 
-    def forward_emb(self, x):
+    def forward_emb(self, x, global_attention_mask):
         self.log.info("Embedding shape:", x.shape)
         x = self.drop_emb(x)
-        x = self.trf_blocks(x)
+        x = self.trf_blocks(x, global_attention_mask)
         x = self.final_norm(x)
         return x
 
-    def forward(self, tokens):
+    def forward(self, tokens, tokenizer):
+        global_attention_mask = None
+        if self.config.attention_window > 0:
+            global_attention_mask = LongformerSelfAttention.update_global_attention_mask(tokens, tokenizer)
         x = self.embedded(tokens)  # Shape [batch_size, num_tokens, emb_size]
-        x = self.forward_emb(x)
+        x = self.forward_emb(x, global_attention_mask)
         logits = self.out_head(x)
         return logits
 

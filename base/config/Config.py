@@ -29,6 +29,8 @@ class GPT2_CONFIG_124M(object):
         self.linformer_factor = 1.0  # linformer_factor = 1/2^k
         self.attention_groups = 1
         self.attention = MultiHeadAttention
+        self.attention_window = 0
+        self.attention_dilation = 1  # TODO
 
 
 model_configs = {

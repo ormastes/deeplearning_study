@@ -95,25 +95,3 @@ class GroupedAttention(nn.Module):
         context = context_contiguous.view(b, token_cnt, self.d_out)  # context.reshape(b, token_cnt, self.d_out)
         return context
 
-
-if __name__ == "__main__":
-    inputs = torch.tensor(
-        [[0.43, 0.15, 0.89],  # Your     (x^1)
-         [0.55, 0.87, 0.66],  # journey  (x^2)
-         [0.57, 0.85, 0.64],  # starts   (x^3)
-         [0.22, 0.58, 0.33],  # with     (x^4)
-         [0.77, 0.25, 0.10],  # one      (x^5)
-         [0.05, 0.80, 0.55]]  # step     (x^6)
-    )
-    batch = torch.stack((inputs, inputs), dim=0)
-    print("Batch shape:", batch.shape)
-    head_cnt = 2
-    d_in = inputs.shape[1]
-    block_size = inputs.shape[0]
-    d_out = 2
-    dropout = 0.5
-    torch.manual_seed(123)
-    multi_headed_attention = MultiHeadAttention(d_in, d_out, block_size, dropout, head_cnt)
-    output = multi_headed_attention(batch)
-    print("Output shape:", output.shape)
-    print("Output:", output)

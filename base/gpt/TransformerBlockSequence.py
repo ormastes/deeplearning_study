@@ -8,6 +8,11 @@ class SimpleTransformerBlockSequence(torch.nn.Sequential):
     def __init__(self, config):
         super().__init__(*[TransformerBlock(config) for _ in range(config.num_layers)])
 
+    def forward(self, x, local_attention_scores=None):
+        for block in self:
+            x = block(x, local_attention_scores)
+        return x
+
 
 class SharedTransformerBlockSequence(torch.nn.Module):
     def __init__(self, config):

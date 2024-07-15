@@ -14,6 +14,8 @@ class GPT2TikTokenizer:
     def __init__(self):
         self.tokenizer = tiktoken.get_encoding("gpt2")
         self.log = Logger.get_instance()
+        self.log.debug("Original token set:", self.tokenizer.special_tokens_set)
+        self.tokenizer.special_tokens_set = CommonConstants.SPECIAL_TOKENS_SET
         self.vocab_size = self.tokenizer.n_vocab
         # print the vocab size
         self.log.debug("Vocab size:", self.vocab_size)
