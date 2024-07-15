@@ -24,8 +24,8 @@ class MultiHeadAttention(nn.Module):
         self.alibi = config.alibi(head_cnt)
 
         #self.attn_weight = Linear(d_in, d_out * 3, bias=qkv_bias)
-        self.W_query = Linear(d_in, d_out, bias=qkv_bias)
-        self.W_key = Linear(d_in, d_out, bias=qkv_bias)
+        self.W_query = Linear(d_in, int(d_out/config.linformer_factor), bias=qkv_bias)
+        self.W_key = Linear(d_in,  int(d_out/config.linformer_factor), bias=qkv_bias)
         self.W_value = Linear(d_in, d_out, bias=qkv_bias)
         self.proj = Linear(d_out, d_out, bias=True)
         self.dropout = nn.Dropout(dropout)
@@ -52,8 +52,8 @@ class MultiHeadAttention(nn.Module):
 
     def forward_attn(self, k, q, v, x, normalizer=None):
         b, token_cnt, d_in = x.size()
-        queries = q.view(b, token_cnt, self.head_cnt, self.head_out).transpose(1, 2)
-        keys = k.view(b, token_cnt, self.head_cnt, self.head_out).transpose(1, 2)
+        queries = q.view(b, token_cnt, self.head_cnt, int(self.head_out/self.config.linformer_factor)).transpose(1, 2)
+        keys = k.view(b, token_cnt, self.head_cnt, int(self.head_out/self.config.linformer_factor)).transpose(1, 2)
         values = v.view(b, token_cnt, self.head_cnt, self.head_out).transpose(1, 2)
         self.log.debug("keys shape:", keys.shape)
         self.log.debug("queries shape:", queries.shape)

@@ -24,6 +24,7 @@ class GPT2_CONFIG_124M(object):
         self.prim_mum_layers = None
         self.alibi = None
         self.is_feature_attention = False
+        self.linformer_factor = 1.0
 
 
 model_configs = {
