@@ -1,4 +1,6 @@
 import enum
+from base.gpt.MultiHeadAttention import MultiHeadAttention
+
 
 class ModelName(enum.Enum):
     gpt2_small_124M = "openai-community/gpt2"
@@ -24,7 +26,9 @@ class GPT2_CONFIG_124M(object):
         self.prim_mum_layers = None
         self.alibi = None
         self.is_feature_attention = False
-        self.linformer_factor = 1.0
+        self.linformer_factor = 1.0  # linformer_factor = 1/2^k
+        self.attention_groups = 1
+        self.attention = MultiHeadAttention
 
 
 model_configs = {

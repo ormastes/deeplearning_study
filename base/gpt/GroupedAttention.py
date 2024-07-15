@@ -6,11 +6,11 @@ from base.util.Log import Logger
 from base.prim.Linear import Linear
 
 
-class MultiHeadAttention(nn.Module):
+class GroupedAttention(nn.Module):
     def __init__(self, d_in, d_out, context_length, dropout, head_cnt, qkv_bias=False, config=None):
         super().__init__()
         assert d_out % head_cnt == 0, "d_out must be divisible by n_heads"
-        assert d_out % config.linformer_facto == 0, "d_out must be divisible by linformer_factor"
+        assert d_out % config.linformer_factor == 0, "d_out must be divisible by linformer_factor"
         self.config = config
         self.log = Logger.get_instance()
         self.d_in = d_in
@@ -20,14 +20,19 @@ class MultiHeadAttention(nn.Module):
         self.dropout = dropout
         self.qkv_bias = qkv_bias
         self.head_out = d_out // head_cnt
+        self.attention_groups = config.attention_groups
+        self.heads_per_group = head_cnt // self.attention_groups
         assert (d_out % head_cnt == 0)
-        assert self.head_out % config.linformer_facto == 0, "head_out must be divisible by linformer_factor"
+        assert self.head_cnt % self.attention_groups == 0, "head_cnt must be divisible by attention_groups"
+        assert self.head_out % config.linformer_factor == 0, "head_out must be divisible by linformer_factor"
+        assert (d_out / config.linformer_factor) % self.attention_groups == 0, "d_out must be divisible by attention_groups"
+
         self.alibi = config.alibi(head_cnt)
 
         #self.attn_weight = Linear(d_in, d_out * 3, bias=qkv_bias)
         self.W_query = Linear(d_in, int(d_out/config.linformer_factor), bias=qkv_bias)
-        self.W_key = Linear(d_in,  int(d_out/config.linformer_factor), bias=qkv_bias)
-        self.W_value = Linear(d_in, d_out, bias=qkv_bias)
+        self.W_key = Linear(d_in,  int(d_out/config.linformer_factor) // self.attention_groups, bias=qkv_bias)
+        self.W_value = Linear(d_in, d_out // self.attention_groups, bias=qkv_bias)
         self.proj = Linear(d_out, d_out, bias=True)
         self.dropout = nn.Dropout(dropout)
         self.register_buffer("mask", torch.triu(torch.ones(context_length, context_length), diagonal=1))
@@ -39,8 +44,11 @@ class MultiHeadAttention(nn.Module):
         #qkv = self.attn_weight(x)
         #q, k, v = qkv.chunk(3, dim=-1)
         q = self.W_query(x)
-        k = self.W_key(x)  # Shape: (b, num_tokens, d_out)
+        k = self.W_key(x)
+        # repeat k's dim -1 about attention_groups times
+        k = k.repeat(1, 1, self.attention_groups)
         v = self.W_value(x)
+        v = v.repeat(1, 1, self.attention_groups)
         self.log.debug("q_k_v shape:", q.shape)
 
         context = self.forward_attn(k, q, v, x)
