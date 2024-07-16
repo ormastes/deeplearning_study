@@ -2,6 +2,7 @@ import unittest
 import os
 
 from base.gpt.LongformerSelfAttention import LongformerSelfAttention
+from base.quantization.QuantizedAttention import QuantizedAttention
 
 os.environ['PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION'] = 'python'
 
@@ -121,6 +122,29 @@ class GPT2Train(unittest.TestCase):
         config.linformer_factor = 4.0
         config.attention_groups = 4
         config.attention = GroupedAttention
+
+        from base.gpt.BPETokenizer import GPT2TikTokenizer
+        tokenizer = GPT2TikTokenizer()
+
+        setting = OTHER_SETTINGS(num_epochs=10)
+
+        train_losses, val_losses, tokens_seen, model = train(config, setting, tokenizer)
+
+        self.assertTrue(train_losses[-1] < 3)
+        self.assertTrue(val_losses[-1] < 16)
+
+        self.logging_after_train(config, model, setting, tokens_seen, train_losses, val_losses)
+
+
+    def test_quantization_aware_train(self):
+        ###########################
+        # Initiate training
+        ###########################
+        config = GPT2_CONFIG_124M_TRAIN()
+        config.alibi = SimpleLearnableAlibiPositionalEmbedding
+        config.is_feature_attention = True
+        config.linformer_factor = 4.0
+        config.attention = QuantizedAttention
 
         from base.gpt.BPETokenizer import GPT2TikTokenizer
         tokenizer = GPT2TikTokenizer()
