@@ -2,6 +2,7 @@ import unittest
 import os
 
 from base.gpt.LongformerSelfAttention import LongformerSelfAttention
+from base.gpt.TransformerBlockSequence import SharedTransformerBlockSequence
 from base.quantization.QuantizedAttention import QuantizedAttention
 
 os.environ['PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION'] = 'python'
@@ -15,7 +16,7 @@ from base.config.GPTConfig import GPT2_CONFIG_124M
 from base.util.Util import *
 from base.util.Log import *
 from base.embedding.AttentionLinearBiasPositionalEmbedding import *
-from base.gpt.GroupedAttention import GroupedAttention
+
 
 class GPT2Train(unittest.TestCase):
     def test_train(self):
@@ -121,7 +122,6 @@ class GPT2Train(unittest.TestCase):
         config.is_feature_attention = True
         config.linformer_factor = 4.0
         config.attention_groups = 4
-        config.attention = GroupedAttention
 
         from base.gpt.BPETokenizer import GPT2TikTokenizer
         tokenizer = GPT2TikTokenizer()
@@ -227,8 +227,9 @@ class GPT2Train(unittest.TestCase):
         ###########################
         config = GPT2_CONFIG_124M_TRAIN()
         config.reverse_position_embedding = True
-        config.prim_mum_layers = 5
-        config.num_layers = config.prim_mum_layers * config.prim_mum_layers * config.prim_mum_layers
+        config.num_prim_layers = 5
+        config.num_layers = config.num_prim_layers * config.num_prim_layers * config.num_prim_layers
+        config.trf_blocks = SharedTransformerBlockSequence
 
         from base.gpt.BPETokenizer import GPT2TikTokenizer
         tokenizer = GPT2TikTokenizer()

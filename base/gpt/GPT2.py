@@ -1,7 +1,6 @@
 import os
 
 from base.gpt.SimpleGPT2Embedding import SimpleGPT2Embedding
-from base.gpt.TransformerBlockSequence import SimpleTransformerBlockSequence, SharedTransformerBlockSequence
 
 os.environ['PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION'] = 'python'
 from torch import nn
@@ -21,19 +20,16 @@ class GPT2Model(nn.Module):
         self.log = Logger.get_instance()
         self.config = config
 
-        self.embedded = SimpleGPT2Embedding(config.vocab_size, config.embed_dim, config.context_length, config)
+        self.embedded = SimpleGPT2Embedding(config.vocab_size, config.embed_dim, config.context_len, config)
         self.drop_emb = nn.Dropout(config.drop_rate)
 
-        if config.prim_mum_layers is not None:
-            self.trf_blocks = SharedTransformerBlockSequence(config)
-        else:
-            self.trf_blocks = SimpleTransformerBlockSequence(config)
+        self.trf_blocks = config.trf_blocks(config)
 
         self.final_norm = LayerNorm(config.embed_dim)
         self.out_head = nn.Linear(config.embed_dim, config.vocab_size, bias=False)
 
     def forward_emb(self, x, global_attention_mask):
-        self.log.info("Embedding shape:", x.shape)
+        self.log.shape("Context", x, x.shape)
         x = self.drop_emb(x)
         x = self.trf_blocks(x, global_attention_mask)
         x = self.final_norm(x)

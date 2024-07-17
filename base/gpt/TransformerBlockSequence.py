@@ -18,7 +18,7 @@ class SharedTransformerBlockSequence(torch.nn.Module):
     def __init__(self, config):
         super().__init__()
         self.log = Logger.get_instance()
-        self.blocks = torch.nn.ModuleList([TransformerBlock(config) for _ in range(config.prim_mum_layers)])
+        self.blocks = torch.nn.ModuleList([TransformerBlock(config) for _ in range(config.num_prim_layers)])
         self.norms = torch.nn.ModuleList([LayerNorm(config.embed_dim) for _ in range(config.num_layers)])
 
     def forward(self, x):

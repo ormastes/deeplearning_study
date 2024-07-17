@@ -52,8 +52,8 @@ def train(gpt_config, settings, tokenizer, global_attention_mask=None):
     train_loader = create_dataloader_with_worker(
         text_data[:split_idx], tokenizer,
         batch_size=settings.batch_size,
-        max_length=gpt_config.context_length,
-        stride=gpt_config.context_length,
+        max_length=gpt_config.context_len,
+        stride=gpt_config.context_len,
         drop_last=True,
         shuffle=True,
         num_workers=0
@@ -62,8 +62,8 @@ def train(gpt_config, settings, tokenizer, global_attention_mask=None):
     val_loader = create_dataloader_with_worker(
         text_data[split_idx:], tokenizer,
         batch_size=settings.batch_size,
-        max_length=gpt_config.context_length,
-        stride=gpt_config.context_length,
+        max_length=gpt_config.context_len,
+        stride=gpt_config.context_len,
         drop_last=False,
         shuffle=False,
         num_workers=0
@@ -87,10 +87,7 @@ def generate_text_simple(model, idx, max_new_tokens, context_size, tokenizer):
         idx_cond = idx[:, -context_size:]
 
         with torch.no_grad():
-            if model.config.attention_window > 0:
-                logits = model(idx_cond, tokenizer)
-            else:
-                logits = model(idx_cond)
+            logits = model(idx_cond, tokenizer)
         #print("GPT2 output shape:", logits.shape)
         #probas = torch.nn.functional.softmax(logits[:, -1, :], dim=-1)
         logits = logits[:, -1, :]
@@ -245,7 +242,7 @@ def evaluate_model(model, train_loader, val_loader, tokenizer, eval_iter):
 
 def generate_and_print_sample(model, tokenizer, start_context):
     model.eval()
-    context_size = model.embedded.config.context_length
+    context_size = model.embedded.config.context_len
     encoded = text_to_token_ids(start_context, tokenizer).to(model.device)
     with torch.no_grad():
         token_ids = generate_text_simple(

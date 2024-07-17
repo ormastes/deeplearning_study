@@ -54,6 +54,11 @@ class Logger:
         if self.level <= LogLevel.DEBUG:
             print(f"{self.name}: ", *args)
 
+    def shape(self, name, tensor, expected_shape):
+        if self.level <= LogLevel.DEBUG:
+            assert tensor.shape == expected_shape, f"Shape mismatch for {name}. Expected {expected_shape}, got {tensor.shape}"
+            print(f"Shape {self.name}: ", tensor.shape)
+
     def error(self, *args):
         if self.level <= LogLevel.ERROR:
             print(f"{self.name}: ", *args)

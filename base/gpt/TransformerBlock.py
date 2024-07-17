@@ -15,10 +15,9 @@ class TransformerBlock(nn.Module):
 
         self.norm1 = LayerNorm(config.embed_dim)
 
-        self.attn = config.attention(config.embed_dim, config.embed_dim, config.context_length,
-                                         config.drop_rate, config.num_heads, config.qkv_bias, config=config)
+        self.attn = config.attention(config)
         if self.config.is_feature_attention:
-            self.feature_attn = FeatureAttention(config.embed_dim, config.embed_dim, config.context_length,
+            self.feature_attn = FeatureAttention(config.embed_dim, config.embed_dim, config.context_len,
                                        config.drop_rate, config.num_heads, config.qkv_bias, config=config)
 
         self.norm2 = LayerNorm(config.embed_dim)
@@ -30,22 +29,25 @@ class TransformerBlock(nn.Module):
         self.front_norm = True
 
     def forward(self, x, local_attention_scores=None):
-        self.log.info("Block input shape:", x.shape)
+        self.log.shape("Block input", x, x.shape)
         shortcut = x
         if self.front_norm :
             x = self.norm1(x)
         if self.config.attention_window > 0:
             x = self.attn(x, local_attention_scores)
         else:
-            x = self.attn(x)  # Shape [batch_size, num_tokens, emb_size]
+            x = self.attn(x)
+
         if self.config.is_feature_attention:
             x_pre = x
             x = self.feature_attn(x)
             x = x_pre*0.9 + x*0.1
+
+        self.log.shape("Block Attention output", x, x.shape)
+
         return self.forward_after_attn(x, shortcut)
 
     def forward_after_attn(self, x, shortcut):
-        self.log.info("Block Attention output shape:", x.shape)
         x = self.drop(x)
         x = x + shortcut
         if not self.front_norm:
@@ -53,8 +55,8 @@ class TransformerBlock(nn.Module):
         shortcut = x
         x = self.norm2(x)
         x = self.mlp(x)
-        self.log.info("Block FF output shape:", x.shape)
+        self.log.shape("Block FF output", x, x.shape)
         x = self.drop(x)
         x = x + shortcut
-        self.log.info("Block output shape:", x.shape)
+        self.log.shape("Block output", x, x.shape)
         return x

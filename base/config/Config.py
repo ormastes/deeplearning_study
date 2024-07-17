@@ -1,5 +1,6 @@
 import enum
 from base.gpt.MultiHeadAttention import MultiHeadAttention
+from base.gpt.TransformerBlockSequence import SimpleTransformerBlockSequence
 
 
 class ModelName(enum.Enum):
@@ -10,20 +11,21 @@ class ModelName(enum.Enum):
 
 class GPT2_CONFIG_124M(object):
     def __init__(self,
-                 vocab_size=50257, context_length=1024,
+                 vocab_size=50257, context_len=1024,
                  embed_dim=768, embed_dim_ff_dim=3072,
                  num_heads=12, num_layers=12,
                  drop_rate=0.0, qkv_bias=False):
         self.vocab_size = vocab_size
-        self.context_length = context_length
+        self.context_len = context_len
         self.embed_dim = embed_dim
         self.embed_dim_ff_dim = embed_dim_ff_dim
         self.num_heads = num_heads
         self.num_layers = num_layers
         self.drop_rate = drop_rate
         self.qkv_bias = qkv_bias
+        self.trf_blocks = SimpleTransformerBlockSequence
         self.reverse_position_embedding = False
-        self.prim_mum_layers = None
+        self.num_prim_layers = None
         self.alibi = None
         self.is_feature_attention = False
         self.linformer_factor = 1.0  # linformer_factor = 1/2^k
@@ -31,6 +33,8 @@ class GPT2_CONFIG_124M(object):
         self.attention = MultiHeadAttention
         self.attention_window = 0
         self.attention_dilation = 1  # TODO
+        self.seq_first = False
+        self.tokenizer = None
 
 
 model_configs = {
@@ -46,11 +50,11 @@ model_configs = {
 
 class GPT2_CONFIG_124M_TRAIN(GPT2_CONFIG_124M):
     def __init__(self,
-                 vocab_size=50257, context_length=52,
+                 vocab_size=50257, context_len=52,
                  embed_dim=768, embed_dim_ff_dim=3072,
                  num_heads=12, num_layers=12,
                  drop_rate=0.1, qkv_bias=False):
-        super().__init__(vocab_size, context_length, embed_dim, embed_dim_ff_dim, num_heads, num_layers, drop_rate, qkv_bias)
+        super().__init__(vocab_size, context_len, embed_dim, embed_dim_ff_dim, num_heads, num_layers, drop_rate, qkv_bias)
 
 
 class OTHER_SETTINGS(object):

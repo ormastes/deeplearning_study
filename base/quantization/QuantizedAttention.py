@@ -5,12 +5,17 @@ from base.quantization.QuantizedLinear import QuantizedLinear
 
 
 class QuantizedAttention(nn.Module):
-    def __init__(self, embed_dim, num_heads, dropout=0.1, seq_first=True, config=None):
+    def __init__(self, config, embed_dim=None, num_heads=None, dropout=None, seq_first=None):
         super(QuantizedAttention, self).__init__()
         self.config = config
+        embed_dim = config.embed_dim if embed_dim is None else embed_dim
+        num_heads = config.num_heads if num_heads is None else num_heads
+        seq_first = config.seq_first if seq_first is None else seq_first
+
+        assert embed_dim % num_heads == 0, "d_out must be divisible by n_heads"
+        assert embed_dim % config.linformer_factor == 0, "d_out must be divisible by linformer_factor"
         self.embed_dim = embed_dim
         self.num_heads = num_heads
-        self.head_dim = embed_dim // num_heads
         self.seq_first = seq_first
 
         assert self.head_dim * num_heads == embed_dim, "embed_dim must be divisible by num_heads"
