@@ -1,10 +1,11 @@
 import torch
+import torch.nn.functional as F
 from torch import nn
 
-from base.embedding.AttentionLinearBiasPositionalEmbedding import AttentionLinearBiasPositionalEmbedding
+from base.config.CommonConstants import CommonConstants
 from base.gpt.DecoderMask import DecoderMask
-from base.util.Log import Logger
 from base.prim.Linear import Linear
+from base.util.Log import Logger
 
 
 class MultiHeadAttention(nn.Module):
@@ -23,6 +24,8 @@ class MultiHeadAttention(nn.Module):
         attention_groups = config.attention_groups
         qk_embed_dim = embed_dim
         qk_out = head_out
+        attention_window = config.attention_window
+        attention_dilation = config.attention_dilation  # not used yet
 
         assert embed_dim % num_heads == 0, "embed_dim must be divisible by n_heads"
 
@@ -36,7 +39,7 @@ class MultiHeadAttention(nn.Module):
         self.qk_out = qk_out
 
         self.linformer_factor = linformer_factor
-        if linformer_factor > 1.0 :
+        if linformer_factor > 1.0:
             assert head_out % linformer_factor == 0, "head_out must be divisible by linformer_factor"
             qk_embed_dim = int(qk_embed_dim / linformer_factor)
             qk_out = int(qk_out / linformer_factor)
@@ -56,17 +59,40 @@ class MultiHeadAttention(nn.Module):
             self.qk_embed_dim = qk_embed_dim
             self.qk_out = qk_out
 
+        self.attention_window = attention_window
+        if attention_window > 0:
+            self.attention_dilation = attention_dilation  # not used yet
+            self.W_local_query = Linear(embed_dim, qk_embed_dim, bias=qkv_bias)
+            self.W_local_key = Linear(embed_dim, qk_embed_dim, bias=qkv_bias)
+            self.W_local_value = Linear(embed_dim, embed_dim, bias=qkv_bias)
+
         self.alibi = config.alibi(num_heads)
         self.W_query = Linear(embed_dim, qk_embed_dim, bias=qkv_bias)
-        self.W_key = Linear(embed_dim,  qk_embed_dim, bias=qkv_bias)
+        self.W_key = Linear(embed_dim, qk_embed_dim, bias=qkv_bias)
         self.W_value = Linear(embed_dim, embed_dim, bias=qkv_bias)
         self.proj = Linear(embed_dim, embed_dim, bias=True)
         self.dropout = nn.Dropout(drop_rate)
         self.mask = DecoderMask(context_len)
 
-    def forward(self, x):
+    def forward(self, x , global_attention_mask=None):
         qk_embed_dim = self.qk_embed_dim
         b, seq_len, embed_dim = x.size()
+
+        if self.attention_window > 0:
+            q = self.W_local_query(x)
+            k = self.W_local_key(x)
+            v = self.W_local_value(x)
+
+            self.log.shape("weight applied queries keys", k, [b, seq_len, qk_embed_dim])
+            self.log.shape("weight applied values", v, [b, seq_len, embed_dim])
+
+            q, k, v, padding_cnt= self.apply_padding(q, k, v, seq_len)
+
+            chunks_count = (seq_len + padding_cnt) // self.attention_window
+
+            # Reshape to get chunks
+            local_context = self.forward_attn_local(k, q, v, x, chunks_count)
+
         q = self.W_query(x)
         k = self.W_key(x)  # Shape: (b, num_tokens, d_out)
         v = self.W_value(x)
@@ -74,6 +100,12 @@ class MultiHeadAttention(nn.Module):
         self.log.shape("weight applied values", v, [b, seq_len, embed_dim])
 
         context = self.forward_attn(k, q, v, x)
+
+        if self.config.attention_window > 0:
+            assert global_attention_mask is not None, "global_attention_mask must be provided"
+            assert local_context is not None, "local_context must be provided"
+            global_attention_mask = global_attention_mask.unsqueeze(2)
+            context = torch.where(global_attention_mask == 1, context, local_context)
 
         result = self.proj(context)
         self.log.shape("result context", result, [b, seq_len, embed_dim])
@@ -92,7 +124,41 @@ class MultiHeadAttention(nn.Module):
         self.log.shape("queries keys", keys, [b, num_heads, seq_len, qk_out])
         self.log.shape("values", values, [b, num_heads, seq_len, head_out])
 
-        attention_scores = self.calc_attention(queries, keys, normalizer)
+        attention_scores = self.calc_attention(queries, keys, seq_len, normalizer)
+
+        context = self.forward_attn_post(attention_scores, values)
+        return context
+
+    def forward_attn_local(self, k, q, v, x, chunks_count, normalizer=None):
+        b, seq_len, embed_dim = x.size()
+        num_heads = self.num_heads
+        head_out = self.head_out
+        qk_out = self.qk_out
+        attention_window = self.attention_window
+
+        # Reshape to get chunks
+        queries = q.view(b, num_heads, chunks_count, attention_window, qk_out)
+        keys = k.view(b, num_heads, chunks_count, attention_window, qk_out)
+        values = v.view(b, num_heads, seq_len, head_out)
+        # chunks let effect like adding head. Then result reduce sequence.
+        self.log.shape("queries keys", keys, [b, num_heads, chunks_count, attention_window, qk_out])
+        self.log.shape("values", values, [b, num_heads, seq_len, head_out])
+
+        attention_scores = self.calc_attention(queries, keys, attention_window, normalizer, chunks_count=chunks_count)
+
+        attention_scores = attention_scores.view(b, num_heads, chunks_count, attention_window, attention_window)
+        attention_scores = torch.mean(attention_scores, dim=2)
+        attention_scores = F.pad(attention_scores, (0, seq_len - attention_window, 0, seq_len - attention_window))
+
+        context = self.forward_attn_post(attention_scores, values)
+        return context
+
+    def forward_attn_post(self, attention_scores, values):
+        b = values.shape[0]
+        seq_len = values.shape[2]
+        head_out = self.head_out
+        embed_dim = self.embed_dim
+        num_heads = self.num_heads
 
         attention_weights = torch.nn.functional.softmax(attention_scores, dim=-1)
         attention_weights = self.dropout(attention_weights)
@@ -101,15 +167,17 @@ class MultiHeadAttention(nn.Module):
         # Combine heads, where self.d_out = self.num_heads * self.head_dim
         context_ = (attention_weights @ values).transpose(1, 2)
         self.log.shape("aw@v context", context_, [b, num_heads, seq_len, head_out])
-        context = context_.contiguous().view(b, seq_len, embed_dim)
+        context_contiguous = context_.contiguous()
+        context = context_contiguous.view(b, seq_len, embed_dim)
         self.log.shape("Transpose context", context, [b, seq_len, embed_dim])
         return context
 
-    def calc_attention(self, queries, keys, normalizer):
-        b, num_heads, seq_len, _ = queries.size()
+    def calc_attention(self, queries, keys, seq_len, normalizer, chunks_count=None):
+        b = queries.shape[0]
+        num_heads = self.num_heads
         head_out = self.head_out
         # Compute scaled dot-product attention (aka self-attention) with a causal mask
-        attention_scores = queries @ keys.transpose(2, 3)
+        attention_scores = queries @ keys.transpose(-2, -1)
         self.log.shape("attention_scores", attention_scores, [b, num_heads, head_out, head_out])
         if normalizer is not None:
             attention_scores = normalizer(attention_scores)
@@ -117,13 +185,43 @@ class MultiHeadAttention(nn.Module):
         attention_scores = self.mask(attention_scores, seq_len)
 
         if self.alibi is not None:
-            attention_scores = attention_scores + self.alibi(seq_len)
+            alibi_attention_score = self.alibi(seq_len)
+
+            attention_window = self.attention_window
+            if chunks_count is not None:
+                alibi_attention_score = alibi_attention_score.flatten()
+                alibi_attention_score = alibi_attention_score.view(1, num_heads, 1, attention_window, attention_window)
+                alibi_attention_score = alibi_attention_score.repeat(b, 1, chunks_count, 1, 1)
+            attention_scores = attention_scores + alibi_attention_score
 
         # Normalize to 1 by multiplying by 1/sqrt(d_k)
         DIMENSION_IDX = -1
         attention_scores = attention_scores / (keys.shape[DIMENSION_IDX] ** 0.5)
 
         return attention_scores
+    def apply_padding(self, k, q, v, seq_len):
+        padding_cnt = self.attention_window - (seq_len % self.attention_window)
+        if padding_cnt > 0:
+            q = F.pad(q, (0, 0, 0, padding_cnt))
+            k = F.pad(k, (0, 0, 0, padding_cnt))
+            #v = F.pad(v, (0, 0, 0, padding_cnt))
+
+            return k, q, v, padding_cnt
+    @staticmethod
+    def update_global_attention_mask(input_ids, tokenizer, special_tokens=CommonConstants.SPECIAL_TOKENS):
+        global_attention_mask = torch.zeros_like(input_ids)
+
+        # Iterate over each sequence in the batch
+        for batch_idx, seq in enumerate(input_ids):
+            for token in special_tokens:
+                token_id = tokenizer.encode(token)[0]
+                # to tensor
+                token_id = torch.tensor(token_id).to(input_ids.device)
+                token_positions = (seq == token_id).nonzero(as_tuple=True)[0]
+                if len(token_positions) > 0:
+                    global_attention_mask[batch_idx, token_positions] = 1
+
+        return global_attention_mask
 
 
 if __name__ == "__main__":

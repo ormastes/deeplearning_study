@@ -1,7 +1,6 @@
 import torch
 import os
 from base.config.CommonConstants import CommonConstants
-from base.gpt.LongformerSelfAttention import LongformerSelfAttention
 
 
 def train(gpt_config, settings, tokenizer, global_attention_mask=None):

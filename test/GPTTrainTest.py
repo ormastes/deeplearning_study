@@ -1,7 +1,6 @@
 import unittest
 import os
 
-from base.gpt.LongformerSelfAttention import LongformerSelfAttention
 from base.gpt.TransformerBlockSequence import SharedTransformerBlockSequence
 from base.quantization.QuantizedAttention import QuantizedAttention
 
@@ -167,7 +166,6 @@ class GPT2Train(unittest.TestCase):
         config.is_feature_attention = True
         config.linformer_factor = 4.0
         config.attention_groups = 4
-        config.attention = LongformerSelfAttention
         config.attention_window = 32  # 256
 
         from base.gpt.BPETokenizer import GPT2TikTokenizer
