@@ -22,10 +22,10 @@ class QuantizedAttention(nn.Module):
         self.seq_first = seq_first
         self.head_dim = head_out
 
-        self.W_query = QuantizedLinear(embed_dim, embed_dim, bias=config.qkv_bias, no_fake_quantize=no_fake_quantize)
-        self.W_key = QuantizedLinear(embed_dim, embed_dim, bias=config.qkv_bias, no_fake_quantize=no_fake_quantize)
-        self.W_value = QuantizedLinear(embed_dim, embed_dim, bias=config.qkv_bias, no_fake_quantize=no_fake_quantize)
-        self.proj = QuantizedLinear(embed_dim, embed_dim, no_fake_quantize=no_fake_quantize)
+        self.W_query = QuantizedLinear(embed_dim, embed_dim, config=config, bias=config.qkv_bias)
+        self.W_key = QuantizedLinear(embed_dim, embed_dim, config=config, bias=config.qkv_bias)
+        self.W_value = QuantizedLinear(embed_dim, embed_dim, config=config, bias=config.qkv_bias)
+        self.proj = QuantizedLinear(embed_dim, embed_dim, config=config)
         self.dropout = nn.Dropout(drop_rate)
 
     def state_dict(self, destination=None, prefix='', keep_vars=False):
