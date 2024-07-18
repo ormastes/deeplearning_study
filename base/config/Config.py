@@ -37,6 +37,9 @@ class GPT2_CONFIG_124M(object):
         self.tokenizer = None
         self.no_fake_quantize = False
         self.qlora_rank = 0
+        self.aq_num_codebooks = 0
+        self.mcq_num_codebooks = 0
+        self.mcq_codebook_size = 0
 
 
 model_configs = {

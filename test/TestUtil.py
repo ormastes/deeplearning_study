@@ -38,6 +38,16 @@ class TestUtil:
                 print(f"Parameter {name} is not required grad")
 
     @staticmethod
+    def apply_original_weight(model):
+        # loop child modules
+        for name, module in model.named_children():
+            # check initialize_from_existing_weights function exist
+            if hasattr(module, 'initialize_from_existing_weights'):
+                module.initialize_from_existing_weights()
+            else:
+                TestUtil.apply_original_weight(module)
+
+    @staticmethod
     def logging_after_train(config, model, setting, tokens_seen, train_losses, val_losses, file_name="model.pth"):
         # compare last train loss with
         ###########################
