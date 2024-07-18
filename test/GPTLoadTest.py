@@ -30,13 +30,36 @@ class MyTestCase(unittest.TestCase):
             model=gpt.to(device),
             idx=text_to_token_ids("Every effort moves", tokenizer).to(device),
             max_new_tokens=30,
-            context_size=BASE_CONFIG.context_length,
+            context_size=BASE_CONFIG.context_len,
             tokenizer=tokenizer,
             top_k=1,
             temperature=1.0
         )
         expected_output = "I'm not going to sit here and say, 'I'm not going to do this,'"
         self.assertTrue(expected_output in token_ids)
+
+    def test_load_validation(self):
+        gpt_hf = GPT2Model.from_pretrained(ModelName.gpt2_small_124M.value)
+        gpt_hf.eval()
+
+        config = GPT2_CONFIG_124M_TRAIN()
+        config.qkv_bias = True
+        gpt = GPT2.GPT2Model(config)
+        config.context_len = 256  # because data set is too small
+
+        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        gpt.to(device)
+        load_weights(gpt, gpt_hf, config)
+        torch.manual_seed(123)
+
+        tokenizer = GPT2TikTokenizer() # tiktoken.get_encoding("gpt2")
+
+        setting = OTHER_SETTINGS(num_epochs=1)
+
+        train_losses, val_losses, tokens_seen, model = train(gpt, config, setting, tokenizer)
+
+        self.assertTrue(train_losses[-1] < 22)
+        self.assertTrue(val_losses[-1] < 22)
 
 
 if __name__ == '__main__':

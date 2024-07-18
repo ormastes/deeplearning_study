@@ -30,9 +30,10 @@ class Linear(nn.Module):
             return inputs+ self.bias
         else:
             return inputs
+
     def forward(self, inputs):
         # `y = xA^T + b`.
         if self.bias_enabled:
-            return inputs @ self.weight.t() + self.bias
+            return inputs @ self.weight.T + self.bias
         else:
-            return inputs @ self.weight.t()
+            return inputs @ self.weight.T

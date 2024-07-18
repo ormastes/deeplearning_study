@@ -30,6 +30,14 @@ class SinusoidalPositionalEmbedding(torch.nn.Module):
         # Add a batch dimension
         self._parameters = {"weights": self.weight}
 
+    def state_dict(self, destination=None, prefix='', keep_vars=False):
+        state_dict = {
+            'weight': self.weight
+        }
+        return state_dict
+
+    def load_state_dict(self, state_dict, strict=True):
+        self.weight = state_dict['weight']
 
     def forward(self, x):
         _, seq_len, _ = x.size()

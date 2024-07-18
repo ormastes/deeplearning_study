@@ -30,7 +30,7 @@ class FakeQuantization(nn.Module):
         self.zero_point = nn.Parameter(torch.tensor(zero_point), requires_grad=True)
 
     def forward(self, x):
-        q_x = (x / self.scale + self.zero_point).round().to(torch.int32)
+        q_x = (x / self.scale + self.zero_point).round()
         return q_x, self.scale
 
     # STE https://discuss.pytorch.org/t/the-parameters-of-the-model-with-custom-loss-function-doesnt-upgraded-thorough-its-learning-over-epochs/149024

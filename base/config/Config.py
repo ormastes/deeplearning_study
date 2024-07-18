@@ -35,6 +35,7 @@ class GPT2_CONFIG_124M(object):
         self.attention_dilation = 1  # TODO
         self.seq_first = False
         self.tokenizer = None
+        self.no_fake_quantize = False
 
 
 model_configs = {
@@ -50,7 +51,7 @@ model_configs = {
 
 class GPT2_CONFIG_124M_TRAIN(GPT2_CONFIG_124M):
     def __init__(self,
-                 vocab_size=50257, context_len=52,
+                 vocab_size=50257, context_len=1024,
                  embed_dim=768, embed_dim_ff_dim=3072,
                  num_heads=12, num_layers=12,
                  drop_rate=0.1, qkv_bias=False):

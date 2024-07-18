@@ -3,7 +3,7 @@ import os
 from base.config.CommonConstants import CommonConstants
 
 
-def train(gpt_config, settings, tokenizer, global_attention_mask=None):
+def train(model, gpt_config, settings, tokenizer, global_attention_mask=None, no_train=False):
     import urllib.request
     from base.gpt.GPT2 import GPT2Model
     from base.dataset.SimpleDataset import create_dataloader_with_worker
@@ -33,8 +33,6 @@ def train(gpt_config, settings, tokenizer, global_attention_mask=None):
     # Initialize model
     ##############################
 
-
-    model = GPT2Model(gpt_config)
     model.to(device)  # no assignment model = model.to(device) necessary for nn.Module classes
     optimizer = torch.optim.AdamW(
         model.parameters(), lr=settings.learning_rate, weight_decay=settings.weight_decay
@@ -48,8 +46,10 @@ def train(gpt_config, settings, tokenizer, global_attention_mask=None):
     train_ratio = 0.90
     split_idx = int(train_ratio * len(text_data))
 
+    train_text_data = text_data[:split_idx]
+    val_text_data = text_data[split_idx:]
     train_loader = create_dataloader_with_worker(
-        text_data[:split_idx], tokenizer,
+        train_text_data, tokenizer,
         batch_size=settings.batch_size,
         max_length=gpt_config.context_len,
         stride=gpt_config.context_len,
@@ -59,7 +59,7 @@ def train(gpt_config, settings, tokenizer, global_attention_mask=None):
     )
 
     val_loader = create_dataloader_with_worker(
-        text_data[split_idx:], tokenizer,
+        val_text_data, tokenizer,
         batch_size=settings.batch_size,
         max_length=gpt_config.context_len,
         stride=gpt_config.context_len,
@@ -76,7 +76,7 @@ def train(gpt_config, settings, tokenizer, global_attention_mask=None):
     train_losses, val_losses, tokens_seen = train_model_simple(
         model, train_loader, val_loader, optimizer,
         num_epochs=settings.num_epochs, eval_freq=5, eval_iter=1,
-        start_context="Every effort moves you", tokenizer=tokenizer
+        start_context="Every effort moves you", tokenizer=tokenizer, no_train=no_train
     )
 
     return train_losses, val_losses, tokens_seen, model
@@ -109,7 +109,7 @@ def generate_text(model, idx, max_new_tokens, context_size, tokenizer, temperatu
             if is_org:
                 logits = model.generate(idx_cond, max_length=1)
             else:
-                logits = model(idx_cond)
+                logits = model(idx_cond, tokenizer)
                 # print("GPT2 output shape:", logits.shape)
                 # probas = torch.nn.functional.softmax(logits[:, -1, :], dim=-1)
                 logits = logits[:, -1, :]
@@ -256,7 +256,7 @@ def generate_and_print_sample(model, tokenizer, start_context):
 
 
 def train_model_simple(model, train_loader, val_loader, optimizer, num_epochs,
-                       eval_freq, eval_iter, start_context, tokenizer):
+                       eval_freq, eval_iter, start_context, tokenizer, no_train=False):
     # Initialize lists to track losses and tokens seen
     train_losses, val_losses, track_tokens_seen = [], [], []
     tokens_seen, global_step = 0, -1
@@ -276,7 +276,8 @@ def train_model_simple(model, train_loader, val_loader, optimizer, num_epochs,
             optimizer.zero_grad()  # Reset loss gradients from previous batch iteration
             loss = calc_loss_batch(input_batch, target_batch, model, tokenizer)
             loss.backward()  # Calculate loss gradients
-            optimizer.step()  # Update model weights using loss gradients
+            if not no_train:
+                optimizer.step()  # Update model weights using loss gradients
             tokens_seen += input_batch.numel()
             global_step += 1
 

@@ -1,5 +1,6 @@
 import os
 
+from base.gpt.MultiHeadAttention import MultiHeadAttention
 from base.gpt.SimpleGPT2Embedding import SimpleGPT2Embedding
 
 os.environ['PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION'] = 'python'
@@ -28,6 +29,27 @@ class GPT2Model(nn.Module):
         self.final_norm = LayerNorm(config.embed_dim)
         self.out_head = nn.Linear(config.embed_dim, config.vocab_size, bias=False)
 
+    def state_dict(self, destination=None, prefix='', keep_vars=False):
+        state_dict = {
+            'embedded': self.embedded.state_dict(),
+            'drop_emb': self.drop_emb.state_dict(),
+            'final_norm': self.final_norm.state_dict(),
+            'out_head': self.out_head.state_dict()
+        }
+        for i, block in enumerate(self.trf_blocks):
+            trf_dict = block.state_dict(prefix='trf_blocks.' + str(i) + '.')
+            state_dict.update(trf_dict)
+        return state_dict
+
+    def load_state_dict(self, state_dict, strict=True):
+        self.embedded.load_state_dict(state_dict['embedded'])
+        self.drop_emb.load_state_dict(state_dict['drop_emb'])
+        self.final_norm.load_state_dict(state_dict['final_norm'])
+        self.out_head.load_state_dict(state_dict['out_head'])
+        for i, block in enumerate(self.trf_blocks):
+            trf_dict = {k[len('trf_blocks.' + str(i) + '.'):]: v for k, v in state_dict.items() if k.startswith('trf_blocks.' + str(i) + '.')}
+            block.load_state_dict(trf_dict)
+
     def forward_emb(self, x, global_attention_mask):
         self.log.shape("Context", x, x.shape)
         x = self.drop_emb(x)
@@ -38,7 +60,7 @@ class GPT2Model(nn.Module):
     def forward(self, tokens, tokenizer):
         global_attention_mask = None
         if self.config.attention_window > 0:
-            global_attention_mask = LongformerSelfAttention.update_global_attention_mask(tokens, tokenizer)
+            global_attention_mask = MultiHeadAttention.update_global_attention_mask(tokens, tokenizer)
         x = self.embedded(tokens)  # Shape [batch_size, num_tokens, emb_size]
         x = self.forward_emb(x, global_attention_mask)
         logits = self.out_head(x)

@@ -22,10 +22,11 @@ class MultiHeadAttention(nn.Module):
         linformer_factor = config.linformer_factor
         context_len = config.context_len
         attention_groups = config.attention_groups
-        qk_embed_dim = embed_dim
-        qk_out = head_out
         attention_window = config.attention_window
         attention_dilation = config.attention_dilation  # not used yet
+
+        qk_embed_dim = embed_dim
+        qk_out = head_out
 
         assert embed_dim % num_heads == 0, "embed_dim must be divisible by n_heads"
 
@@ -66,7 +67,11 @@ class MultiHeadAttention(nn.Module):
             self.W_local_key = Linear(embed_dim, qk_embed_dim, bias=qkv_bias)
             self.W_local_value = Linear(embed_dim, embed_dim, bias=qkv_bias)
 
-        self.alibi = config.alibi(num_heads)
+        if config.alibi is not None:
+            self.alibi = config.alibi(num_heads)
+        else:
+            self.alibi = None
+
         self.W_query = Linear(embed_dim, qk_embed_dim, bias=qkv_bias)
         self.W_key = Linear(embed_dim, qk_embed_dim, bias=qkv_bias)
         self.W_value = Linear(embed_dim, embed_dim, bias=qkv_bias)
@@ -74,7 +79,32 @@ class MultiHeadAttention(nn.Module):
         self.dropout = nn.Dropout(drop_rate)
         self.mask = DecoderMask(context_len)
 
-    def forward(self, x , global_attention_mask=None):
+    def state_dict(self, destination=None, prefix='', keep_vars=False):
+        state_dict = {
+            prefix+'W_query': self.W_query.state_dict(),
+            prefix+'W_key': self.W_key.state_dict(),
+            prefix+'W_value': self.W_value.state_dict(),
+            prefix+'proj': self.proj.state_dict(),
+            prefix+'dropout': self.dropout.state_dict()
+        }
+        if self.attention_window > 0:
+            state_dict[prefix+'W_local_query'] = self.W_local_query.state_dict()
+            state_dict[prefix+'W_local_key'] = self.W_local_key.state_dict()
+            state_dict[prefix+'W_local_value'] = self.W_local_value.state_dict()
+        return state_dict
+
+    def load_state_dict(self, state_dict, strict=True):
+        self.W_query.load_state_dict(state_dict['W_query'])
+        self.W_key.load_state_dict(state_dict['W_key'])
+        self.W_value.load_state_dict(state_dict['W_value'])
+        self.proj.load_state_dict(state_dict['proj'])
+        self.dropout.load_state_dict(state_dict['dropout'])
+        if self.attention_window > 0:
+            self.W_local_query.load_state_dict(state_dict['W_local_query'])
+            self.W_local_key.load_state_dict(state_dict['W_local_key'])
+            self.W_local_value.load_state_dict(state_dict['W_local_value'])
+
+    def forward(self, x, global_attention_mask=None):
         qk_embed_dim = self.qk_embed_dim
         b, seq_len, embed_dim = x.size()
 

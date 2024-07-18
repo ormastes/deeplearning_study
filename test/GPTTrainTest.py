@@ -1,6 +1,7 @@
 import unittest
 import os
 
+from base.gpt import GPT2
 from base.gpt.TransformerBlockSequence import SharedTransformerBlockSequence
 from base.quantization.QuantizedAttention import QuantizedAttention
 
@@ -15,8 +16,9 @@ from base.config.GPTConfig import GPT2_CONFIG_124M
 from base.util.Util import *
 from base.util.Log import *
 from base.embedding.AttentionLinearBiasPositionalEmbedding import *
+from test.TestUtil import TestUtil
 
-
+    
 class GPT2Train(unittest.TestCase):
     def test_train(self):
         ###########################
@@ -27,8 +29,8 @@ class GPT2Train(unittest.TestCase):
         tokenizer = GPT2TikTokenizer()
 
         setting = OTHER_SETTINGS(num_epochs=10)
-
-        train_losses, val_losses, tokens_seen, model = train(config, setting, tokenizer)
+        gpt = GPT2.GPT2Model(config)
+        train_losses, val_losses, tokens_seen, model = train(gpt, config, setting, tokenizer)
 
         self.assertTrue(train_losses[-1] < 1)
         self.assertTrue(val_losses[-1] < 16)
@@ -44,13 +46,13 @@ class GPT2Train(unittest.TestCase):
         tokenizer = GPT2TikTokenizer()
 
         setting = OTHER_SETTINGS(num_epochs=6)
-
-        train_losses, val_losses, tokens_seen, model = train(config, setting, tokenizer)
+        gpt = GPT2.GPT2Model(config)
+        train_losses, val_losses, tokens_seen, model = train(gpt, config, setting, tokenizer)
 
         self.assertTrue(train_losses[-1] < 3)
         self.assertTrue(val_losses[-1] < 16)
 
-        self.logging_after_train(config, model, setting, tokens_seen, train_losses, val_losses)
+        TestUtil.logging_after_train(config, model, setting, tokens_seen, train_losses, val_losses)
 
     def test_simple_learnable_alibi_train(self):
         ###########################
@@ -63,13 +65,13 @@ class GPT2Train(unittest.TestCase):
         tokenizer = GPT2TikTokenizer()
 
         setting = OTHER_SETTINGS(num_epochs=10)
-
-        train_losses, val_losses, tokens_seen, model = train(config, setting, tokenizer)
+        gpt = GPT2.GPT2Model(config)
+        train_losses, val_losses, tokens_seen, model = train(gpt, config, setting, tokenizer)
 
         self.assertTrue(train_losses[-1] < 3)
         self.assertTrue(val_losses[-1] < 16)
 
-        self.logging_after_train(config, model, setting, tokens_seen, train_losses, val_losses)
+        TestUtil.logging_after_train(config, model, setting, tokens_seen, train_losses, val_losses)
 
     def test_feature_attention_train(self):
         ###########################
@@ -83,13 +85,13 @@ class GPT2Train(unittest.TestCase):
         tokenizer = GPT2TikTokenizer()
 
         setting = OTHER_SETTINGS(num_epochs=10)
-
-        train_losses, val_losses, tokens_seen, model = train(config, setting, tokenizer)
+        gpt = GPT2.GPT2Model(config)
+        train_losses, val_losses, tokens_seen, model = train(gpt, config, setting, tokenizer)
 
         self.assertTrue(train_losses[-1] < 3)
         self.assertTrue(val_losses[-1] < 16)
 
-        self.logging_after_train(config, model, setting, tokens_seen, train_losses, val_losses)
+        TestUtil.logging_after_train(config, model, setting, tokens_seen, train_losses, val_losses)
 
     def test_linformer_train(self):
         ###########################
@@ -104,13 +106,13 @@ class GPT2Train(unittest.TestCase):
         tokenizer = GPT2TikTokenizer()
 
         setting = OTHER_SETTINGS(num_epochs=10)
-
-        train_losses, val_losses, tokens_seen, model = train(config, setting, tokenizer)
+        gpt = GPT2.GPT2Model(config)
+        train_losses, val_losses, tokens_seen, model = train(gpt, config, setting, tokenizer)
 
         self.assertTrue(train_losses[-1] < 3)
         self.assertTrue(val_losses[-1] < 16)
 
-        self.logging_after_train(config, model, setting, tokens_seen, train_losses, val_losses)
+        TestUtil.logging_after_train(config, model, setting, tokens_seen, train_losses, val_losses)
 
     def test_grouped_train(self):
         ###########################
@@ -126,13 +128,13 @@ class GPT2Train(unittest.TestCase):
         tokenizer = GPT2TikTokenizer()
 
         setting = OTHER_SETTINGS(num_epochs=10)
-
-        train_losses, val_losses, tokens_seen, model = train(config, setting, tokenizer)
+        gpt = GPT2.GPT2Model(config)
+        train_losses, val_losses, tokens_seen, model = train(gpt, config, setting, tokenizer)
 
         self.assertTrue(train_losses[-1] < 3)
         self.assertTrue(val_losses[-1] < 16)
 
-        self.logging_after_train(config, model, setting, tokens_seen, train_losses, val_losses)
+        TestUtil.logging_after_train(config, model, setting, tokens_seen, train_losses, val_losses)
 
 
     def test_quantization_aware_train(self):
@@ -150,12 +152,12 @@ class GPT2Train(unittest.TestCase):
 
         setting = OTHER_SETTINGS(num_epochs=10)
 
-        train_losses, val_losses, tokens_seen, model = train(config, setting, tokenizer)
+        train_losses, val_losses, tokens_seen, model = train(config, setting, tokenizer, no_train=True)
 
         self.assertTrue(train_losses[-1] < 3)
         self.assertTrue(val_losses[-1] < 16)
 
-        self.logging_after_train(config, model, setting, tokens_seen, train_losses, val_losses)
+        TestUtil.logging_after_train(config, model, setting, tokens_seen, train_losses, val_losses)
 
     def test_longformer_train(self):
         ###########################
@@ -172,13 +174,13 @@ class GPT2Train(unittest.TestCase):
         tokenizer = GPT2TikTokenizer()
 
         setting = OTHER_SETTINGS(num_epochs=10)
-
-        train_losses, val_losses, tokens_seen, model = train(config, setting, tokenizer)
+        gpt = GPT2.GPT2Model(config)
+        train_losses, val_losses, tokens_seen, model = train(gpt, config, setting, tokenizer)
 
         self.assertTrue(train_losses[-1] < 5) # longformer cause
         self.assertTrue(val_losses[-1] < 16)
 
-        self.logging_after_train(config, model, setting, tokens_seen, train_losses, val_losses)
+        TestUtil.logging_after_train(config, model, setting, tokens_seen, train_losses, val_losses)
 
     def test_complex_learnable_alibi_train(self):
         ###########################
@@ -191,13 +193,13 @@ class GPT2Train(unittest.TestCase):
         tokenizer = GPT2TikTokenizer()
 
         setting = OTHER_SETTINGS(num_epochs=6)
-
-        train_losses, val_losses, tokens_seen, model = train(config, setting, tokenizer)
+        gpt = GPT2.GPT2Model(config)
+        train_losses, val_losses, tokens_seen, model = train(gpt, config, setting, tokenizer)
 
         self.assertTrue(train_losses[-1] < 3)
         self.assertTrue(val_losses[-1] < 16)
 
-        self.logging_after_train(config, model, setting, tokens_seen, train_losses, val_losses)
+        TestUtil.logging_after_train(config, model, setting, tokens_seen, train_losses, val_losses)
 
     def test_alibi_tokenizer_train(self):
         ###########################
@@ -211,13 +213,13 @@ class GPT2Train(unittest.TestCase):
         tokenizer = StarCoder2Tokenizer()
 
         setting = OTHER_SETTINGS(num_epochs=6)
-
-        train_losses, val_losses, tokens_seen, model = train(config, setting, tokenizer)
+        gpt = GPT2.GPT2Model(config)
+        train_losses, val_losses, tokens_seen, model = train(gpt, config, setting, tokenizer)
 
         self.assertTrue(train_losses[-1] < 3)
         self.assertTrue(val_losses[-1] < 16)
 
-        self.logging_after_train(config, model, setting, tokens_seen, train_losses, val_losses)
+        TestUtil.logging_after_train(config, model, setting, tokens_seen, train_losses, val_losses)
 
     def test_train_shared(self):
         ###########################
@@ -233,13 +235,13 @@ class GPT2Train(unittest.TestCase):
         tokenizer = GPT2TikTokenizer()
 
         setting = OTHER_SETTINGS(num_epochs=50)
-
-        train_losses, val_losses, tokens_seen, model = train(config, setting, tokenizer)
+        gpt = GPT2.GPT2Model(config)
+        train_losses, val_losses, tokens_seen, model = train(gpt, config, setting, tokenizer)
 
         self.assertTrue(train_losses[-1] < 2)
         self.assertTrue(val_losses[-1] < 21)
 
-        self.logging_after_train(config, model, setting, tokens_seen, train_losses, val_losses)
+        TestUtil.logging_after_train(config, model, setting, tokens_seen, train_losses, val_losses)
 
     def logging_after_train(self, config, model, setting, tokens_seen, train_losses, val_losses):
         # compare last train loss with

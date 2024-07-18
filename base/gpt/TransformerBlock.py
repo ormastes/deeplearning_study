@@ -1,5 +1,4 @@
 from torch import nn
-
 from base.gpt.FeatureAttention import FeatureAttention
 from base.prim.FeedForward import FeedForward
 from base.prim.LayerNorm import LayerNorm
@@ -27,6 +26,28 @@ class TransformerBlock(nn.Module):
 
         self.drop = nn.Dropout(config.drop_rate)
         self.front_norm = True
+
+    def state_dict(self, destination=None, prefix='', keep_vars=False):
+        state_dict = {
+            prefix+'norm1': self.norm1.state_dict(),
+            prefix+'attn': self.attn.state_dict(),
+            prefix+'norm2': self.norm2.state_dict(),
+            prefix+'mlp': self.mlp.state_dict(),
+            prefix+'drop': self.drop.state_dict()
+        }
+        if self.config.is_feature_attention:
+            state_dict['feature_attn'] = self.feature_attn.state_dict()
+        return state_dict
+
+    def load_state_dict(self, state_dict, strict=True):
+        self.norm1.load_state_dict(state_dict['norm1'])
+        self.attn.load_state_dict(state_dict['attn'])
+        self.norm2.load_state_dict(state_dict['norm2'])
+        self.mlp.load_state_dict(state_dict['mlp'])
+        self.drop.load_state_dict(state_dict['drop'])
+        if self.config.is_feature_attention:
+            self.feature_attn.load_state_dict(state_dict['feature_attn'])
+
 
     def forward(self, x, local_attention_scores=None):
         self.log.shape("Block input", x, x.shape)

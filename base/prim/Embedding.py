@@ -11,6 +11,14 @@ class Embedding(torch.nn.Module):
         self.weight = torch.randn(vocab_size, embedding_size, requires_grad=True)
         self._parameters = {"weights": self.weight}
 
+    def state_dict(self, destination=None, prefix='', keep_vars=False):
+        state_dict = {
+            'weight': self.weight
+        }
+        return state_dict
+
+    def load_state_dict(self, state_dict, strict=True):
+        self.weight = state_dict['weight']
     def forward(self, input_ids):
         one_hot = torch.nn.functional.one_hot(input_ids, num_classes=self.vocab_size).to(self.weight.dtype)
         if one_hot.device != self.weight.device:

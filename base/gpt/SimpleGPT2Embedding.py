@@ -19,6 +19,18 @@ class SimpleGPT2Embedding(torch.nn.Module):
             self.pos_embed = SinusoidalPositionalEmbedding(context_length, embedded_dim, config)
         self.log = Logger.get_instance()
 
+    def state_dict(self, destination=None, prefix='', keep_vars=False):
+        state_dict = {
+            'token_embed': self.token_embed.state_dict(),
+            'pos_embed': self.pos_embed.state_dict()
+        }
+        return state_dict
+
+    def load_state_dict(self, state_dict, strict=True):
+        self.token_embed.load_state_dict(state_dict['token_embed'])
+        if self.config.alibi is None:
+            self.pos_embed.load_state_dict(state_dict['pos_embed'])
+
     def forward(self, input_ids):
         token_embeddings = self.token_embed(input_ids)
         self.log.debug("Token embeddings shape:", token_embeddings.shape)
