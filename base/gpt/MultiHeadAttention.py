@@ -9,7 +9,7 @@ from base.util.Log import Logger
 
 
 class MultiHeadAttention(nn.Module):
-    def __init__(self, config, embed_dim=None, num_heads=None, drop_rate=None, qkv_bias=None, seq_first=None):
+    def __init__(self,embed_dim=None, num_heads=None, drop_rate=None, qkv_bias=None, seq_first=None, config=None):
         super().__init__()
         self.config = config
         self.log = Logger.get_instance()

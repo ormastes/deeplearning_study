@@ -14,7 +14,7 @@ class TransformerBlock(nn.Module):
 
         self.norm1 = LayerNorm(config.embed_dim)
 
-        self.attn = config.attention(config)
+        self.attn = config.attention(config=config)
         if self.config.is_feature_attention:
             self.feature_attn = FeatureAttention(config.embed_dim, config.embed_dim, config.context_len,
                                        config.drop_rate, config.num_heads, config.qkv_bias, config=config)
