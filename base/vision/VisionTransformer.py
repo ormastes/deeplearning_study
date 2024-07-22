@@ -1,8 +1,5 @@
 import os
 
-from base.config.Config import GPT2_CONFIG_124M
-from base.vision.Util import  save_images
-
 os.environ['PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION'] = 'python'
 
 # base on https://github.com/google-research/vision_transformer
@@ -16,6 +13,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from torch.cuda.amp import GradScaler, autocast
 from tqdm import tqdm
+import torchvision
 
 def weight_standardize(w, axis, eps):
     """Subtracts mean and divides by standard deviation."""
@@ -209,8 +207,9 @@ class VisionTransformer(nn.Module):
     """Vision Transformer."""
 
     def __init__(self, num_classes, patches, transformer, hidden_size, resnet=None, representation_size=None,
-                 classifier='token', head_bias_init=0.0, model_name=None):
+                 classifier='token', head_bias_init=0.0, in_channels=3, model_name=None):
         super(VisionTransformer, self).__init__()
+        self.in_channels = in_channels
         self.num_classes = num_classes
         self.patches = patches
         self.hidden_size = hidden_size
@@ -223,7 +222,7 @@ class VisionTransformer(nn.Module):
         if resnet is not None:
             width = int(64 * resnet['width_factor'])
             self.resnet_stem = nn.Sequential(
-                nn.Conv2d(in_channels=3, out_channels=width, kernel_size=7, stride=2, padding=3, bias=False),
+                nn.Conv2d(in_channels=in_channels, out_channels=width, kernel_size=7, stride=2, padding=3, bias=False),
                 nn.GroupNorm(32, width),
                 nn.ReLU(inplace=True),
                 nn.MaxPool2d(kernel_size=3, stride=2, padding=1)
@@ -237,7 +236,7 @@ class VisionTransformer(nn.Module):
                 )
                 self.resnet_stages.append(stage)
 
-        self.embedding = nn.Conv2d(in_channels=3, out_channels=hidden_size, kernel_size=patches['size'],
+        self.embedding = nn.Conv2d(in_channels=in_channels, out_channels=hidden_size, kernel_size=patches['size'],
                                    stride=patches['size'], padding=0)
         num_patches = (patches['image_size'] // patches['size']) ** 2
         self.pos_embed = nn.Parameter(torch.zeros(1, num_patches + 1, hidden_size))
@@ -299,21 +298,23 @@ class VisionTransformer(nn.Module):
         return x
 
 
-# CIFAR-10 Data Preparation
+# MNIST Data Preparation
 transform_train = transforms.Compose([
+    transforms.Resize(32),
     transforms.RandomCrop(32, padding=4),
     transforms.RandomHorizontalFlip(),
     transforms.ToTensor(),
-    transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),
+    transforms.Normalize((0.5,), (0.5,)),
 ])
 
 transform_val = transforms.Compose([
+    transforms.Resize(32),
     transforms.ToTensor(),
-    transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),
+    transforms.Normalize((0.5,), (0.5,)),
 ])
 
-train_dataset = datasets.CIFAR10(root='/workspace/data/cifar10', train=True, download=True, transform=transform_train)
-val_dataset = datasets.CIFAR10(root='/workspace/data/cifar10', train=False, download=True, transform=transform_val)
+train_dataset = datasets.MNIST(root='/workspace/data/mnist', train=True, download=True, transform=transform_train)
+val_dataset = datasets.MNIST(root='/workspace/data/mnist', train=False, download=True, transform=transform_val)
 
 train_loader = DataLoader(train_dataset, batch_size=16, shuffle=True, num_workers=4)
 val_loader = DataLoader(val_dataset, batch_size=16, shuffle=False, num_workers=4)
@@ -321,7 +322,7 @@ val_loader = DataLoader(val_dataset, batch_size=16, shuffle=False, num_workers=4
 # Model, Loss, Optimizer, and Device Setup
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 model = VisionTransformer(
-    num_classes=10,  # Number of classes in CIFAR-10
+    num_classes=10,  # Number of classes in MNIST
     patches={'size': 4, 'image_size': 32},
     transformer={
         'num_layers': 12,
@@ -330,6 +331,7 @@ model = VisionTransformer(
         'dropout_rate': 0.1,
         'attention_dropout_rate': 0.1
     },
+    in_channels=1,  # Number of input channels in MNIST
     hidden_size=768
 ).to(device)
 
@@ -337,7 +339,6 @@ criterion = nn.CrossEntropyLoss()
 optimizer = optim.Adam(model.parameters(), lr=3e-4)
 scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=100, eta_min=1e-6)
 scaler = GradScaler()
-
 
 # Training Function
 def train(model, train_loader, criterion, optimizer, device, scaler):
@@ -362,7 +363,6 @@ def train(model, train_loader, criterion, optimizer, device, scaler):
 
     return running_loss / total, correct / total
 
-
 # Validation Function
 def validate(model, val_loader, criterion, device):
     model.eval()
@@ -380,6 +380,12 @@ def validate(model, val_loader, criterion, device):
             correct += predicted.eq(targets).sum().item()
     return running_loss / total, correct / total
 
+# Function to display an image (for debugging/visualization purposes)
+def imshow(img):
+    img = img / 2 + 0.5  # unnormalize
+    npimg = img.numpy()
+    plt.imshow(np.transpose(npimg, (1, 2, 0)))
+    plt.show()
 
 # Training Loop
 num_epochs = 1000
@@ -387,8 +393,7 @@ for epoch in range(num_epochs):
     train_loss, train_acc = train(model, train_loader, criterion, optimizer, device, scaler)
     val_loss, val_acc = validate(model, val_loader, criterion, device)
     scheduler.step()
-    print(
-        f'Epoch {epoch + 1}, Train Loss: {train_loss:.4f}, Train Acc: {train_acc:.4f}, Val Loss: {val_loss:.4f}, Val Acc: {val_acc:.4f}')
+    print(f'Epoch {epoch + 1}, Train Loss: {train_loss:.4f}, Train Acc: {train_acc:.4f}, Val Loss: {val_loss:.4f}, Val Acc: {val_acc:.4f}')
 
     # Save checkpoint
     checkpoint_path = f'./checkpoint_epoch_{epoch + 1}.pth'
@@ -400,6 +405,9 @@ for epoch in range(num_epochs):
     }, checkpoint_path)
     print(f'Checkpoint saved at {checkpoint_path}')
 
+    # Display a sample image from the validation set
+    sample_inputs, _ = next(iter(val_loader))
+    imshow(torchvision.utils.make_grid(sample_inputs))
 
 # Function to display an image (for debugging/visualization purposes)
 def imshow(img):

@@ -3,12 +3,12 @@ import math
 
 
 class SinusoidalPositionalEmbedding(torch.nn.Module):
-    def __init__(self, max_seq_len, embedding_size, config):
+    def __init__(self, max_seq_len, embedding_size, config=None):
         super().__init__()
         self.embedding_size = embedding_size
         self.max_seq_len = max_seq_len
         self.weight = torch.zeros(max_seq_len, embedding_size, requires_grad=False)
-        self.is_reverse = config.reverse_position_embedding
+        self.is_reverse = False if config is None else config.reverse_position_embedding
 
         # Generate position indices
         if self.is_reverse:
@@ -39,9 +39,14 @@ class SinusoidalPositionalEmbedding(torch.nn.Module):
     def load_state_dict(self, state_dict, strict=True):
         self.weight = state_dict['weight']
 
-    def forward(self, x):
-        _, seq_len, _ = x.size()
-        if self.is_reverse:
-            return self.weight[-seq_len:, :]
+    def forward(self, x, t=None):
+        if t is not None:
+            embed = self.weight[t]
+            embed = embed[:,:, None, None]
+            return embed
         else:
-            return self.weight[:seq_len, :]
+            seq_len = x.shape[1]
+            if self.is_reverse:
+                return self.weight[-seq_len:, :]
+            else:
+                return self.weight[:seq_len, :]

@@ -9,7 +9,7 @@ from base.util.Log import Logger
 
 
 class MultiHeadAttention(nn.Module):
-    def __init__(self,embed_dim=None, num_heads=None, drop_rate=None, qkv_bias=None, seq_first=None, config=None):
+    def __init__(self, embed_dim=None, num_heads=None, drop_rate=None, qkv_bias=None, seq_first=None, config=None):
         super().__init__()
         self.config = config
         self.log = Logger.get_instance()
@@ -106,6 +106,12 @@ class MultiHeadAttention(nn.Module):
 
     def forward(self, x, global_attention_mask=None):
         qk_embed_dim = self.qk_embed_dim
+        shape_len = len(x.shape)
+        if shape_len > 3:
+            # main tain batch and squence only
+            original_shape = x.shape
+            x = x.view(x.shape[0], x.shape[1], -1)
+            x = x.transpose(1, 2)
         b, seq_len, embed_dim = x.size()
 
         if self.attention_window > 0:
@@ -139,7 +145,9 @@ class MultiHeadAttention(nn.Module):
 
         result = self.proj(context)
         self.log.shape("result context", result, [b, seq_len, embed_dim])
-
+        if shape_len > 3:
+            result = result.transpose(1, 2)
+            result = result.view(original_shape)
         return result
 
     def forward_attn(self, k, q, v, x, normalizer=None):
