@@ -18,7 +18,7 @@ from base.embedding.SequencePositionalEmbedding import SinusoidalPositionalEmbed
 class StableDiffusionConfig:
     def __init__(self):
         self.time_steps = None
-        self.batch_size = 64
+        self.batch_size = 64 * 3
         self.epochs = 10
         self.lr = 1e-4
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -30,7 +30,7 @@ class StableDiffusionConfig:
         self.num_dec_layers = 3
         self.num_layers = self.num_enc_layers + self.num_dec_layers
 
-        self.time_steps = 1000
+        self.time_steps = 100  # 1000
         self.channels = [64, 128, 256, 512, 512, 384]
         self.attention_enable = [False, True, False, False, False, True]
         self.upscale = [False, False, False, True, True, True]
@@ -235,48 +235,82 @@ def set_seed(seed: int = 42):
 # Beta schedule for DDPM
 class BETA_SCHEDULE:
     LINEAR = "linear"
+    SINOISODAL = "sinusoidal"
 
 
-# DDPM Model
+# Differentiable Diffusion Probabilistic Model
 class DDPM(nn.Module):
+    # q(x_t \mid x_0) = \mathcal{N}(x_t; \sqrt{1 - \beta_t} x_{t-1}, \beta_t I)
+    #                 = \mathcal{N}(x_t; \bar{\alpha}_t x_0, (1 - \bar{\alpha}_t) I)
     def __init__(self, model, time_steps=1000, beta_schedule=BETA_SCHEDULE.LINEAR, linear_start=1e-4, linear_end=2e-2):
         super(DDPM, self).__init__()
         self.time_steps = time_steps
-        self.model = model
-        self.betas = torch.tensor(DDPM.make_beta_schedule(beta_schedule, time_steps, linear_start, linear_end), dtype=torch.float32)
+        # \epsilon_\theta()
+        self.epsilon_theta = model
+        self.scheduled_time = DDPM.make_beta_schedule(beta_schedule, time_steps, linear_start, linear_end)
+        # \beta_t
+        self.betas = torch.tensor(self.scheduled_time, dtype=torch.float32)
+        # \sqrt{\beta_t}
+        self.sqrt_beta = torch.sqrt(self.betas)
+        # \alpha_t = 1 - \beta_t
         self.alphas = 1.0 - self.betas
-        self.alphas_cumprod = torch.cumprod(self.alphas, dim=0)
-        self.sqrt_alphas_cumprod = torch.sqrt(self.alphas_cumprod)
-        self.sqrt_one_minus_alphas_cumprod = torch.sqrt(1.0 - self.alphas_cumprod)
+        # \one_minus_alpha_t = 1 - \alpha_t
+        self.one_minus_alphas = 1.0 - self.alphas
+        # [bar_alpha_0, bar_alpha_1, ..., bar_alpha_{T-1}]
+        self.bar_alpha = torch.cumprod(self.alphas, dim=0)
+        # [\sqrt{\bar{\alpha}_0}, \sqrt{\bar{\alpha}_1}, ..., \sqrt{\bar{\alpha}_{T-1}}]
+        self.sqrt_bar_alpha = torch.sqrt(self.bar_alpha)
+        # [\sqrt{1 - \bar{\alpha}_0}, \sqrt{1 - \bar{\alpha}_1}, ..., \sqrt{1 - \bar{\alpha}_{T-1}}]
+        self.sqrt_one_minus_bar_alpha= torch.sqrt(1.0 - self.sqrt_bar_alpha)
+        # \frac{1 - \alpha_t}{\sqrt{1 - \bar{\alpha}_t}}
+        self.one_minus_alpha_over_sqrt_one_minus_bar_alpha = self.one_minus_alphas / self.sqrt_one_minus_bar_alpha
 
     def to(self, device):
         self.betas = self.betas.to(device)
+        self.sqrt_beta = self.sqrt_beta.to(device)
         self.alphas = self.alphas.to(device)
-        self.alphas_cumprod = self.alphas_cumprod.to(device)
-        self.sqrt_alphas_cumprod = self.sqrt_alphas_cumprod.to(device)
-        self.sqrt_one_minus_alphas_cumprod = self.sqrt_one_minus_alphas_cumprod.to(device)
+        self.one_minus_alphas = self.one_minus_alphas.to(device)
+        self.bar_alpha = self.bar_alpha.to(device)
+        self.sqrt_bar_alpha = self.sqrt_bar_alpha.to(device)
+        self.sqrt_one_minus_bar_alpha = self.sqrt_one_minus_bar_alpha.to(device)
         return super().to(device)
 
     @staticmethod
     def make_beta_schedule(schedule, num_timesteps, start, end):
         if schedule == BETA_SCHEDULE.LINEAR:
             betas = np.linspace(start, end, num_timesteps)
+        elif schedule == BETA_SCHEDULE.SINOISODAL:
+            betas = np.sin(np.linspace(0, np.pi / 2, num_timesteps)) ** 2
+            betas = betas * (end - start) + start
         return betas
+
+    # \mathcal{N}(x_t; \bar{\alpha}_t x_0, (1 - \bar{\alpha}_t) I)
+    def normalize(self, x_start, time, noise=None):
+        if noise is None:
+            noise = torch.randn_like(x_start)
+        x_t = self.sqrt_bar_alpha[time][:, None, None, None] * x_start + self.sqrt_one_minus_bar_alpha[time][:, None, None, None] * noise
+        return x_t
+
+    # q(x_t \mid x_0) = \mathcal{N}(x_t; \sqrt{1 - \beta_t} x_{t-1}, \beta_t I)
+    def q_sample(self, x_start, time, noise=None):
+        return self.normalize(x_start, time, noise)
 
     def forward(self, x, t):
         return self.p_losses(x, t)
 
-    def p_losses(self, x_start, t, noise=None):
-        if noise is None:
-            noise = torch.randn_like(x_start)
-        x_noisy = self.q_sample(x_start=x_start, t=t, noise=noise)
-        x_previous = self.q_sample(x_start=x_start, t=t-1, noise=noise)
-        model_out = self.model(x_noisy, t)
-        loss = nn.functional.mse_loss(model_out, x_previous)
+    # loss = \nabla_\theta \left\| \left(x_t-\epsilon \right) - \left(x_t+\epsilon_\theta \left( \sqrt{\bar{\alpha}_t} x_0 + \sqrt{1 - \bar{\alpha}_t} \epsilon, t \right) \right) \right\|^2
+    def p_losses(self, x_start, t, e_noise=None):
+        if e_noise is None:
+            e_noise = torch.randn_like(x_start)
+        # x_noisy sqrt{\bar{\alpha}_t} x_0 + \sqrt{1 - \bar{\alpha}_t} \epsilon
+        x_noisy = self.q_sample(x_start=x_start, time=t, noise=e_noise)
+        # \epsilon_\theta \left( \sqrt{\bar{\alpha}_t} x_0 + \sqrt{1 - \bar{\alpha}_t} \epsilon, t \right)
+        # x_previous_pred = x_noisy - epsilon_theta(x_noisy, t)
+        epsilon_theta = self.epsilon_theta(x_noisy, t)
+        loss = nn.functional.mse_loss(epsilon_theta, e_noise)
         return loss
 
-    def q_sample(self, x_start, t, noise):
-        return self.sqrt_alphas_cumprod[t][:, None, None, None] * x_start + self.sqrt_one_minus_alphas_cumprod[t][:, None, None, None] * noise
+
 
 def enable_debugging():
     torch.autograd.set_detect_anomaly(True)
@@ -306,7 +340,7 @@ transform = transforms.Compose([
     transforms.Normalize((0.5,), (0.5,))
 ])
 
-model_path = 'stable_diffusion_saved_model.pth'
+model_path = '/workspace/data/stable_diffusion/stable_diffusion_saved_model.pth'
 
 # using bfloat16
 base_type = torch.bfloat16
@@ -333,27 +367,23 @@ else:
 
 # Function to visualize results
 def show_images(images, title="Images"):
+    from mpl_toolkits.axes_grid1 import ImageGrid
     images = (images + 1) / 2  # unnormalize
-    grid = torchvision.utils.make_grid(images.cpu().detach())
-    plt.figure(figsize=(32, 32))
-    plt.title(title)
-    plt.imshow(np.transpose(grid.numpy(), (1, 2, 0)), cmap="gray")
+    images = images.clamp(0.0, 1.0)
+    images = images.permute(0, 2, 3, 1)
+    fig = plt.figure(figsize=(32, 32))
+    col_count = 10
+    row_count = images.shape[0] // col_count
+    grid = ImageGrid(fig, 111, nrows_ncols=(row_count, col_count), axes_pad=0.1)
+
+    for ax, im in zip(grid, images.cpu().numpy()):
+        ax.imshow(im)
     plt.show()
 
-# Training loop
-for epoch in range(config.epochs):
-    for i, data in enumerate(trainloader, 0):
-        inputs, _ = data
-        inputs = inputs.to(device).to(base_type)
-        optimizer.zero_grad()
-        time = torch.randint(0, config.time_steps, (inputs.shape[0],), device=device).long()
-        loss = ddpm(inputs, time)
-        loss.backward()
-        optimizer.step()
-        if i % 100 == 0:
-            print(f"Epoch {epoch + 1}, Step {i + 1}, Loss: {loss.item()}")
 
-    # Save model after each epoch
+def save_model(ddpm, optimizer, epoch, loss, model_path):
+    # Make directory if it doesn't exist
+    os.makedirs(os.path.dirname(model_path), exist_ok=True)
     torch.save({
         'epoch': epoch,
         'model_state_dict': ddpm.state_dict(),
@@ -362,18 +392,46 @@ for epoch in range(config.epochs):
     }, model_path)
     print(f"Model saved after epoch {epoch + 1}")
 
+
+# Training loop
+for epoch in range(config.epochs):
+    for i, data in enumerate(trainloader, 0):
+        inputs, _ = data
+        inputs = inputs.to(device).to(base_type)
+        optimizer.zero_grad()
+        rand_times = torch.randint(0, config.time_steps, (inputs.shape[0],), device=device).long()
+        loss = ddpm(inputs, rand_times)
+        loss.backward()
+        optimizer.step()
+        if i % 100 == 0:
+            print(f"Epoch {epoch + 1}, Step {i + 1}, Loss: {loss.item()}")
+
+    assert not torch.isnan(loss).any(), "Loss is NaN"
+    save_model(ddpm, optimizer, epoch, loss, model_path)
+
     # Generate and display images after each epoch
     with torch.no_grad():
         ddpm.eval()
         noise = torch.randn(1, 1, 32, 32).to(device).to(base_type)
+        prev_image_predicted = noise
         images = torch.tensor([]).cpu()
         # 0 to config.time_steps - 1
         for i in reversed(range(config.time_steps)):
-            # one element list
-            a_time = torch.tensor([i], device=device).long()
-            generated_image = ddpm.model(noise, a_time)
-            noise = generated_image
+            z_noise = torch.randn_like(prev_image_predicted)
+            one_minus_alphas = ddpm.one_minus_alphas[i]
+            sqrt_bar_alpha = ddpm.sqrt_bar_alpha[i]
+            sqrt_one_minus_bar_alpha = ddpm.sqrt_one_minus_bar_alpha[i]
+            sqrt_beta = ddpm.sqrt_beta[i]
+
+            t = torch.tensor([i]).to(device)
+            epsilon = ddpm.epsilon_theta(prev_image_predicted, t)
+            # x_{t-1} = \frac{1}{\sqrt{\alpha_t}} \left( x_t - \frac{1 - \alpha_t}{\sqrt{1 - \bar{\alpha}_t}}
+            # \epsilon_\theta(x_t, t) \right) + \sigma_t z
+            # x_{t-1} = \frac{1}{\sqrt{\alpha_t}} \left( x_t - \frac{1 - \alpha_t}{\sqrt{1 - \bar{\alpha}_t}}
+            # \epsilon_\theta(x_t, t) \right) + \sqrt{} z
+            _epsilon = (one_minus_alphas/sqrt_one_minus_bar_alpha* epsilon)/sqrt_bar_alpha
+            prev_image_predicted = prev_image_predicted - _epsilon + sqrt_beta * z_noise
             # append to input
-            images = torch.cat((images, generated_image.cpu()), dim=0)
+            images = torch.cat((images, prev_image_predicted.cpu()), dim=0)
 
         show_images(images, f"Generated Images at Epoch {epoch + 1}")
