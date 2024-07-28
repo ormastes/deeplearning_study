@@ -1,4 +1,5 @@
 import enum
+import torch
 from base.gpt.MultiHeadAttention import MultiHeadAttention
 from base.gpt.TransformerBlockSequence import SimpleTransformerBlockSequence
 
@@ -40,6 +41,8 @@ class GPT2_CONFIG_124M(object):
         self.aq_num_codebooks = 0
         self.mcq_num_codebooks = 0
         self.mcq_codebook_size = 0
+        self.base_type = torch.float32
+        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 
 model_configs = {
@@ -61,6 +64,10 @@ class GPT2_CONFIG_124M_TRAIN(GPT2_CONFIG_124M):
                  drop_rate=0.1, qkv_bias=False):
         super().__init__(vocab_size, context_len, embed_dim, embed_dim_ff_dim, num_heads, num_layers, drop_rate, qkv_bias)
 
+
+class GPT2_CONFIG_124M_TRAIN_SMALL_CONTEXT(GPT2_CONFIG_124M_TRAIN):
+    def __init__(self):
+        super().__init__(context_len=32)
 
 class OTHER_SETTINGS(object):
     def __init__(self, learning_rate=5e-4, num_epochs=10,

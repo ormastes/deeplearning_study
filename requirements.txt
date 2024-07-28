@@ -17,4 +17,5 @@ ctransformers[cuda]
 optimum[onnxruntime-gpu]
 ace_tools
 kaggle
+flash-attn
 #auto-gptq #pip3 install auto-gptq --extra-index-url https://huggingface.github.io/autogptq-index/whl/cu118/  # Use cu117 if on CUDA 11.7

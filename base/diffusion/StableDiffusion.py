@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 # Import necessary components from your modules
 from base.gpt.MultiHeadAttention import MultiHeadAttention
 from base.embedding.SequencePositionalEmbedding import SinusoidalPositionalEmbedding
-
+from base.util.CudaUtil import CudaUtil
 
 
 # Configuration
@@ -311,27 +311,8 @@ class DDPM(nn.Module):
         return loss
 
 
-
-def enable_debugging():
-    torch.autograd.set_detect_anomaly(True)
-
-def enable_tf32():
-    torch.backends.cuda.matmul.allow_tf32 = True
-    torch.backends.cudnn.allow_tf32 = True
-
-def performance():
-    enable_tf32()
-    # Enable cuDNN benchmark mode and other fast options
-    torch.backends.cudnn.benchmark = True
-    torch.backends.cudnn.fastest = True
-    torch.backends.cudnn.deterministic = False
-
-
-performance()
-
-# Enable anomaly detection
-torch.autograd.set_detect_anomaly(True)
-set_seed(42)
+CudaUtil.performance()
+CudaUtil.set_sead()
 
 # Load MNIST dataset and resize to 32x32
 transform = transforms.Compose([

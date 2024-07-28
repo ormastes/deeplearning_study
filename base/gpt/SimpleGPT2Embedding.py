@@ -21,9 +21,10 @@ class SimpleGPT2Embedding(torch.nn.Module):
 
     def state_dict(self, destination=None, prefix='', keep_vars=False):
         state_dict = {
-            'token_embed': self.token_embed.state_dict(),
-            'pos_embed': self.pos_embed.state_dict()
+            'token_embed': self.token_embed.state_dict()
         }
+        if self.config.alibi is None:
+            state_dict['pos_embed'] = self.pos_embed.state_dict()
         return state_dict
 
     def load_state_dict(self, state_dict, strict=True):

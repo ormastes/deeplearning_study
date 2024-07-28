@@ -8,7 +8,7 @@ from base.quantization.QuantizedAttention import QuantizedAttention
 os.environ['PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION'] = 'python'
 
 # Import from local files
-from base.config.Config import GPT2_CONFIG_124M_TRAIN, OTHER_SETTINGS
+from base.config.Config import GPT2_CONFIG_124M_TRAIN, OTHER_SETTINGS, GPT2_CONFIG_124M_TRAIN_SMALL_CONTEXT
 from base.dataset.SimpleDataset import *
 from base.gpt.BPETokenizer import GPT2TikTokenizer
 from base.gpt.GPT2 import GPT2Model
@@ -17,6 +17,7 @@ from base.util.Util import *
 from base.util.Log import *
 from base.embedding.AttentionLinearBiasPositionalEmbedding import *
 from test.TestUtil import TestUtil
+from base.gpt.FlashAttention import FlashAttention
 
     
 class GPT2Train(unittest.TestCase):
@@ -39,20 +40,62 @@ class GPT2Train(unittest.TestCase):
         ###########################
         # Initiate training
         ###########################
-        config = GPT2_CONFIG_124M_TRAIN()
+        config = GPT2_CONFIG_124M_TRAIN_SMALL_CONTEXT()
         config.alibi = AttentionLinearBiasPositionalEmbedding
 
         from base.gpt.BPETokenizer import GPT2TikTokenizer
         tokenizer = GPT2TikTokenizer()
 
         setting = OTHER_SETTINGS(num_epochs=6)
-        gpt = GPT2.GPT2Model(config)
+        gpt = GPT2.GPT2Model(config).to(config.base_type)
         train_losses, val_losses, tokens_seen, model = train(gpt, config, setting, tokenizer)
 
         self.assertTrue(train_losses[-1] < 3)
         self.assertTrue(val_losses[-1] < 16)
 
         TestUtil.logging_after_train(config, model, setting, tokens_seen, train_losses, val_losses)
+
+    def test_alibi_bf16_train(self):
+        ###########################
+        # Initiate training
+        ###########################
+        config = GPT2_CONFIG_124M_TRAIN_SMALL_CONTEXT()
+        config.alibi = AttentionLinearBiasPositionalEmbedding
+        config.base_type = torch.bfloat16
+
+        from base.gpt.BPETokenizer import GPT2TikTokenizer
+        tokenizer = GPT2TikTokenizer()
+
+        setting = OTHER_SETTINGS(num_epochs=6)
+        gpt = GPT2.GPT2Model(config).to(config.base_type)
+        train_losses, val_losses, tokens_seen, model = train(gpt, config, setting, tokenizer)
+
+        self.assertTrue(train_losses[-1] < 3)
+        self.assertTrue(val_losses[-1] < 16)
+
+        TestUtil.logging_after_train(config, model, setting, tokens_seen, train_losses, val_losses)
+
+    def test_flash_attn_train(self):
+        ###########################
+        # Initiate training
+        ###########################
+        config = GPT2_CONFIG_124M_TRAIN_SMALL_CONTEXT()
+        config.alibi = AttentionLinearBiasPositionalEmbedding
+        config.attention = FlashAttention
+        config.base_type = torch.bfloat16
+
+        from base.gpt.BPETokenizer import GPT2TikTokenizer
+        tokenizer = GPT2TikTokenizer()
+
+        setting = OTHER_SETTINGS(num_epochs=6)
+        gpt = GPT2.GPT2Model(config).to(config.base_type)
+        train_losses, val_losses, tokens_seen, model = train(gpt, config, setting, tokenizer)
+
+        self.assertTrue(train_losses[-1] < 5)
+        self.assertTrue(val_losses[-1] < 16)
+
+        TestUtil.logging_after_train(config, model, setting, tokens_seen, train_losses, val_losses)
+
 
     def test_simple_learnable_alibi_train(self):
         ###########################
