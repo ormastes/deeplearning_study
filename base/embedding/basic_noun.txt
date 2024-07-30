@@ -1,0 +1,1525 @@
+people	noun
+history	noun
+way	noun
+art	noun
+world	noun
+information	noun
+map	noun
+two	noun
+family	noun
+government	noun
+health	noun
+system	noun
+computer	noun
+meat	noun
+year	noun
+thanks	noun
+music	noun
+person	noun
+reading	noun
+method	noun
+data	noun
+food	noun
+understanding	noun
+theory	noun
+law	noun
+bird	noun
+literature	noun
+problem	noun
+software	noun
+control	noun
+knowledge	noun
+power	noun
+ability	noun
+economics	noun
+love	noun
+internet	noun
+television	noun
+science	noun
+library	noun
+nature	noun
+fact	noun
+product	noun
+idea	noun
+temperature	noun
+investment	noun
+area	noun
+society	noun
+activity	noun
+story	noun
+industry	noun
+media	noun
+thing	noun
+oven	noun
+community	noun
+definition	noun
+safety	noun
+quality	noun
+development	noun
+language	noun
+management	noun
+player	noun
+variety	noun
+video	noun
+week	noun
+security	noun
+country	noun
+exam	noun
+movie	noun
+organization	noun
+equipment	noun
+physics	noun
+analysis	noun
+policy	noun
+series	noun
+thought	noun
+basis	noun
+boyfriend	noun
+direction	noun
+strategy	noun
+technology	noun
+army	noun
+camera	noun
+freedom	noun
+paper	noun
+environment	noun
+child	noun
+instance	noun
+month	noun
+truth	noun
+marketing	noun
+university	noun
+writing	noun
+article	noun
+department	noun
+difference	noun
+goal	noun
+news	noun
+audience	noun
+fishing	noun
+growth	noun
+income	noun
+marriage	noun
+user	noun
+combination	noun
+failure	noun
+meaning	noun
+medicine	noun
+philosophy	noun
+teacher	noun
+communication	noun
+night	noun
+chemistry	noun
+disease	noun
+disk	noun
+energy	noun
+nation	noun
+road	noun
+role	noun
+soup	noun
+advertising	noun
+location	noun
+success	noun
+addition	noun
+apartment	noun
+education	noun
+math	noun
+moment	noun
+painting	noun
+politics	noun
+attention	noun
+decision	noun
+event	noun
+property	noun
+shopping	noun
+student	noun
+wood	noun
+competition	noun
+distribution	noun
+entertainment	noun
+office	noun
+population	noun
+president	noun
+unit	noun
+category	noun
+cigarette	noun
+context	noun
+introduction	noun
+opportunity	noun
+performance	noun
+driver	noun
+flight	noun
+length	noun
+magazine	noun
+newspaper	noun
+relationship	noun
+teaching	noun
+cell	noun
+dealer	noun
+finding	noun
+lake	noun
+member	noun
+message	noun
+phone	noun
+scene	noun
+appearance	noun
+association	noun
+concept	noun
+customer	noun
+death	noun
+discussion	noun
+housing	noun
+inflation	noun
+insurance	noun
+mood	noun
+woman	noun
+advice	noun
+blood	noun
+effort	noun
+expression	noun
+importance	noun
+opinion	noun
+payment	noun
+reality	noun
+responsibility	noun
+situation	noun
+skill	noun
+statement	noun
+wealth	noun
+application	noun
+city	noun
+county	noun
+depth	noun
+estate	noun
+foundation	noun
+grandmother	noun
+heart	noun
+perspective	noun
+photo	noun
+recipe	noun
+studio	noun
+topic	noun
+collection	noun
+depression	noun
+imagination	noun
+passion	noun
+percentage	noun
+resource	noun
+setting	noun
+ad	noun
+agency	noun
+college	noun
+connection	noun
+criticism	noun
+debt	noun
+description	noun
+memory	noun
+patience	noun
+secretary	noun
+solution	noun
+administration	noun
+aspect	noun
+attitude	noun
+director	noun
+personality	noun
+psychology	noun
+recommendation	noun
+response	noun
+selection	noun
+storage	noun
+version	noun
+alcohol	noun
+argument	noun
+complaint	noun
+contract	noun
+emphasis	noun
+highway	noun
+loss	noun
+membership	noun
+possession	noun
+preparation	noun
+steak	noun
+union	noun
+agreement	noun
+cancer	noun
+currency	noun
+employment	noun
+engineering	noun
+entry	noun
+interaction	noun
+mixture	noun
+preference	noun
+region	noun
+republic	noun
+tradition	noun
+virus	noun
+actor	noun
+classroom	noun
+delivery	noun
+device	noun
+difficulty	noun
+drama	noun
+election	noun
+engine	noun
+football	noun
+guidance	noun
+hotel	noun
+owner	noun
+priority	noun
+protection	noun
+suggestion	noun
+tension	noun
+variation	noun
+anxiety	noun
+atmosphere	noun
+awareness	noun
+bath	noun
+bread	noun
+candidate	noun
+climate	noun
+comparison	noun
+confusion	noun
+construction	noun
+elevator	noun
+emotion	noun
+employee	noun
+employer	noun
+guest	noun
+height	noun
+leadership	noun
+mall	noun
+manager	noun
+operation	noun
+recording	noun
+sample	noun
+transportation	noun
+charity	noun
+cousin	noun
+disaster	noun
+editor	noun
+efficiency	noun
+excitement	noun
+extent	noun
+feedback	noun
+guitar	noun
+homework	noun
+leader	noun
+mom	noun
+outcome	noun
+permission	noun
+presentation	noun
+promotion	noun
+reflection	noun
+refrigerator	noun
+resolution	noun
+revenue	noun
+session	noun
+singer	noun
+tennis	noun
+basket	noun
+bonus	noun
+cabinet	noun
+childhood	noun
+church	noun
+clothes	noun
+coffee	noun
+dinner	noun
+drawing	noun
+hair	noun
+hearing	noun
+initiative	noun
+judgment	noun
+lab	noun
+measurement	noun
+mode	noun
+mud	noun
+orange	noun
+poetry	noun
+police	noun
+possibility	noun
+procedure	noun
+queen	noun
+ratio	noun
+relation	noun
+restaurant	noun
+satisfaction	noun
+sector	noun
+signature	noun
+significance	noun
+song	noun
+tooth	noun
+town	noun
+vehicle	noun
+volume	noun
+wife	noun
+accident	noun
+airport	noun
+appointment	noun
+arrival	noun
+assumption	noun
+baseball	noun
+chapter	noun
+committee	noun
+conversation	noun
+database	noun
+enthusiasm	noun
+error	noun
+explanation	noun
+farmer	noun
+gate	noun
+girl	noun
+hall	noun
+historian	noun
+hospital	noun
+injury	noun
+instruction	noun
+maintenance	noun
+manufacturer	noun
+meal	noun
+perception	noun
+pie	noun
+poem	noun
+presence	noun
+proposal	noun
+reception	noun
+replacement	noun
+revolution	noun
+river	noun
+son	noun
+speech	noun
+tea	noun
+village	noun
+warning	noun
+winner	noun
+worker	noun
+writer	noun
+assistance	noun
+breath	noun
+buyer	noun
+chest	noun
+chocolate	noun
+conclusion	noun
+contribution	noun
+cookie	noun
+courage	noun
+dad	noun
+desk	noun
+drawer	noun
+establishment	noun
+examination	noun
+garbage	noun
+grocery	noun
+honey	noun
+impression	noun
+improvement	noun
+independence	noun
+insect	noun
+inspection	noun
+inspector	noun
+king	noun
+ladder	noun
+menu	noun
+penalty	noun
+piano	noun
+potato	noun
+profession	noun
+professor	noun
+quantity	noun
+reaction	noun
+requirement	noun
+salad	noun
+sister	noun
+supermarket	noun
+tongue	noun
+weakness	noun
+wedding	noun
+affair	noun
+ambition	noun
+analyst	noun
+apple	noun
+assignment	noun
+assistant	noun
+bathroom	noun
+bedroom	noun
+beer	noun
+birthday	noun
+celebration	noun
+championship	noun
+cheek	noun
+client	noun
+consequence	noun
+departure	noun
+diamond	noun
+dirt	noun
+ear	noun
+fortune	noun
+friendship	noun
+funeral	noun
+gene	noun
+girlfriend	noun
+hat	noun
+indication	noun
+intention	noun
+lady	noun
+midnight	noun
+negotiation	noun
+obligation	noun
+passenger	noun
+pizza	noun
+platform	noun
+poet	noun
+pollution	noun
+recognition	noun
+reputation	noun
+shirt	noun
+sir	noun
+speaker	noun
+stranger	noun
+surgery	noun
+sympathy	noun
+tale	noun
+throat	noun
+trainer	noun
+uncle	noun
+youth	noun
+time	noun, adjective, verb
+work	noun, adjective, verb
+film	noun, verb
+water	noun, verb, adjective
+money	noun, adjective
+example	noun, verb
+while	noun, conjunction, preposition
+business	noun, adjective
+study	noun, verb
+game	noun, adjective, verb
+life	noun, adjective
+form	noun, verb
+air	noun, verb
+day	noun, adjective
+place	noun, verb
+number	noun, verb
+part	noun, verb, adverb
+field	noun, verb, adjective
+fish	noun, verb
+back	noun, adverb, verb
+process	noun, verb
+heat	noun, verb
+hand	noun, verb
+experience	noun, verb
+job	noun, verb
+book	noun, verb
+end	noun, verb
+point	noun, verb
+type	noun, verb
+home	noun, adjective, adverb
+economy	noun, adjective
+value	noun, verb
+body	noun, verb
+market	noun, verb
+guide	noun, verb
+interest	noun, verb
+state	noun, verb
+radio	noun, verb
+course	noun, verb
+company	noun, verb
+price	noun, verb
+size	noun, verb, adjective
+card	noun, verb
+list	noun, verb
+mind	noun, verb
+trade	noun, verb
+line	noun, verb
+care	noun, verb
+group	noun, verb
+risk	noun, verb
+word	noun, verb, interjection
+fat	noun, adjective, verb
+force	noun, verb
+key	noun, adjective, verb
+light	noun, verb, adjective
+training	noun, adjective
+name	noun, verb, adjective
+school	noun, verb
+top	noun, adjective, verb
+amount	noun, verb
+level	noun, adjective, verb
+order	noun, verb
+practice	noun, verb
+research	noun, verb
+sense	noun, verb
+service	noun, verb
+piece	noun, verb
+web	noun, verb
+boss	noun, verb, adjective
+sport	noun, verb
+fun	noun, adjective, verb
+house	noun, adjective, verb
+page	noun, verb
+term	noun, verb
+test	noun, verb
+answer	noun, verb
+sound	noun, verb, adjective
+focus	noun, verb
+matter	noun, verb
+kind	noun, adjective
+soil	noun, verb
+board	noun, verb
+oil	noun, verb
+picture	noun, verb
+access	noun, verb, adjective
+garden	noun, verb
+range	noun, verb
+rate	noun, verb
+reason	noun, verb
+future	noun, adjective
+site	noun, verb
+demand	noun, verb
+exercise	noun, verb
+image	noun, verb
+case	noun, verb
+cause	noun, verb
+coast	noun, verb
+action	noun, adjective
+age	noun, verb
+bad	noun, adverb, adjective
+boat	noun, verb
+record	noun, verb
+result	noun, verb
+section	noun, verb
+building	noun, verb
+mouse	noun, verb
+cash	noun, verb
+class	noun, verb, adjective
+nothing	noun, pronoun, adjective
+period	noun, adjective
+plan	noun, verb
+store	noun, verb
+tax	noun, verb
+side	noun, verb
+subject	noun, adjective, adverb
+space	noun, verb
+rule	noun, verb
+stock	noun, adjective, verb
+weather	noun, verb
+chance	noun, adjective, verb
+figure	noun, verb
+man	noun, verb, interjection
+model	noun, verb
+source	noun, verb
+beginning	noun, adjective, verb
+earth	noun, verb
+program	noun, verb
+chicken	noun, adjective
+design	noun, verb
+feature	noun, verb
+head	noun, adjective, verb
+material	noun, adjective
+purpose	noun, verb
+question	noun, verb
+rock	noun, verb
+salt	noun, adjective, verb
+act	noun, verb
+birth	noun, verb
+car	noun, adjective
+dog	noun, verb
+object	noun, verb
+scale	noun, verb
+sun	noun, verb
+note	noun, verb
+profit	noun, verb
+rent	noun, verb
+speed	noun, verb
+style	noun, verb
+war	noun, verb
+bank	noun, verb
+craft	noun, verb
+half	noun, predeterminer, adverb
+inside	noun, adjective, preposition
+outside	noun, adjective, preposition
+standard	noun, adjective
+bus	noun, verb
+exchange	noun, verb
+eye	noun, verb
+fire	noun, verb
+position	noun, verb
+pressure	noun, verb
+stress	noun, verb
+advantage	noun, verb
+benefit	noun, verb
+box	noun, verb
+frame	noun, verb
+issue	noun, verb
+step	noun, verb
+cycle	noun, verb
+face	noun, verb
+item	noun, adverb
+metal	noun, verb
+paint	noun, verb
+review	noun, verb
+room	noun, verb
+screen	noun, verb
+structure	noun, verb
+view	noun, verb
+account	noun, verb
+ball	noun, verb
+discipline	noun, verb
+medium	noun, adjective
+share	noun, verb
+balance	noun, verb
+bit	noun, verb
+black	noun, verb, adjective
+bottom	noun, verb, adjective
+choice	noun, adjective
+gift	noun, verb
+impact	noun, verb
+machine	noun, verb
+shape	noun, verb
+tool	noun, verb
+wind	noun, verb
+address	noun, verb
+average	noun, verb, adjective
+career	noun, verb, adjective
+culture	noun, verb
+morning	noun, adverb
+pot	noun, verb
+sign	noun, verb
+table	noun, verb
+task	noun, verb
+condition	noun, verb
+contact	noun, verb
+credit	noun, verb
+egg	noun, verb
+hope	noun, verb
+ice	noun, verb
+network	noun, verb
+north	noun, adjective, adverb
+square	noun, adjective, adverb
+attempt	noun, verb
+date	noun, verb
+effect	noun, verb
+link	noun, verb
+post	noun, verb, adverb
+star	noun, verb
+voice	noun, verb
+capital	noun, adjective
+challenge	noun, verb, adjective
+friend	noun, verb
+self	noun, pronoun, adjective
+shot	noun, adjective
+brush	noun, verb
+couple	noun, verb
+debate	noun, verb
+exit	noun, verb
+front	noun, adjective, verb
+function	noun, verb
+lack	noun, verb
+living	noun, adjective
+plant	noun, verb
+plastic	noun, adjective
+spot	noun, verb
+summer	noun, verb
+taste	noun, verb
+theme	noun, verb
+track	noun, verb
+wing	noun, verb
+brain	noun, verb
+button	noun, verb
+click	noun, verb
+desire	noun, verb
+foot	noun, verb
+gas	noun, verb
+influence	noun, verb
+notice	noun, verb
+rain	noun, verb
+wall	noun, verb
+base	noun, verb, adjective
+damage	noun, verb
+distance	noun, verb
+feeling	noun, adjective
+pair	noun, verb
+savings	noun, adjective, preposition
+staff	noun, verb
+sugar	noun, verb
+target	noun, verb
+text	noun, verb
+animal	noun, adjective
+author	noun, verb
+budget	noun, adjective, verb
+discount	noun, verb, adjective
+file	noun, verb
+ground	noun, verb, adjective
+lesson	noun, verb
+minute	noun, adjective, verb
+officer	noun, verb
+phase	noun, verb
+reference	noun, verb, adjective
+register	noun, verb
+sky	noun, verb
+stage	noun, verb
+stick	noun, verb
+title	noun, verb
+trouble	noun, verb
+bowl	noun, verb
+bridge	noun, verb
+campaign	noun, verb
+character	noun, adjective, verb
+club	noun, verb
+edge	noun, verb, idiom
+evidence	noun, verb, idiom
+fan	noun, verb, idiom
+letter	noun, verb, idiom
+lock	noun, verb, idiom
+maximum	noun, adjective
+novel	noun, adjective
+option	noun, verb
+pack	noun, verb, adjective
+park	noun, verb
+plenty	noun, adjective, adverb
+quarter	noun, verb, adjective
+skin	noun, verb
+sort	noun, verb
+weight	noun, verb
+baby	noun, verb, adjective
+background	noun, adjective
+carry	noun, verb
+dish	noun, verb, idiom
+factor	noun, verb
+fruit	noun, verb
+glass	noun, adjective, verb
+joint	noun, adjective, verb
+master	noun, adjective, verb
+muscle	noun, verb, adjective
+red	noun, adjective, idiom
+strength	noun, idiom
+traffic	noun, verb
+trip	noun, verb, idiom
+vegetable	noun, adjective
+appeal	noun, verb
+chart	noun, verb
+gear	noun, verb, adjective
+ideal	noun, adjective
+kitchen	noun, adjective
+land	noun, verb, idiom
+log	noun, verb
+mother	noun, adjective, verb
+net	noun, verb
+party	noun, adjective, verb
+principle	noun, idiom
+relative	noun, adjective
+sale	noun, idiom
+season	noun, verb, idiom
+signal	noun, adjective, verb
+spirit	noun, verb, idiom
+street	noun, adjective, idiom
+tree	noun, verb, idiom
+wave	noun, verb, idiom
+belt	noun, verb
+bench	noun, verb
+commission	noun, verb
+copy	noun, verb, idiom
+drop	noun, verb
+minimum	noun, adjective
+path	noun, idiom
+progress	noun, verb, idiom
+project	noun, verb
+sea	noun, adjective, idiom
+south	noun, adjective, adverb
+status	noun, adjective
+stuff	noun, verb
+ticket	noun, verb, idiom
+tour	noun, verb
+angle	noun, verb
+blue	noun, verb, adjective
+breakfast	noun, verb
+confidence	noun, idiom
+daughter	noun, adjective
+degree	noun, idiom
+doctor	noun, verb
+dot	noun, verb, idiom
+dream	noun, verb, adjective
+duty	noun, idiom
+essay	noun, verb
+father	noun, verb
+fee	noun, verb
+finance	noun, verb
+hour	noun, adjective, idiom
+juice	noun, verb, idiom
+limit	noun, verb
+luck	noun, verb, idiom
+milk	noun, verb, idiom
+mouth	noun, verb, idiom
+peace	noun, interjection, verb
+pipe	noun, verb
+seat	noun, verb
+stable	noun, verb
+storm	noun, verb, idiom
+substance	noun, idiom
+team	noun, verb, adjective
+trick	noun, adjective, verb
+afternoon	noun, adjective
+bat	noun, verb
+beach	noun, verb
+blank	noun, verb, adjective
+catch	noun, verb
+chain	noun, verb
+consideration	noun, idiom
+cream	noun, verb, adjective
+crew	noun, verb
+detail	noun, verb, idiom
+gold	noun, adjective
+interview	noun, verb
+kid	noun, verb, adjective
+mark	noun, verb, idiom
+match	noun, verb
+mission	noun, adjective
+pain	noun, verb, idiom
+pleasure	noun, verb
+score	noun, verb, idiom
+screw	noun, verb, idiom
+sex	noun, verb, idiom
+shop	noun, verb, interjection
+shower	noun, verb, idiom
+suit	noun, verb, idiom
+tone	noun, verb
+window	noun, verb
+agent	noun, adjective, verb
+band	noun, verb
+block	noun, verb
+bone	noun, verb, adverb
+calendar	noun, verb
+cap	noun, verb
+coat	noun, verb
+contest	noun, verb
+corner	noun, adjective, verb
+court	noun, verb, idiom
+cup	noun, verb
+district	noun, verb
+door	noun, idiom
+east	noun, adjective, adverb
+finger	noun, verb, idiom
+garage	noun, verb
+guarantee	noun, verb
+hole	noun, verb, idiom
+hook	noun, verb, idiom
+implement	noun, verb
+layer	noun, verb
+lecture	noun, verb
+lie	noun, verb, idiom
+manner	noun, idiom
+meeting	noun, idiom
+nose	noun, verb, idiom
+parking	noun, adjective
+partner	noun, verb
+profile	noun, verb
+respect	noun, verb
+rice	noun, verb
+routine	noun, adjective
+schedule	noun, verb
+swimming	noun, adjective
+telephone	noun, verb
+tip	noun, verb
+winter	noun, adjective, verb
+airline	noun, adjective
+bag	noun, verb
+battle	noun, verb
+bed	noun, verb
+bill	noun, verb
+bother	noun, verb
+cake	noun, verb
+code	noun, verb
+curve	noun, verb, idiom
+designer	noun, adjective
+dimension	noun, verb
+dress	noun, adjective, verb
+ease	noun, verb
+emergency	noun, adjective
+evening	noun, adjective
+extension	noun, adjective
+farm	noun, verb, idiom
+fight	noun, verb
+gap	noun, verb
+grade	noun, verb
+holiday	noun, adjective, verb
+horror	noun, adjective
+horse	noun, verb, adjective
+host	noun, verb
+husband	noun, verb
+loan	noun, verb, idiom
+mistake	noun, verb, idiom
+mountain	noun, adjective, idiom
+nail	noun, verb, idiom
+noise	noun, verb
+occasion	noun, verb, idiom
+package	noun, verb
+patient	noun, adjective
+pause	noun, verb, idiom
+phrase	noun, verb
+proof	noun, adjective, verb
+race	noun, verb
+relief	noun, idiom
+sand	noun, verb, idiom
+sentence	noun, verb
+shoulder	noun, verb, idiom
+smoke	noun, verb, idiom
+stomach	noun, verb
+string	noun, verb, idiom
+tourist	noun, adverb
+towel	noun, verb
+vacation	noun, verb
+west	noun, adjective, adverb
+wheel	noun, verb, idiom
+wine	noun, adjective, verb
+arm	noun, verb
+aside	noun, adverb
+associate	noun, verb, adjective
+bet	noun, verb
+blow	noun, verb
+border	noun, verb
+branch	noun, verb
+breast	noun, verb
+brother	noun, interjection
+buddy	noun, verb
+bunch	noun, verb
+chip	noun, verb
+coach	noun, verb, adverb
+cross	noun, verb, adjective
+document	noun, verb
+draft	noun, verb, adjective
+dust	noun, verb
+expert	noun, adjective
+floor	noun, verb
+god	noun, interjection
+golf	noun, verb
+habit	noun, verb
+iron	noun, verb
+judge	noun, verb
+knife	noun, verb
+landscape	noun, verb
+league	noun, verb
+mail	noun, verb
+mess	noun, verb
+native	noun, adjective
+opening	noun, adjective
+parent	noun, verb
+pattern	noun, verb
+pin	noun, verb
+pool	noun, verb
+pound	noun, verb
+request	noun, verb
+salary	noun, verb
+shame	noun, verb
+shelter	noun, verb
+shoe	noun, verb
+silver	noun, adjective, verb
+tackle	noun, verb
+tank	noun, verb
+trust	noun, verb
+assist	noun, verb
+bake	noun, verb
+bar	noun, verb, preposition
+bell	noun, verb
+bike	noun, verb
+blame	noun, verb
+boy	noun, interjection
+brick	noun, verb
+chair	noun, verb
+closet	noun, verb, adjective
+clue	noun, verb
+collar	noun, verb
+comment	noun, verb
+conference	noun, verb
+devil	noun, verb
+diet	noun, verb
+fear	noun, verb
+fuel	noun, verb
+glove	noun, verb
+jacket	noun, verb
+lunch	noun, verb
+monitor	noun, verb
+mortgage	noun, verb
+nurse	noun, verb
+pace	noun, verb, preposition
+panic	noun, verb
+peak	noun, verb, adjective
+plane	noun, adjective, verb
+reward	noun, verb
+row	noun, verb
+sandwich	noun, verb
+shock	noun, verb
+spite	noun, verb
+spray	noun, verb
+surprise	noun, verb
+till	noun, verb
+transition	noun, verb
+weekend	noun, verb
+welcome	noun, interjection, verb
+yard	noun, verb
+alarm	noun, verb
+bend	noun, verb
+bicycle	noun, verb
+bite	noun, verb
+blind	noun, verb, adjective
+bottle	noun, verb
+cable	noun, verb
+candle	noun, verb
+clerk	noun, verb
+cloud	noun, verb
+concert	noun, verb
+counter	noun, verb, adverb
+flower	noun, verb
+grandfather	noun, verb
+harm	noun, verb
+knee	noun, verb
+lawyer	noun, verb
+leather	noun, adjective, verb
+load	noun, verb
+mirror	noun, verb
+neck	noun, verb
+pension	noun, verb
+plate	noun, verb
+purple	noun, adjective, verb
+ruin	noun, verb
+ship	noun, verb
+skirt	noun, verb
+slice	noun, verb
+snow	noun, verb
+specialist	noun, adjective
+stroke	noun, verb
+switch	noun, verb
+trash	noun, verb
+tune	noun, verb
+zone	noun, verb
+anger	noun, verb
+award	noun, verb
+bid	noun, verb
+bitter	noun, adjective
+boot	noun, verb
+bug	noun, verb
+camp	noun, verb, adjective
+candy	noun, verb
+carpet	noun, verb
+cat	noun, verb
+champion	noun, verb
+channel	noun, verb
+clock	noun, verb
+comfort	noun, verb
+cow	noun, verb
+crack	noun, verb, adjective
+engineer	noun, verb
+entrance	noun, verb
+fault	noun, verb
+grass	noun, verb
+guy	noun, verb
+hell	noun, interjection
+highlight	noun, verb
+incident	noun, adjective
+island	noun, verb
+joke	noun, verb
+jury	noun, verb, adjective
+leg	noun, verb
+lip	noun, verb
+mate	noun, verb
+motor	noun, adjective, verb
+nerve	noun, verb
+passage	noun, verb
+pen	noun, verb
+pride	noun, verb
+priest	noun, verb
+prize	noun, adjective, verb
+promise	noun, verb
+resident	noun, adjective
+resort	noun, verb
+ring	noun, verb
+roof	noun, verb
+rope	noun, verb
+sail	noun, verb
+scheme	noun, verb
+script	noun, verb
+sock	noun, verb
+station	noun, verb
+toe	noun, verb
+tower	noun, verb
+truck	noun, verb
+witness	noun, verb
+a	indefinite article, noun, preposition
+you	pronoun, noun
+it	pronoun, noun
+can	auxiliary verb, noun
+will	auxiliary verb, noun
+if	conjunction, noun
+one	adjective, noun, pronoun
+many	adjective, noun, pronoun
+most	adjective, noun, adverb
+other	adjective, noun, pronoun
+use	verb, noun
+make	verb, noun
+good	adjective, noun, adverb
+look	verb, noun, interjection
+help	verb, noun, interjection
+go	verb, noun, adjective
+great	adjective, noun, adverb
+being	verb, noun
+few	adjective, noun, pronoun
+might	auxiliary verb, noun
+still	adjective, noun, adverb
+public	adjective, noun
+read	verb, noun
+keep	verb, noun
+start	verb, noun
+give	verb, noun
+human	adjective, noun
+local	adjective, noun
+general	adjective, noun
+she	pronoun, noun
+specific	adjective, noun
+long	adjective, noun, adverb
+play	verb, noun
+feel	verb, noun
+high	adjective, noun, adverb
+tonight	adverb, noun
+put	verb, noun
+common	adjective, noun
+set	verb, noun, adjective
+change	verb, noun
+simple	adjective, noun
+past	adjective, noun, preposition
+big	adjective, noun
+possible	adjective, noun
+particular	adjective, noun
+today	adverb, noun
+major	adjective, noun, verb
+personal	adjective, noun
+current	adjective, noun
+national	adjective, noun
+cut	verb, noun
+natural	adjective, noun, adverb
+physical	adjective, noun
+show	verb, noun
+try	verb, noun
+check	verb, noun, interjection
+second	number, noun
+call	verb, noun
+move	verb, noun
+pay	verb, noun
+let	verb, noun
+increase	verb, noun
+single	adjective, noun, verb
+individual	adjective, noun
+turn	verb, noun
+ask	verb, noun
+buy	verb, noun
+guard	verb, noun
+hold	verb, noun
+main	adjective, noun
+offer	verb, noun
+potential	adjective, noun
+professional	adjective, noun
+international	adjective, noun
+travel	verb, noun
+cook	verb, noun
+alternative	adjective, noun
+following	preposition, noun, adjective
+special	adjective, noun
+working	adjective, noun
+whole	adjective, noun, adverb
+dance	verb, noun
+excuse	verb, noun
+cold	adjective, noun, adverb
+commercial	adjective, noun
+low	adjective, noun, adverb
+purchase	verb, noun
+deal	verb, noun
+primary	adjective, noun
+worth	adjective, noun
+fall	verb, noun
+necessary	adjective, noun
+positive	adjective, noun
+produce	verb, noun
+search	verb, noun
+present	adjective, noun, verb
+spend	verb, noun
+talk	verb, noun
+creative	adjective, noun
+tell	verb, noun
+cost	verb, noun
+drive	verb, noun
+green	adjective, noun, verb
+support	verb, noun
+glad	adjective, noun
+remove	verb, noun
+return	verb, noun
+run	verb, noun
+complex	adjective, noun, verb
+due	adjective, noun, adverb
+effective	adjective, noun
+middle	adjective, noun
+regular	adjective, noun
+reserve	verb, noun
+independent	adjective, noun
+leave	verb, noun
+original	adjective, noun
+reach	verb, noun
+rest	verb, noun
+serve	verb, noun
+watch	verb, noun
+beautiful	adjective, noun, interjection
+charge	verb, noun
+active	adjective, noun
+break	verb, noun
+negative	adjective, noun, interjection
+safe	adjective, noun
+stay	verb, noun
+visit	verb, noun
+visual	adjective, noun
+affect	verb, noun
+cover	verb, noun
+report	verb, noun
+rise	verb, noun
+walk	verb, noun
+white	adjective, noun, verb
+beyond	preposition, noun
+junior	adjective, noun
+pick	verb, noun
+unique	adjective, noun
+anything	pronoun, noun, adverb
+classic	adjective, noun
+final	adjective, noun
+lift	verb, noun
+mix	verb, noun
+private	adjective, noun
+stop	verb, noun
+teach	verb, noun
+western	adjective, noun
+concern	verb, noun
+familiar	adjective, noun
+fly	verb, noun
+official	adjective, noun
+broad	adjective, noun
+comfortable	adjective, noun
+gain	verb, noun
+maybe	adverb, noun
+rich	adjective, noun
+save	verb, noun, preposition
+stand	verb, noun
+young	adjective, noun
+fail	verb, noun
+heavy	adjective, noun, adverb
+hello	interjection, noun
+lead	verb, noun
+listen	verb, noun
+valuable	adjective, noun
+worry	verb, noun
+handle	verb, noun
+leading	adjective, noun
+meet	verb, noun
+release	verb, noun
+sell	verb, noun
+finish	verb, noun
+normal	adjective, noun
+press	verb, noun
+ride	verb, noun
+secret	adjective, noun
+spread	verb, noun
+spring	verb, noun
+tough	adjective, noun
+wait	verb, noun
+brown	adjective, noun, verb
+deep	adjective, noun, adverb
+display	verb, noun
+flow	verb, noun
+hit	verb, noun
+objective	adjective, noun
+shoot	verb, noun, interjection
+touch	verb, noun
+cancel	verb, noun
+chemical	adjective, noun
+cry	verb, noun, idiom
+dump	verb, noun, idiom
+extreme	adjective, noun
+push	verb, noun, idiom
+conflict	verb, noun
+eat	verb, noun, idiom
+fill	verb, noun, idiom
+formal	adjective, noun, adverb
+jump	verb, noun, adjective
+kick	verb, noun, idiom
+opposite	adjective, noun, preposition
+pass	verb, noun, idiom
+pitch	verb, noun
+remote	adjective, noun
+total	adjective, noun, verb
+treat	verb, noun
+vast	adjective, noun
+abuse	verb, noun
+beat	verb, noun, adjective
+burn	verb, noun
+deposit	verb, noun
+print	verb, noun, adjective
+raise	verb, noun, idiom
+sleep	verb, noun, idiom
+somewhere	adverb, noun
+advance	verb, noun, adjective
+anywhere	adverb, noun
+consist	verb, noun
+dark	adjective, noun, idiom
+double	adjective, noun, verb
+draw	verb, noun, idiom
+equal	adjective, noun, verb
+fix	verb, noun, idiom
+hire	verb, noun, adjective
+internal	adjective, noun
+join	verb, noun
+kill	verb, noun, idiom
+sensitive	adjective, noun
+tap	verb, noun
+win	verb, noun
+attack	verb, noun
+claim	verb, noun
+constant	adjective, noun
+drag	verb, noun, adjective
+drink	verb, noun
+guess	verb, noun, idiom
+minor	adjective, noun, verb
+pull	verb, noun
+raw	adjective, noun, idiom
+soft	adjective, noun, adverb
+solid	adjective, noun
+wear	verb, noun, idiom
+weird	adjective, noun
+wonder	verb, noun, idiom
+annual	adjective, noun
+count	verb, noun, adjective
+dead	adjective, noun, adverb
+doubt	verb, noun, idiom
+feed	verb, noun, idiom
+forever	adverb, noun, idiom
+impress	verb, noun
+nobody	pronoun, noun
+repeat	verb, noun
+round	adjective, noun, adverb
+sing	verb, noun
+slide	verb, noun, idiom
+strip	verb, noun
+whereas	conjunction, noun
+wish	verb, noun
+combine	verb, noun
+command	verb, noun
+dig	verb, noun
+divide	verb, noun
+equivalent	adjective, noun
+hang	verb, noun, idiom
+hunt	verb, noun
+initial	adjective, noun, verb
+march	verb, noun, idiom
+mention	verb, noun, idiom
+smell	verb, noun
+spiritual	adjective, noun
+survey	verb, noun
+tie	verb, noun, idiom
+adult	adjective, noun
+brief	adjective, noun, verb
+crazy	adjective, noun, idiom
+escape	verb, noun, adjective
+gather	verb, noun, idiom
+hate	verb, noun
+prior	adjective, noun, idiom
+repair	verb, noun
+rough	adjective, noun, adverb
+sad	adjective, noun
+scratch	verb, noun, adjective
+sick	adjective, noun, idiom
+strike	verb, noun, adjective
+employ	verb, noun
+external	adjective, noun
+hurt	verb, noun
+illegal	adjective, noun
+laugh	verb, noun
+lay	verb, noun, adjective
+mobile	adjective, noun
+nasty	adjective, noun
+ordinary	adjective, noun
+respond	verb, noun
+royal	adjective, noun
+senior	adjective, noun
+split	verb, noun
+strain	verb, noun
+struggle	verb, noun
+swim	verb, noun
+train	verb, noun
+upper	adjective, noun
+wash	verb, noun
+yellow	adjective, noun, verb
+convert	verb, noun
+crash	verb, noun, adjective
+dependent	adjective, noun
+fold	verb, noun
+funny	adjective, noun
+grab	verb, noun
+hide	verb, noun
+miss	verb, noun
+permit	verb, noun
+quote	verb, noun
+recover	verb, noun
+resolve	verb, noun
+roll	verb, noun
+sink	verb, noun
+slip	verb, noun
+spare	adjective, noun, verb
+suspect	verb, noun, adjective
+sweet	adjective, noun
+swing	verb, noun
+twist	verb, noun
+upstairs	adjective, noun
+usual	adjective, noun
+abroad	adverb, noun
+brave	adjective, noun, verb
+calm	adjective, noun, verb
+concentrate	verb, noun
+estimate	verb, noun
+grand	adjective, noun
+male	adjective, noun
+mine	pronoun, noun, verb
+prompt	verb, noun, adjective
+quiet	adjective, noun, verb
+refuse	verb, noun
+regret	verb, noun
+reveal	verb, noun
+rush	verb, noun
+shake	verb, noun
+shift	verb, noun
+shine	verb, noun
+steal	verb, noun
+suck	verb, noun
+surround	verb, noun
+anybody	pronoun, noun
+bear	verb, noun
+brilliant	adjective, noun
+dare	verb, noun
+dear	adjective, noun, adverb
+delay	verb, noun
+drunk	adjective, noun
+female	adjective, noun
+hurry	verb, noun
+inevitable	adjective, noun
+invite	verb, noun
+kiss	verb, noun
+neat	adjective, noun
+pop	verb, noun, adverb
+punch	verb, noun
+quit	verb, noun
+reply	verb, noun
+representative	adjective, noun
+resist	verb, noun
+rip	verb, noun
+rub	verb, noun
+silly	adjective, noun
+smile	verb, noun
+spell	verb, noun
+stretch	verb, noun
+stupid	adjective, noun
+tear	verb, noun
+temporary	adjective, noun
+tomorrow	adverb, noun
+wake	verb, noun
+wrap	verb, noun
+yesterday	adverb, noun

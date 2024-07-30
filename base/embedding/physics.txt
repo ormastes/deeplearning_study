@@ -1,0 +1,119 @@
+acceleration	the rate of increase of speed or the rate of change of velocity
+alternating current	a continuous electric current that periodically reverses direction, usually sinusoidally
+ampere	the basic SI unit of electric current; the constant current that, when maintained in two parallel conductors of infinite length and negligible cross section placed 1 metre apart in free space, produces a force of 2 × 10–7 newton per metre between them. 1 ampere is equivalent to 1 coulomb per second
+amplifier	an electronic device used to increase the strength of the signal fed into it
+angstrom	a unit of length equal to 10–10 metre, used principally to express the wavelengths of electromagnetic radiations. It is equivalent to 0.1 nanometre
+anion	a negatively charged ion; an ion that is attracted to the anode during electrolysis
+antimatter	a form of matter composed of antiparticles, such as antihydrogen, consisting of antiprotons and positrons
+atom	this entity as a source of nuclear energy
+baryon	any of a class of elementary particles that have a mass greater than or equal to that of the proton, participate in strong interactions, and have a spin of . Baryons are either nucleons or hyperons. The baryon number is the number of baryons in a system minus the number of antibaryons
+becquerel	the derived SI unit of radioactivity equal to one disintegration per second
+Boyle's law	the principle that the pressure of a gas varies inversely with its volume at constant temperature
+Brownian motion	random movement of microscopic particles suspended in a fluid, caused by bombardment of the particles by molecules of the fluid. First observed in 1827, it provided strong evidence in support of the kinetic theory of molecules
+cacion	a positively charged ion; an ion that is attracted to the cathode during electrolysis
+calorie	a unit of heat, equal to 4.1868 joules (International Table calorie): formerly defined as the quantity of heat required to raise the temperature of 1 gram of water by 1°C under standard conditions. It has now largely been replaced by the joule for scientific purposes
+capacitance	the property of a system that enables it to store electric charge
+cathode ray	a valve in which a beam of high-energy electrons is focused onto a fluorescent screen to give a visible spot of light. The device, with appropriate deflection equipment, is used in television receivers, visual display units, oscilloscopes, etc
+centre of gravity	the point through which the resultant of the gravitational forces on a body always acts
+centrifugal force	a fictitious force that can be thought of as acting outwards on any body that rotates or moves along a curved path
+centripetal force	a force that acts inwards on any body that rotates or moves along a curved path and is directed towards the centre of curvature of the path or the axis of rotation
+charge	the attribute of matter by which it responds to electromagnetic forces responsible for all electrical phenomena, existing in two forms to which the signs negative and positive are arbitrarily assigned
+Charles' law	the principle that all gases expand equally for the same rise of temperature if they are held at constant pressure: also that the pressures of all gases increase equally for the same rise of temperature if they are held at constant volume. The law is now known to be only true for ideal gases
+conductor	a substance, body, or system that conducts electricity, heat, etc
+convection	the process by which masses of relatively warm air are raised into the atmosphere, often cooling and forming clouds, with compensatory downward movements of cooler air
+cosmic ray	a radiation of high penetrating power that originates in outer space and consists partly of high-energy atomic nuclei
+coulomb	the derived SI unit of electric charge; the quantity of electricity transported in one second by a current of 1 ampere
+current	a flow of electric charge through a conductor
+cyclotron	a type of particle accelerator in which the particles spiral inside two D-shaped hollow metal electrodes placed facing each other under the effect of a strong vertical magnetic field, gaining energy by a high-frequency voltage applied between these electrodes
+decibel	a unit for comparing two currents, voltages, or power levels, equal to one tenth of a bel
+density	a measure of the compactness of a substance, expressed as its mass per unit volume. It is measured in kilograms per cubic metre or pounds per cubic foot
+diffraction	a deviation in the direction of a wave at the edge of an obstacle in its path
+diffusion	the random thermal motion of atoms, molecules, clusters of atoms, etc, in gases, liquids, and some solids
+diode	a semiconductor device containing one p-n junction, used in circuits for converting alternating current to direct current
+direct current	a continuous electric current that flows in one direction only, without substantial variation in magnitude
+Doppler effect	a phenomenon, observed for sound waves and electromagnetic radiation, characterized by a change in the apparent frequency of a wave as a result of relative motion between the observer and the source
+earth	a connection between an electrical circuit or device and the earth, which is at zero potential
+electricity	any phenomenon associated with stationary or moving electrons, ions, or other charged particles
+electromotive force	a source of energy that can cause a current to flow in an electrical circuit or device
+electron	a stable elementary particle present in all atoms, orbiting the nucleus in numbers equal to the atomic number of the element in the neutral atom; a lepton with a negative charge of 1.602 176 462 × 10–19 coulomb, a rest mass of 9.109 381 88 × 10–31 kilogram, a radius of 2.817 940 285 × 10–15 metre, and a spin of
+energy	a measure of this capacity, expressed as the work that it does in changing to some specified reference state. It is measured in joules (SI units)
+farad	the derived SI unit of electric capacitance; the capacitance of a capacitor between the plates of which a potential of 1 volt is created by a charge of 1 coulomb
+field	a region of space that is a vector field; a region of space under the influence of some scalar quantity, such as temperature
+fission	the splitting of an atomic nucleus into approximately equal parts, either spontaneously or as a result of the impact of a particle usually with an associated release of energy
+fluorescence	the emission of light or other radiation from atoms or molecules that are bombarded by particles, such as electrons, or by radiation from a separate source. The bombarding radiation produces excited atoms, molecules, or ions and these emit photons as they fall back to the ground state
+force	a dynamic influence that changes a body from a state of rest to one of motion or changes its rate of motion. The magnitude of the force is equal to the product of the mass of the body and its acceleration
+frequency	the number of times that a periodic function or vibration repeats itself in a specified time, often 1 second. It is usually measured in hertz
+friction	a resistance encountered when one body moves relative to another body with which it is in contact
+fuse	a lead of combustible black powder in a waterproof covering (safety fuse), or a lead containing an explosive (detonating fuse), used to fire an explosive charge
+fusion	a reaction in which two nuclei combine to form a nucleus with the release of energy
+gamma ray	electromagnetic radiation having a wavelength of 10-9 centimeters or less: may be produced by the reactions of nuclei or elementary particles or by the interaction of high energy electrons with matter
+generator	any device for converting mechanical energy into electrical energy by electromagnetic induction, esp a large one as in a power station
+gravitational wave	a wave-like motion in a gravitational field, produced when a mass is accelerated or otherwise disturbed; they travel through space-time at the speed of light and the strongest sources are those with the strongest gravitational fields, although the waves are very weak; predicted by Einstein in 1916 but not first observed directly until 2015
+gravity	the force of attraction that moves or tends to move bodies towards the centre of a celestial body, such as the earth or moon
+half-life	the time taken for half of the atoms in a radioactive material to undergo decay
+hertz	the derived SI unit of frequency; the frequency of a periodic phenomenon that has a periodic time of 1 second; 1 cycle per second
+hyperon	any baryon that is not a nucleon
+impetus	the force that sets a body in motion or that tends to resist changes in a body's motion
+inductance	the property of an electric circuit as a result of which an electromotive force is created by a change of current in the same circuit (self-inductance) or in a neighbouring circuit (mutual inductance). It is usually measured in henries
+inertia	the tendency of a body to preserve its state of rest or uniform motion unless acted upon by an external force
+infrared	the part of the electromagnetic spectrum with a longer wavelength than light but a shorter wavelength than radio waves; radiation with wavelength between 0.8 micrometres and 1 millimetre
+joule	the derived SI unit of work or energy; the work done when the point of application of a force of 1 newton is displaced through a distance of 1 metre in the direction of the force. 1 joule is equivalent to 1 watt-second, 107 ergs, 0.2390 calories, or 0.738 foot-pound
+kelvin	the basic SI unit of thermodynamic temperature; the fraction 1⁄273.16 of the thermodynamic temperature of the triple point of waterSymbol: K
+kinetic energy	the energy of motion of a body, equal to the work it would do if it were brought to rest. The translational kinetic energy depends on motion through space, and for a rigid body of constant mass is equal to the product of half the mass times the square of the speed. The rotational kinetic energy depends on rotation about an axis, and for a body of constant moment of inertia is equal to the product of half the moment of inertia times the square of the angular velocity. In relativistic physics kinetic energy is equal to the product of the increase of mass caused by motion times the square of the speed of light. The SI unit is the joule but the electronvolt is often used in atomic physics
+laser	a source of high-intensity optical, infrared, or ultraviolet radiation produced as a result of stimulated emission maintained within a solid, liquid, or gaseous medium. The photons involved in the emission process all have the same energy and phase so that the laser beam is monochromatic and coherent, allowing it to be brought to a fine focus
+lens	a device that diverges or converges a beam of electromagnetic radiation, sound, or particles
+lepton	any of a group of elementary particles and their antiparticles, such as an electron, muon, or neutrino, that participate in electromagnetic and weak interactions and have a half-integral spin
+luminescence	the emission of light at low temperatures by any process other than incandescence, such as phosphorescence or chemiluminescence
+mass	a physical quantity expressing the amount of matter in a body. It is a measure of a body's resistance to changes in velocity (inertial mass) and also of the force experienced in a gravitational field (gravitational mass): according to the theory of relativity, inertial and gravitational masses are equal
+matter	substance that occupies space and has mass, as distinguished from substance that is mental, spiritual, etc
+meson	any of a group of elementary particles, such as a pion or kaon, that usually has a rest mass between those of an electron and a proton, and an integral spin. They are responsible for the force between nucleons in the atomic nucleus
+microwave	electromagnetic radiation in the wavelength range 0.3 to 0.001 metres: used in radar, cooking, etc
+moment	the product of a physical quantity, such as force or mass, and its distance from a fixed reference point
+momentum	the product of a body's mass and its velocity
+muon	a positive or negative elementary particle with a mass 207 times that of an electron and spin . It was originally called the mu meson but is now classified as a lepton
+neutrino	a stable leptonic neutral elementary particle with very small or possibly zero rest mass and spin that travels at the speed of light. Three types exist, associated with the electron, the muon, and the tau particle
+neutron	a neutral elementary particle with a rest mass of 1.674 92716 × 10–27 kilogram and spin ; classified as a baryon. In the nucleus of an atom it is stable, but when free it decays
+newton	the derived SI unit of force that imparts an acceleration of 1 metre per second to a mass of 1 kilogram; equivalent to 105 dynes or 7.233 poundals
+nucleon	a proton or neutron, esp one present in an atomic nucleus
+nucleus	the central portion in the head of a comet, consisting of small solid particles of ice and frozen gases, which vaporize on approaching the sun to form the coma and tail
+ohm	the derived SI unit of electrical resistance; the resistance between two points on a conductor when a constant potential difference of 1 volt between them produces a current of 1 ampere
+Ohm's law	the principle that the electric current passing through a conductor is directly proportional to the potential difference across it, provided that the temperature remains constant. The constant of proportionality is the resistance of the conductor
+particle	a body with finite mass that can be treated as having negligible size, and internal structure
+pascal	the derived SI unit of pressure; the pressure exerted on an area of 1 square metre by a force of 1 newton; equivalent to 10 dynes per square centimetre or 1.45 × 10–4 pound per square inch
+Planck constant or Planck's constant	a fundamental constant equal to the energy of any quantum of radiation divided by its frequency. It has a value of 6.62606876 × 10–34 joule seconds
+potential difference	the difference in electric potential between two points in an electric field; the work that has to be done in transferring unit positive charge from one point to the other, measured in volts
+potential energy	the energy of a body or system as a result of its position in an electric, magnetic, or gravitational field. It is measured in joules (SI units), electronvolts, ergs, etc
+proton	a stable, positively charged elementary particle, found in atomic nuclei in numbers equal to the atomic number of the element. It is a baryon with a charge of 1.602176462 × 10–19 coulomb, a rest mass of 1.672 62159 × 10–27 kilogram, and spin
+quantum	the smallest quantity of some physical property, such as energy, that a system can possess according to the quantum theory
+radiation	the emission or transfer of radiant energy as particles, electromagnetic waves, sound, etc
+radioactivity	the spontaneous emission of radiation from atomic nuclei. The radiation can consist of alpha, beta, and gamma radiation
+radio wave	an electromagnetic wave of radio frequency
+red shift	a shift in the lines of the spectrum of an astronomical object towards a longer wavelength (the red end of an optical spectrum), relative to the wavelength of these lines in the terrestrial spectrum, usually as a result of the Doppler effect caused by the recession of the object
+reflection	the act of reflecting or the state of being reflected
+refraction	the change in direction of a propagating wave, such as light or sound, in passing from one medium to another in which it has a different velocity
+relativity	either of two theories developed by Albert Einstein, the special theory of relativity, which requires that the laws of physics shall be the same as seen by any two different observers in uniform relative motion, and the general theory of relativity which considers observers with relative acceleration and leads to a theory of gravitation
+resistance	the opposition to a flow of electric current through a circuit component, medium, or substance. It is the magnitude of the real part of the impedance and is measured in ohms
+rutherford	a unit of activity equal to the quantity of a radioactive nuclide required to produce one million disintegrations per second
+semiconductor	a device, such as a transistor or integrated circuit, that depends on the properties of such a substance
+simple harmonic motion	a form of periodic motion of a particle, etc, in which the acceleration is always directed towards some equilibrium point and is proportional to the displacement from this point
+spectrum	the distribution of colours produced when white light is dispersed by a prism or diffraction grating. There is a continuous change in wavelength from red, the longest wavelength, to violet, the shortest. Seven colours are usually distinguished: violet, indigo, blue, green, yellow, orange, and red
+static electricity	electric sparks or crackling produced by friction
+subatomic particle	any of various particles, such as electrons, neutrons, or protons, that are smaller than an atom
+superconductivity	the property of certain substances that have no electrical resistance. In metals it occurs at very low temperatures, but higher temperature superconductivity occurs in some ceramic materials
+superfluidity	the state of being or property of becoming a superfluid
+surface tension	a property of liquids caused by intermolecular forces near the surface leading to the apparent presence of a surface film and to capillarity, etc
+tau particle	an unstable, negatively charged lepton with a mass of c. 1,777 MeV/c2 (or c. 3,490 times that of an electron) and a mean lifetime of 2.2 ×10-13 second
+tension	a force that tends to produce an elongation of a body or structure
+terminal velocity	the constant maximum velocity reached by a body falling under gravity through a fluid, esp the atmosphere
+thermostat	a device that maintains a system at a constant temperature. It often consists of a bimetallic strip that bends as it expands and contracts with temperature, thus breaking and making contact with an electrical power supply
+transformer	a device that transfers an alternating current from one circuit to one or more other circuits, usually with an increase (step-up transformer) or decrease (step-down transformer) of voltage. The input current is fed to a primary winding, the output being taken from a secondary winding or windings inductively linked to the primary
+transistor	a semiconductor device, having three or more terminals attached to electrode regions, in which current flowing between two electrodes is controlled by a voltage or current applied to one or more specified electrodes. The device is capable of amplification, etc, and has replaced the valve in most circuits since it is much smaller, more robust, and works at a much lower voltage
+ultraviolet	the part of the electromagnetic spectrum with wavelengths shorter than light but longer than X-rays; in the range 0.4 × 10–6 and 1 × 10–8 metres
+vacuum	a region containing no matter; free space
+velocity	a measure of the rate of motion of a body expressed as the rate of change of its position in a particular direction with time. It is measured in metres per second, miles per hour, etc
+viscosity	a measure of this resistance, equal to the tangential stress on a liquid undergoing streamline flow divided by its velocity gradient. It is measured in newton seconds per metre squared
+volt	the derived SI unit of electric potential; the potential difference between two points on a conductor carrying a current of 1 ampere, when the power dissipated between these points is 1 watt
+watt	the derived SI unit of power, equal to 1 joule per second; the power dissipated by a current of 1 ampere flowing across a potential difference of 1 volt. 1 watt is equivalent to 1.341 × 10–3 horsepower
+wave	one of a sequence of ridges or undulations that moves across the surface of a body of a liquid, esp the sea: created by the wind or a moving object and gravity
+wavelength	the distance, measured in the direction of propagation, between two points of the same phase in consecutive cycles of a wave
+x-ray	electromagnetic radiation emitted when matter is bombarded with fast electrons. X-rays have wavelengths shorter than that of ultraviolet radiation, that is less than about 1 × 10–8 metres. They extend to indefinitely short wavelengths, but below about 1 × 10–11 metres they are often called gamma radiation

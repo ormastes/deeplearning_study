@@ -1,0 +1,17 @@
+.	Statement end period
+.	Block start period
+.	Block end period
+,	Comment start comma
+,	Comment end comma
+(	Comment open parenthesis
+)	Comment close parenthesis
+:	Block start colon
+\n	Block end newline
+\n	Statement end newline
+ 	Connect word space
+`	Text open back quote
+'	Text open single quote
+"	Text open double quote
+`	Text close back quote
+'	Text close single quote
+"	Text close double quote

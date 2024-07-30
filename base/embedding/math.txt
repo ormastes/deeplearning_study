@@ -1,0 +1,173 @@
+acute angle	an angle that is less than 90°
+addition	a mathematical operation in which the sum of two numbers or quantities is calculated. Usually indicated by the symbol +
+algorithm	recursive procedure whereby an infinite sequence of terms can be generated
+algorism	a recursive procedure whereby an infinite sequence of terms can be generated
+angle	the extent to which one such line or plane diverges from another, measured in degrees or radians
+arc	a section of a curve, graph, or geometric figure
+area	the two-dimensional extent of the surface of a solid, or of some part thereof, esp one bounded by a closed curve
+average	the result obtained by adding the numbers or quantities in a set and dividing the total by the number of members in the set
+axis	one of two or three reference lines used in coordinate geometry to locate a point in a plane or in space
+base	the number of distinct single-digit numbers in a counting system, and so the number represented as 10 in a place-value system
+binary	of, relating to, or expressed in binary notation or binary code
+binomial	a mathematical expression consisting of two terms, such as 3x + 2y
+cardinal number	a number denoting quantity but not order in a set
+Cartesian coordinates	a system of representing points in space in terms of their distance from a given origin measured along a set of mutually perpendicular axes. Written (x,y,z) with reference to three axes
+chord	a straight line connecting two points on a curve or curved surface
+circle	a closed plane curve every point of which is equidistant from a given fixed point, the centre. Equation: (x –h)2 + (y –k)2 = r2 where r is the radius and (h, k) are the coordinates of the centre; area πr2; circumference: 2πr
+circumference	the boundary of a specific area or geometric figure, esp of a circle
+closed set	a set that includes all the values obtained by application of a given operation to its members
+coefficient	a numerical or constant factor in an algebraic term
+common denominator	an integer exactly divisible by each denominator of a group of fractions: , , and have a common denominator of 12
+common factor	a number or quantity that is a factor of each member of a group of numbers or quantities
+complex number	any number of the form a + ib, where a and b are real numbers and i = √–1
+concentric	having a common centre
+cone	a geometric solid consisting of a plane base bounded by a closed curve, often a circle or an ellipse, every point of which is joined to a fixed point, the vertex, lying outside the plane of the base. A right circular cone has a vertex perpendicularly above or below the centre of a circular base. Volume of a cone: πr2h, where r is the radius of the base and h is the height of the cone
+constant	a symbol representing an unspecified number that remains invariable throughout a particular series of operations
+coordinate or co-ordinate	any of a set of numbers that defines the location of a point in space
+cosecant	(of an angle) a trigonometric function that in a right-angled triangle is the ratio of the length of the hypotenuse to that of the opposite side; the reciprocal of sine
+cosine	a trigonometric function that in a right-angled triangle is the ratio of the length of the adjacent side to that of the hypotenuse; the sine of the complement
+cotangent	(of an angle) a trigonometric function that in a right-angled triangle is the ratio of the length of the adjacent side to that of the opposite side; the reciprocal of tangent
+cube	a solid having six plane square faces in which the angle between two adjacent sides is a right angle
+cube root	the number or quantity whose cube is a given number or quantity: 2 is the cube root of 8 (usually written 3√ 8 or 81⁄3)
+cuboid	a geometric solid whose six faces are rectangles; rectangular parallelepiped
+curve	a system of points whose coordinates satisfy a given equation; a locus of points
+cusp	a point at which two arcs of a curve intersect and at which the two tangents are coincident
+cylinder	a solid consisting of two parallel planes bounded by identical closed curves, usually circles, that are interconnected at every point by a set of parallel lines, usually perpendicular to the planes. Volume base area × length
+decagon	a polygon having ten sides
+decimal	a fraction that has a denominator of a power of ten, the power depending on or deciding the decimal place. It is indicated by a decimal point to the left of the numerator, the denominator being omitted. Zeros are inserted between the point and the numerator, if necessary, to obtain the correct decimal place
+denary	calculated by tens; based on ten; decimal
+denominator	the divisor of a fraction, as 8 in
+diagonal	any oblique row of squares of the same colour
+diameter	a straight line connecting the centre of a geometric figure, esp a circle or sphere, with two points on the perimeter or surface
+digit	any of the ten Arabic numerals from 0 to 9
+division	a mathematical operation, the inverse of multiplication, in which the quotient of two numbers or quantities is calculated. Usually written: a ÷ b, , a/b,
+dodecahedron	a solid figure having twelve plane faces. A regular dodecahedron has regular pentagons as faces
+ellipse	a closed conic section shaped like a flattened circle and formed by an inclined plane that does not cut the base of the cone. Standard equation x2/a2 + y2/b2 = 1, where 2a and 2b are the lengths of the major and minor axes. Area: πab
+equals	same in number, amount, degree, rank, or quality
+equation	a mathematical statement that two expressions are equal: it is either an identity in which the variables can assume any value, or a conditional equation in which the variables have only certain values (roots)
+equilateral	a geometric figure having all its sides of equal length
+even	(of a number) divisible by two
+exponential	an exponential function, etc
+factor	one of two or more integers or polynomials whose product is a given integer or polynomial
+factorial	the product of all the positive integers from one up to and including a given integer. Factorial zero is assigned the value of one: factorial four is 1 × 2 × 3 × 4. Symbol: n!, where n is the given integer
+formula	a general relationship, principle, or rule stated, often as an equation, in the form of symbols
+fraction	a ratio of two expressions or numbers other than zero
+frequency	the number of times that an event occurs within a given period; rate of recurrence
+function	a relation between two sets that associates a unique element (the value) of the second (the range) with each element (the argument) of the first (the domain): a many-one relation. Symbol: f(x) The value of f(x) for x = 2 is f(2)
+graph	a drawing depicting the relation between certain sets of numbers or quantities by means of a series of dots, lines, etc, plotted with reference to a set of axes
+helix	a curve that lies on a cylinder or cone, at a constant angle to the line segments making up the surface; spiral
+hemisphere	one half of a sphere
+heptagon	a polygon having seven sides
+hexagon	a polygon having six sides
+hyperbola	a conic section formed by a plane that cuts both bases of a cone; it consists of two branches asymptotic to two intersecting fixed lines and has two foci. Standard equation: x2/a2 – y2/b2 = 1 where 2a is the distance between the two intersections with the x-axis and b = a√(e2 – 1), where e is the eccentricity
+hypotenuse	the side in a right-angled triangle that is opposite the right angle
+icosahedron	a solid figure having 20 faces. The faces of a regular icosahedron are equilateral triangles
+imaginary number	any complex number of the form ib, where i = √–1
+improper fraction	a fraction in which the numerator has a greater absolute value or degree than the denominator, as or (x2 + 3)/(x + 1)
+index	a number or variable placed as a superscript to the left of a radical sign indicating by its value the root to be extracted, as in 3√8 = 2
+infinity	the concept of a value greater than any finite numerical value
+integer	any rational number that can be expressed as the sum or difference of a finite number of units, being a member of the set …–3, –2, –1, 0, 1, 2, 3…
+integral	the limit of an increasingly large number of increasingly smaller quantities, related to the function that is being integrated (the integrand). The independent variables may be confined within certain limits (definite integral) or in the absence of limits (indefinite integral)
+intersection	a point or set of points common to two or more geometric configurations
+irrational number	any real number that cannot be expressed as the ratio of two integers, such as π
+isosceles	(of a triangle) having two sides of equal length; (of a trapezium) having the two nonparallel sides of equal length
+locus	a set of points whose location satisfies or is determined by one or more specified conditions
+logarithm or log	the exponent indicating the power to which a fixed number, the base, must be raised to obtain a given number or variable. It is used esp to simplify multiplication and division: if ax = M, then the logarithm of M to the base a (written logaM) is x
+lowest common denominator	the smallest integer or polynomial that is exactly divisible by each denominator of a set of fractions
+lowest common multiple	the smallest number or quantity that is exactly divisible by each member of a set of numbers or quantities
+Mandelbrot set	a set of points in the complex plane that is self-replicating according to some predetermined rule such that the boundary of the set has fractal dimensions, used in the study of fractal geometry and in producing patterns in computer graphics
+matrix	a substance, situation, or environment in which something has its origin, takes form, or is enclosed
+mean	the second and third terms of a proportion, as b and c in a/b = c/d
+median	a straight line joining one vertex of a triangle to the midpoint of the opposite side
+minus	reduced by the subtraction of
+mode	that one of a range of values that has the highest frequency as determined statistically
+multiplication	an arithmetical operation, defined initially in terms of repeated addition, usually written a × b, a.b, or ab, by which the product of two quantities is calculated: to multiply a by positive integral b is to add a to itself b times. Multiplication by fractions can then be defined in the light of the associative and commutative properties; multiplication by 1/n is equivalent to multiplication by 1 followed by division by n: for example 0.3 × 0.7 = 0.3 × = (0.3 × 7)/10 = 2 = 0.21
+natural logarithm	a logarithm to the base e. Usually written loge or ln
+natural number	any of the numbers 0,1,2,3,4,… that can be used to count the members of a set; the non-negative integers
+node	a point at which the amplitude of one of the two kinds of displacement in a standing wave has zero or minimum value. Generally the other kind of displacement has its maximum value at this point
+nonagon	a polygon having nine sides
+number	a concept of quantity that is or can be derived from a single unit, the sum of a collection of units, or zero. Every number occupies a unique position in a sequence, enabling it to be used in counting. It can be assigned to one or more sets that can be arranged in a hierarchical classification: every number is a complex number; a complex number is either an imaginary number or a real number, and the latter can be a rational number or an irrational number; a rational number is either an integer or a fraction, while an irrational number can be a transcendental number or an algebraic number
+numerator	the dividend of a fraction
+oblong	having an elongated, esp rectangular, shape
+obtuse angle	An obtuse angle is an angle of greater than 90° and less than 180°.
+octagon	a polygon having eight sides
+octahedron	a solid figure having eight plane faces
+odd	not divisible by two
+open set	a set which is not a closed set
+operation	any procedure, such as addition, multiplication, involution, or differentiation, in which one or more numbers or quantities are operated upon according to specific rules
+operator	any symbol, term, letter, etc, used to indicate or express a specific operation or process, such as Δ (the differential operator)
+ordinal number	a number denoting relative position in a sequence, such as first, second, third
+origin	the point of intersection of coordinate axes or planes
+parabola	a conic section formed by the intersection of a cone by a plane parallel to its side. Standard equation: y2 = 4ax, where 2a is the distance between focus and directrix
+parallel	separated by an equal distance at every point; never touching or intersecting
+parallelogram	a quadrilateral whose opposite sides are parallel and equal in length
+pentagon	a polygon having five sides
+percentage	proportion or rate per hundred parts
+perfect number	an integer, such as 28, that is equal to the sum of all its possible factors, excluding itself
+pi	a transcendental number, fundamental to mathematics, that is the ratio of the circumference of a circle to its diameter. Approximate value: 3.141 592…; symbol: π
+plus	increased by the addition of
+polygon	a closed plane figure bounded by three or more straight sides that meet in pairs in the same number of vertices, and do not intersect other than at these vertices. The sum of the interior angles is (n–2) × 180° for n sides; the sum of the exterior angles is 360°. A regular polygon has all its sides and angles equal. Specific polygons are named according to the number of sides, such as triangle, pentagon, etc
+polyhedron	a solid figure consisting of four or more plane faces (all polygons), pairs of which meet along an edge, three or more edges meeting at a vertex. In a regular polyhedron all the faces are identical regular polygons making equal angles with each other. Specific polyhedrons are named according to the number of faces, such as tetrahedron, icosahedron, etc
+polynomial	a mathematical expression consisting of a sum of terms each of which is the product of a constant and one or more variables raised to a positive or zero integral power. For one variable, x, the general form is given by: a0xn + a1xn–1 + … + an–1x + an, where a0, a1, etc, are real numbers
+power	the value of a number or quantity raised to some exponent
+prime number	an integer that cannot be factorized into other integers but is only divisible by itself or 1, such as 2, 3, 5, 7, and 11
+prism	a transparent polygonal solid, often having triangular ends and rectangular sides, for dispersing light into a spectrum or for reflecting and deviating light. They are used in spectroscopes, binoculars, periscopes, etc
+probability	a measure or estimate of the degree of confidence one may have in the occurrence of an event, measured on a scale from zero (impossibility) to one (certainty). It may be defined as the proportion of favourable outcomes to the total number of possibilities if these are indifferent (mathematical probability), or the proportion observed in a sample (empirical probability), or the limit of this as the sample size tends to infinity (relative frequency), or by more subjective criteria (subjective probability)
+product	the result of the multiplication of two or more numbers, quantities, etc
+proof	a sequence of steps or statements that establishes the truth of a proposition
+proper fraction	a fraction in which the numerator has a lower absolute value than the denominator, as or x/(3 + x2)
+Pythagoras' theorem	the theorem that in a right-angled triangle the square of the length of the hypotenuse equals the sum of the squares of the other two sides
+quadrant	a quarter of the circumference of a circle
+quadratic equation	an equation containing one or more terms in which the variable is raised to the power of two, but no terms in which it is raised to a higher power
+quadrilateral	a polygon having four sides. A complete quadrilateral consists of four lines and their six points of intersection
+quotient	the result of the division of one number or quantity by another
+radian	an SI unit of plane angle; the angle between two radii of a circle that cut off on the circumference an arc equal in length to the radius. 1 radian is equivalent to 57.296 degrees and π/2 radians equals a right angle
+radius	a straight line joining the centre of a circle or sphere to any point on the circumference or surface
+ratio	a quotient of two numbers or quantities
+rational number	any real number of the form a/b, where a and b are integers and b is not zero, as 7 or 7/3
+real number	a number expressible as a limit of rational numbers
+reciprocal	a number or quantity that when multiplied by a given number or quantity gives a product of one
+rectangle	a parallelogram having four right angles
+recurring decimal	a rational number that contains a pattern of digits repeated indefinitely after the decimal point
+reflex angle	A reflex angle is an angle that measures more than 180° but less than 360°
+remainder	the amount left over when one quantity cannot be exactly divided by another
+rhombus	an oblique-angled parallelogram having four equal sides
+right angle	the angle between two radii of a circle that cut off on the circumference an arc equal in length to one quarter of the circumference; an angle of 90° or π/2 radians
+right-angled triangle	a triangle one angle of which is a right angle
+root	any plant part, such as a rhizome or tuber, that is similar to a root in structure, function, or appearance
+scalar	an element of a field associated with a vector space
+scalene	(of a triangle) having all sides of unequal length
+secant	(of an angle) a trigonometric function that in a right-angled triangle is the ratio of the length of the hypotenuse to that of the adjacent side; the reciprocal of cosine
+sector	either portion of a circle included between two radii and an arc. Area: r2θ, where r is the radius and θ is the central angle subtended by the arc (in radians)
+semicircle	one half of a circle
+set	a collection of numbers, objects, etc, that is treated as an entity
+significant figures	the figures of a number that express a magnitude to a specified degree of accuracy, rounding up or down the final figure
+simultaneous equations	a set of equations that are all satisfied by the same values of the variables
+sine	a trigonometric function that in a right-angled triangle is the ratio of the length of the opposite side to that of the hypotenuse
+slide rule	a mechanical calculating device consisting of two strips, one sliding along a central groove in the other, each strip graduated in two or more logarithmic scales of numbers, trigonometric functions, etc. It employs the same principles as logarithm tables
+solid	a closed surface in three-dimensional space
+sphere	the solid figure bounded by this surface or the space enclosed by it. Equation: (x–a)2 + (y–b)2 + (z–c)2 = r2, where r is the radius and (a, b, c) are the coordinates of the centre; surface area: 4πr2; volume: 4πr3/3
+square	a plane geometric figure having four equal sides and four right angles
+square root	a number or quantity that when multiplied by itself gives a given number or quantity
+strange attractor	a type of chaotic dynamical system
+subset	a set within a larger set
+subtraction	a mathematical operation in which the difference between two numbers or quantities is calculated. Usually indicated by the symbol (–)
+sum	the limit of a series of sums of the first n terms of a converging infinite series as n tends to infinity
+surd	an expression containing one or more irrational roots of numbers, such as 2√3 + 3√2 + 6
+tangent	a geometric line, curve, plane, or curved surface that touches another curve or surface at one point but does not intersect it
+tetrahedron	a solid figure having four plane faces. A regular tetrahedron has faces that are equilateral triangles
+torus	a ring-shaped surface generated by rotating a circle about a coplanar line that does not intersect the circle. Area: 4π2Rr; volume: 2π2Rr2, where r is the radius of the circle and R is the distance from the line to the centre of the circle
+trapezium	a quadrilateral having two parallel sides of unequal length
+triangle	a three-sided polygon that can be classified by angle, as in an acute triangle, or by side, as in an equilateral triangle. Sum of interior angles: 180°; area: base × height
+union	a set containing all members of two given sets. Symbol: ⋃, as in A⋃B
+universal set	the set of all objects or elements considered in a given problem
+value	a particular magnitude, number, or amount
+variable	an expression that can be assigned any of a set of values
+vector	a variable quantity, such as force, that has magnitude and direction and can be resolved into components that are odd functions of the coordinates. It is represented in print by a bold italic symbol: F or ̄F
+Venn diagram	a diagram in which mathematical sets or terms of a categorial statement are represented by overlapping circles within a boundary representing the universal set, so that all possible combinations of the relevant properties are represented by the various distinct areas in the diagram
+volume	the magnitude of the three-dimensional space enclosed within or occupied by an object, geometric solid, etc
+vulgar fraction	a fraction in which the numerator and denominator are both integers expressed as a ratio rather than a decimal
+x-axis	the horizontal, or more nearly horizontal, axis in a plane Cartesian coordinate system, along which the abscissa is measured
+y-axis	the vertical, or more nearly vertical, axis in a plane Cartesian coordinate system, along which the ordinate is measured
+z-axis	in a three-dimensional Cartesian coordinate system, the axis that is perpendicular to the x-axis and the y-axis and that is used to measure or plot the values of z
+zero	the integer denoted by the symbol 0; nought

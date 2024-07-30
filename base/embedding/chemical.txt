@@ -1,0 +1,115 @@
+acid	any substance that dissociates in water to yield a sour corrosive solution containing hydrogen ions, having a pH of less than 7, and turning litmus red
+alcohol	a colourless flammable liquid, the active principle of intoxicating drinks, produced by the fermentation of sugars, esp glucose, and used as a solvent and in the manufacture of organic chemicals. Formula: C2H5OH
+alkali	a soluble base or a solution of a base
+alkali metal	any of the monovalent metals lithium, sodium, potassium, rubidium, caesium, and francium, belonging to group 1A of the periodic table. They are all very reactive and electropositive
+alkaline earth metal	any of the divalent electropositive metals beryllium, magnesium, calcium, strontium, barium, and radium, belonging to group 2A of the periodic table
+alkane	any saturated aliphatic hydrocarbon with the general formula CnH2n+2
+allotrope	any of two or more physical forms in which an element can exist
+alloy	a metallic material, such as steel, brass, or bronze, consisting of a mixture of two or more metals or of metallic elements with nonmetallic elements. Alloys often have physical properties markedly different from those of the pure metals
+amino acid	any of a group of organic compounds containing one or more amino groups, -NH2, and one or more carboxyl groups, -COOH. The alpha-amino acids RCH(NH2)COOH (where R is either hydrogen or an organic group) are the component molecules of proteins; some can be synthesized in the body (nonessential amino acids) and others cannot and are thus essential components of the diet (essential amino acids)
+analysis	the decomposition of a substance into its elements, radicals, or other constituents in order to determine the kinds of constituents present (qualitative analysis) or the amount of each constituent (quantitative analysis)
+anion	a negatively charged ion; an ion that is attracted to the anode during electrolysis
+anode	the positive electrode in an electrolytic cell
+atom	the smallest quantity of an element that can take part in a chemical reaction
+atomic mass	the mass of an isotope of an element in atomic mass units
+atomic number	the number of protons in the nucleus of an atom of an element
+base	the main ingredient of a mixture
+boiling point	the temperature at which a liquid boils at a given pressure, usually atmospheric pressure at sea level; the temperature at which the vapour pressure of a liquid equals the external pressure
+bond	something that binds, fastens, or holds together, such as a chain or rope
+Brownian motion	random movement of microscopic particles suspended in a fluid, caused by bombardment of the particles by molecules of the fluid. First observed in 1827, it provided strong evidence in support of the kinetic theory of molecules
+carbohydrate	any of a large group of organic compounds, including sugars, such as sucrose, and polysaccharides, such as cellulose, glycogen, and starch, that contain carbon, hydrogen, and oxygen, with the general formula Cm(H2O)n: an important source of food and energy for animals
+catalyst	a substance that increases the rate of a chemical reaction without itself suffering any permanent chemical change
+cathode	the negative electrode in an electrolytic cell; the electrode by which electrons enter a device from an external circuit
+cation	a positively charged ion; an ion that is attracted to the cathode during electrolysis
+chain	two or more atoms or groups bonded together so that the configuration of the resulting molecule, ion, or radical resembles a chain
+chemical equation	a representation of a chemical reaction using symbols of the elements to indicate the amount of substance, usually in moles, of each reactant and product
+chain reaction	a process in which a neutron colliding with an atomic nucleus causes fission and the ejection of one or more other neutrons, which induce other nuclei to split
+chromatography	the technique of separating and analysing the components of a mixture of liquids or gases by selective adsorption in, for example, a column of powder (column chromatography) or on a strip of paper (paper chromatography)
+combustion	a chemical process in which two compounds, such as sodium and chlorine, react together to produce heat and light
+compound	a substance that contains atoms of two or more chemical elements held together by chemical bonds
+concentrated	having had water removed to increase concentration
+condensation	a type of reaction in which two organic molecules combine to form a larger molecule as well as a simple molecule such as water, methanol, etc
+corrosion	a process in which a solid, esp a metal, is eaten away and changed by a chemical action, as in the oxidation of iron in the presence of water by an electrolytic process
+covalent bond	a type of chemical bond involving the sharing of electrons between atoms in a molecule, esp the sharing of a pair of electrons by two adjacent atoms
+crystal	a piece of solid substance, such as quartz, with a regular shape in which plane faces intersect at definite angles, due to the regular internal structure of its atoms, ions, or molecules
+crystallization	the process in which crystals are formed either from something that has been melted or from a solution
+diffusion	the random thermal motion of atoms, molecules, clusters of atoms, etc, in gases, liquids, and some solids
+dilute	(of a solution, suspension, mixture, etc) having a low concentration or a concentration that has been reduced by admixture; (of a substance) present in solution, esp a weak solution in water
+distillation	the process of evaporating or boiling a liquid and condensing its vapour
+electrode	an element in a semiconducting device that emits, collects, or controls the movement of electrons or holes
+electrolysis	the conduction of electricity by a solution or melt, esp the use of this process to induce chemical changes
+electron	a stable elementary particle present in all atoms, orbiting the nucleus in numbers equal to the atomic number of the element in the neutral atom; a lepton with a negative charge of 1.602 176 462 × 10–19 coulomb, a rest mass of 9.109 381 88 × 10–31 kilogram, a radius of 2.817 940 285 × 10–15 metre, and a spin of
+electrovalency	the valency of a substance in forming ions, equal to the number of electrons gained or lost
+element	any of the 118 known substances (of which 93 occur naturally) that consist of atoms with the same number of protons in their nuclei
+emulsion	a light-sensitive coating on a base, such as paper or film, consisting of fine grains of silver bromide suspended in gelatine
+ester	any of a class of compounds produced by reaction between acids and alcohols with the elimination of water. Esters with low molecular weights, such as ethyl acetate, are usually volatile fragrant liquids; fats are solid esters
+ether	a colourless volatile highly flammable liquid with a characteristic sweetish odour, made by the reaction of sulphuric acid with ethanol: used as a solvent and anaesthetic. Formula: C2H5OC2H5
+evaporation	when a liquid changes to a vapor, caused by an increase in temperature and/or a decrease in pressure
+fat	any of a class of naturally occurring soft greasy solids that are esters of glycerol and certain fatty acids. They are present in some plants and in the adipose tissue of animals, forming a reserve energy source, and are used in making soap and paint and in the food industry
+fatty acid	any of a class of aliphatic carboxylic acids, such as palmitic acid, stearic acid, and oleic acid, that form part of a lipid molecule
+fermentation	a chemical reaction in which a ferment causes an organic molecule to split into simpler substances, esp the anaerobic conversion of sugar to ethyl alcohol by yeast
+fission	the act or process of splitting or breaking into parts
+foam	a mass of small bubbles of gas formed on the surface of a liquid, such as the froth produced by agitating a solution of soap or detergent in water
+formula	a representation of molecules, radicals, ions, etc, expressed in the symbols of the atoms of their constituent elements
+fuel	any substance burned as a source of heat or power, such as coal or petrol
+gas	a substance in a physical state in which it does not resist change of shape and will expand indefinitely to fill any container. If very high pressure is applied a gas may become liquid or solid, otherwise its density tends towards that of the condensed phase
+halogen	any of the chemical elements fluorine, chlorine, bromine, iodine, and astatine. They are all monovalent and readily form negative ions
+hydrocarbon	any organic compound containing only carbon and hydrogen, such as the alkanes, alkenes, alkynes, terpenes, and arenes
+hydrolysis	a chemical reaction in which a compound reacts with water to produce other compounds
+inert	having only a limited ability to react chemically; unreactive
+inorganic	relating to or denoting chemical compounds that do not contain carbon
+insoluble	incapable of being dissolved; incapable of forming a solution, esp in water
+ion	an electrically charged atom or group of atoms formed by the loss or gain of one or more electrons
+ionic bond	the chemical bond between two oppositely charged ions formed when one atom transfers electrons to another atom, as in the formation of sodium chloride; electrovalent bond
+ionization	the formation of ions as a result of a chemical reaction, high temperature, electrical discharge, particle collisions, or radiation
+isomer	a compound that exhibits isomerism with one or more other compounds
+isotope	one of two or more atoms with the same atomic number that contain different numbers of neutrons
+lanthanide or rare-earth element	any element of the lanthanide series
+liquid	a substance in a physical state in which it does not resist change of shape but does resist change of size
+litmus test	a test to establish the acidity or alkalinity of a mixture
+melting point	the temperature at which a solid turns into a liquid. It is equal to the freezing point
+metal	any of a number of chemical elements, such as iron or copper, that are often lustrous ductile solids, have basic oxides, form positive ions, and are good conductors of heat and electricity
+metalloid	a nonmetallic element, such as arsenic or silicon, that has some of the properties of a metal
+mineral	any of a class of naturally occurring solid inorganic substances with a characteristic crystalline form and a homogeneous chemical composition
+mixture	a substance consisting of two or more substances mixed together without any chemical bonding between them
+molarity	another name (not in technical usage) for concentration
+mole	the basic SI unit of amount of substance; the amount that contains as many elementary entities as there are atoms in 0.012 kilogram of carbon-12. The entity must be specified and may be an atom, a molecule, an ion, a radical, an electron, a photon, etc
+molecule	the simplest unit of a chemical compound that can exist, consisting of two or more atoms held together by chemical bonds
+monomer	a compound whose molecules can join together to form a polymer
+neutral	neither acidic nor alkaline
+neutron	a neutral elementary particle with a rest mass of 1.674 92716 × 10–27 kilogram and spin ; classified as a baryon. In the nucleus of an atom it is stable, but when free it decays
+noble gas or inert gas	any of the unreactive gaseous elements helium, neon, argon, krypton, xenon, and radon
+nonmetal	any of a number of chemical elements that form negative ions, have acidic oxides, and are generally poor conductors of heat and electricity
+nucleus	a fundamental group of atoms in a molecule serving as the base structure for related compounds and remaining unchanged during most chemical reactions
+oil	any of a number of viscous liquids with a smooth sticky feel. They are usually flammable, insoluble in water, soluble in organic solvents, and are obtained from plants and animals, from mineral deposits, and by synthesis. They are used as lubricants, fuels, perfumes, foodstuffs, and raw materials for chemicals
+ore	any naturally occurring mineral or aggregate of minerals from which economically important constituents, esp metals, can be extracted
+organic	of, relating to, or belonging to the class of chemical compounds that are formed from carbon
+oxidation	any process in which oxygen combines with an element or substance, either slowly, as in the rusting of iron, or rapidly, as in the burning of wood
+oxidation-reduction	a reversible chemical process usually involving the transfer of electrons, in which one reaction is an oxidation and the reverse reaction is a reduction
+periodic table	a table of the elements, arranged in order of increasing atomic number, based on the periodic law. Elements having similar chemical properties and electronic structures appear in vertical columns (groups)
+pH	potential of hydrogen; a measure of the acidity or alkalinity of a solution equal to the common logarithm of the reciprocal of the concentration of hydrogen ions in moles per cubic decimetre of solution. Pure water has a pH of 7, acid solutions have a pH less than 7, and alkaline solutions a pH greater than 7
+plastic	any one of a large number of synthetic usually organic materials that have a polymeric structure and can be moulded when soft and then set, esp such a material in a finished state containing plasticizer, stabilizer, filler, pigments, etc. Plastics are classified as thermosetting (such as Bakelite) or thermoplastic (such as PVC) and are used in the manufacture of many articles and in coatings, artificial fibres, etc
+polymer	a naturally occurring or synthetic compound, such as starch or Perspex, that has large molecules made up of many relatively simple repeated units
+precipitate	a precipitated solid in its suspended form or after settling or filtering
+proton	a stable, positively charged elementary particle, found in atomic nuclei in numbers equal to the atomic number of the element. It is a baryon with a charge of 1.602176462 × 10–19 coulomb, a rest mass of 1.672 62159 × 10–27 kilogram, and spin
+radioactivity	the spontaneous emission of radiation from atomic nuclei. The radiation can consist of alpha, beta, and gamma radiation
+reaction	a process that involves changes in the structure and energy content of atoms, molecules, or ions but not their nuclei
+reagent	a substance for use in a chemical reaction, esp for use in chemical synthesis and analysis
+reduce	to undergo or cause to undergo a chemical reaction with hydrogen or formation of a hydride; to lose or cause to lose oxygen atoms; to undergo or cause to undergo an increase in the number of electrons.
+salt	a white powder or colourless crystalline solid, consisting mainly of sodium chloride and used for seasoning and preserving food
+saponification	the conversion of an ester heated with an alkali into the corresponding alcohol and acid salt; specif., this process carried out with fats (glyceryl esters) to produce soap
+saturated	(of a solution or solvent) containing the maximum amount of solute that can normally be dissolved at a given temperature and pressure
+soap	a cleaning or emulsifying agent made by reacting animal or vegetable fats or oils with potassium or sodium hydroxide. Soaps often contain colouring matter and perfume and act by emulsifying grease and lowering the surface tension of water, so that it more readily penetrates open materials such as textiles
+solid	of, concerned with, or being a substance in a physical state in which it resists changes in size and shape
+soluble	(of a substance) capable of being dissolved, esp easily dissolved in some solvent, usually water
+solution	a homogeneous mixture of two or more substances in which the molecules or atoms of the substances are completely dispersed. The constituents can be solids, liquids, or gases
+solvent	a liquid capable of dissolving another substance
+sublimation	the process or instance or subliming
+substitution reaction	a chemical reaction in which an atom or group replaces an atom or group in a molecule
+sugar	a white crystalline sweet carbohydrate, a disaccharide, found in many plants and extracted from sugar cane and sugar beet: it is used esp as a sweetening agent in food and drinks. Formula: C12H22O11
+suspension	a dispersion of fine solid or liquid particles in a fluid, the particles being supported by buoyancy
+synthesis	the process of producing a compound by a chemical reaction or series of reactions, usually from simpler or commonly available starting materials
+transition metal	any element belonging to one of three series of elements with atomic numbers between 21 and 30, 39 and 48, and 57 and 80. They have an incomplete penultimate electron shell and tend to exhibit more than one valency and to form complexes
+unsaturated	(of a chemical compound, esp an organic compound) containing one or more double or triple bonds and thus capable of undergoing addition reactions
+valency	a property of atoms or groups, equal to the number of atoms of hydrogen that the atom or group could combine with or displace in forming compounds
+van der Waals forces	weak electrostatic forces between atoms and molecules caused by transient distortions in the distribution of electrons in the interacting atoms or molecules

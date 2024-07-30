@@ -1,0 +1,140 @@
+# connectors
+\s Connect word space
+->	connect member arrow
+.	connect member dot|Structure reference
+->*	connect member arrow indirection
+.*	connect member dot indirection
+::	connect scope resolution
+CAPITAL connect word capital
+
+# statement ends
+. Statement end period
+; Statement end semicolon
+\n Statement end newline
+
+# block starts
+{ Block start curly brace
+: Block start colon
+. Block start period
+
+# block ends
+} Block end curly brace
+\n Block end newline
+. Block end period
+
+# comment starts
+,	Comment start comma
+( Comment open parenthesis
+// Comment start double slash
+# Comment start hash
+\n Comment end newline
+/* Comment open slash star
+
+# comment ends
+,	Comment end comma
+) Comment close parenthesis
+\n Comment end newline
+*/ Comment close star slash
+
+# arithmetic
++	Addition
+-	Subtraction
++	Unary plus
+-	Unary minus
+*	Multiplication
+/	Division
+//	Floor division
+%	Modulo
+++	increment Prefix
+++	increment Postfix
+--	decrement Prefix
+--	decrement Postfix
+==	Equal
+!=	Not equal
+>	Greater than
+<	Less than
+>=	Greater than or equa
+<=	Less than or equal
+<=>	Three-way comparison
+!	Not
+&&	and
+||	or
+~	Bitwise NOT
+&	Bitwise AND
+|	Bitwise OR
+^	Bitwise XOR
+<<	Bitwise left shift
+>>	Bitwise right shift
+is	same
+and	and
+or	or
+not	not
+in	contained
+
+# assignment and arithmetic
+=	assignment
+:=	assignment
++=	Addition assignment
+-=	Subtraction assignment
+*=	Multiplication assignment
+/=	Division assignment
+//=	Floor division assignment
+%=	Modulo assignment
+&=	Bitwise AND assignment
+|=	Bitwise OR assignment
+^=	Bitwise XOR assignment
+<<=	Bitwise left shift assignment
+>>=	Bitwise right shift assignment
+
+
+# symbols
+(	order open parenthesis
+)	order close parenthesis
+(	Function parameter open parenthesis
+)	Function parameter close parenthesis
+,	Parameter Comma
+:	Ternary condition colon
+_	User-defined literals
+_	connect variable underline
+(	Conversion open parenthesis
+)	Conversion close parenthesis
+{	Conversion open curly brace
+}	Conversion close curly brace
+<	Type open angle bracket
+>	Type close angle bracket
+{	Block start curly brace
+}	Block end curly brace
+;	Statement end semicolon
+
+# open
+[	index open bracket
+(	Function parameter open parenthesis
+(	Conversion open parenthesis
+{	Conversion open curly brace
+<	Type open angle bracket
+,   Comment open comma
+// Comment start double slash
+# Comment start hash
+/* Comment open slash star
+` Text open back quote
+' Text open single quote
+" Text open double quote
+''' Text open triple single quote
+""" Text open triple double quote
+``` Text open triple back quote
+
+# close
+]	index close bracket
+)	Function parameter close parenthesis
+)	Conversion close parenthesis
+}	Conversion close curly brace
+>	Type close angle bracket
+,  Comment close comma
+\n Comment end newline
+*/ Comment close star slash
+` Text close back quote
+' Text close single quote
+" Text close double quote
+''' Text close triple single quote
+""" Text close triple double quote
+``` Text close triple back quote

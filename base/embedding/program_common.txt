@@ -1,0 +1,60 @@
++	Addition
+-	Subtraction
++	Unary plus
+-	Unary minus
+*	Multiplication
+/	Division
+//	Floor division
+%	Modulo
+++	increment Prefix
+++	increment Postfix
+--	decrement Prefix
+--	decrement Postfix
+==	Equal
+!=	Not equal
+>	Greater than
+<	Less than
+>=	Greater than or equa
+<=	Less than or equal
+<=>	Three-way comparison
+!	Not
+&&	and
+||	or
+~	Bitwise NOT
+&	Bitwise AND
+|	Bitwise OR
+^	Bitwise XOR
+<<	Bitwise left shift
+>>	Bitwise right shift
+=	assignment
+:=	assignment
++=	Addition assignment
+-=	Subtraction assignment
+*=	Multiplication assignment
+/=	Division assignment
+//=	Floor division assignment
+%=	Modulo assignment
+&=	Bitwise AND assignment
+|=	Bitwise OR assignment
+^=	Bitwise XOR assignment
+<<=	Bitwise left shift assignment
+>>=	Bitwise right shift assignment
+//	Comment start double slash
+#	Comment start hash
+\n	Comment end newline
+/*	Comment open slash star
+*/	Comment close star slash
+'''	Text open triple single quote
+"""	Text open triple double quote
+```	Text open triple back quote
+'''	Text close triple single quote
+"""	Text close triple double quote
+```	Text close triple back quote
+is	same
+and	and
+or	or
+not	not
+in	contained
+typeof	Returns the type of a variable
+instanceof	Returns true if an object is an instance of an object type
+

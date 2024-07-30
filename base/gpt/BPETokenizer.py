@@ -42,11 +42,11 @@ class StarCoder2Tokenizer:
     def decode(self, tokens):
         return self.tokenizer.decode(tokens)
 class BPETokenizer:
-    def __init__(self, vocab_size):
+    def __init__(self, vocab_size, special_tokens=["<unk>", "<pad>", "<s>", "</s>"] ):
         self.vocab_size = vocab_size  # Desired size of the vocabulary
         self.vocab = {}  # Dictionary to hold the vocabulary
         self.bpe_merges = {}  # Dictionary to hold BPE merge rules
-        self.special_tokens = ["<unk>", "<pad>", "<s>", "</s>"]  # Special tokens
+        self.special_tokens = special_tokens # Special tokens
         self.token_to_id = {}  # Mapping from tokens to IDs
         self.id_to_token = {}  # Mapping from IDs to tokens
 
