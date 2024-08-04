@@ -44,6 +44,7 @@ class GPT2_CONFIG_124M(object):
         self.base_type = torch.float32
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         self.data_path= '/workspace/data'
+        self.model_path = self.data_path+'/model'
 
 
 model_configs = {

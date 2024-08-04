@@ -1,3 +1,9 @@
+import os
+
+from base.prim.Linear import Linear
+
+os.environ['PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION'] = 'python'
+
 import pandas as pd
 import torch
 from tokenizers import Tokenizer
@@ -29,6 +35,10 @@ class SymbolSynonym:
 
 
 config = FeatureEmbeddingLLM()
+
+config.core_embed_dim = config.embed_dim
+effective_embed_dim = config.core_embed_dim - config.additional_context_dim
+config.effect_embed_dim = effective_embed_dim
 
 import pickle
 
@@ -75,9 +85,6 @@ class VirtualTokenizer:
         return self.tokenizer.decode(ids)
 
 
-effective_embed_dim = config.embed_dim - config.additional_context_dim
-config.effect_embed_dim = effective_embed_dim
-
 tokenizer = VirtualTokenizer(tokenizer, symbol_synonyms.symbols, symbol_synonyms.synonyms,
                              symbol_synonyms.synonymed_symbols, config)
 max_id = tokenizer.max_id()
@@ -87,15 +94,19 @@ class VirtualEmbedding(Embedding):
     def __init__(self, vocab_size, embedded_dim, tokenizer):
         super().__init__(vocab_size, embedded_dim)
         self.tokenizer = tokenizer
+        self.dropout = torch.nn.Dropout(0.3)
 
     def forward(self, input_ids):
         embedding = super().forward(input_ids)
         for i in range(len(input_ids)):
             input_id = input_ids[i]
             synonym_ids = self.tokenizer.id_to_synonym_id(input_id)
+            i_sum = torch.sum(embedding[i])
             for synonym_id in synonym_ids:
                 synonym_embedding = super().forward(torch.tensor([synonym_id]))
-                embedding[i] = torch.max(embedding[i], synonym_embedding)
+                d = i_sum/ torch.sum(synonym_embedding)
+                embedding[i] = embedding[i] + self.dropout(d*synonym_embedding)
+            # embedding[i] = embedding[i] / (len(synonym_ids) + 1)
         return embedding
 
 
@@ -103,6 +114,7 @@ class ReverseEmbedding(Embedding):
     def __init__(self, vocab_size, embedded_dim):
         super().__init__(embedded_dim, vocab_size)
         self.revserse_vocab_size = vocab_size
+
 
     def forward(self, input):
         recovered = input @ self.weight
@@ -112,35 +124,133 @@ class ReverseEmbedding(Embedding):
 class TestModule(torch.nn.Module):
     def __init__(self, config, tokenizer):
         super().__init__()
-        self.embedding = VirtualEmbedding(config.vocab_size, config.embed_dim, tokenizer)
-        self.reverse_embedding = ReverseEmbedding(config.vocab_size, config.embed_dim)
+        self.embedding = VirtualEmbedding(tokenizer.max_id(), config.effect_embed_dim, tokenizer)
+        self.reverse_embedding = ReverseEmbedding(tokenizer.max_id(), config.embed_dim)
         self.config = config
         self.tokenizer = tokenizer
         self.padding = (torch.tensor([0.1] * config.additional_context_dim * config.context_len)
-                .view(config.additional_context_dim,
-                      config.context_len).to(
+                .view(config.context_len,
+                      config.additional_context_dim).to(
                     config.device))
+
+    # load store
+    def load_state_dict(self, state_dict, strict=True):
+        self.embedding.load_state_dict(state_dict['embedding'])
+        self.reverse_embedding.load_state_dict(state_dict['reverse_embedding'])
+
+    def state_dict(self, destination=None, prefix='', keep_vars=False):
+        state_dict = {
+            'embedding': self.embedding.state_dict(),
+            'reverse_embedding': self.reverse_embedding.state_dict()
+        }
+        return state_dict
 
     def forward(self, ids):
         synonym_embedding = self.embedding(ids)
         embedding = torch.cat(
-            (synonym_embedding, self.padding),
+            [synonym_embedding, self.padding[0:len(ids), :]],
             dim=1)
         embedding = self.reverse_embedding(embedding)
         return embedding
 
 
+class SynonymModule(torch.nn.Module):
+    def __init__(self, config, tokenizer):
+        super().__init__()
+        self.embedding = Embedding(tokenizer.vocab_size, config.effect_embed_dim)
+        self.embed_in_dropout = torch.nn.Dropout(config.drop_rate)
+        self.to_synonym_embedding = Embedding(tokenizer.vocab_size, config.additional_context_dim)
+        self.synonym_dropout = torch.nn.Dropout(config.drop_rate)
+        self.embed_out_dropout = torch.nn.Dropout(config.drop_rate)
+        self.synonym_id_recovers = Linear(config.additional_context_dim, tokenizer.max_id()-config.embed_dim)
+        self.synonym_embedding = Linear(config.additional_context_dim, config.effect_embed_dim)
+        self.reverse_embedding = ReverseEmbedding(tokenizer.max_id(), config.embed_dim)
+        self.config = config
+        self.tokenizer = tokenizer
+        self.padding = (torch.tensor([0.1] * config.additional_context_dim * config.context_len)
+                .view(config.context_len,
+                      config.additional_context_dim).to(
+                    config.device))
+
+    def train(self, mode=True):
+        self.to_synonym_embedding.train(mode)
+        self.synonym_embedding.train(mode)
+
+    def eval(self):
+        self.to_synonym_embedding.eval()
+        self.synonym_embedding.eval()
+
+    # load store
+    def load_state_dict(self, state_dict, strict=True):
+        embedding = state_dict['embedding']
+        # make embedding weight size to be the same as the current embedding
+        embedding['weight'] = embedding['weight'][0:self.embedding.weight.shape[0], :]
+        self.embedding.load_state_dict(embedding)
+        self.reverse_embedding.load_state_dict(state_dict['reverse_embedding'])
+        if 'to_synonym_embedding' in state_dict:
+            self.to_synonym_embedding.load_state_dict(state_dict['to_synonym_embedding'])
+            self.synonym_embedding.load_state_dict(state_dict['synonym_embedding'])
+
+    def state_dict(self, destination=None, prefix='', keep_vars=False):
+        state_dict = {
+            'embedding': self.embedding.state_dict(),
+            'reverse_embedding': self.reverse_embedding.state_dict(),
+            'to_synonym_embedding': self.to_synonym_embedding.state_dict(),
+            'synonym_embedding': self.synonym_embedding.state_dict()
+        }
+        return state_dict
+
+    def forward(self, ids):
+        embedding = self.embedding.forward(ids)
+        embedding = self.embed_in_dropout(embedding)
+        synonym_embedding = self.to_synonym_embedding(ids)
+        synonym_embedding = self.synonym_dropout(synonym_embedding)
+        if self.training:
+            synonym_hot = self.synonym_id_recovers(synonym_embedding).to(self.config.device)
+            expected_synonym_hots = None
+            for i in range(len(ids)):
+                input_id = ids[i]
+                synonym_ids = self.tokenizer.id_to_synonym_id(input_id)
+                synonym_ids = [id - self.config.embed_dim for id in synonym_ids]
+                synonym_ids = torch.tensor(synonym_ids).to(self.config.device)
+                expected_synonym_hot = torch.zeros_like(synonym_hot[0])
+                expected_synonym_hot.scatter_(0, synonym_ids, 1.0)
+                expected_synonym_hots = torch.cat([expected_synonym_hots, expected_synonym_hot.unsqueeze(0)]) if expected_synonym_hots is not None else expected_synonym_hot.unsqueeze(0)
+
+        synonym_embedding = self.synonym_embedding(synonym_embedding)
+        synonym_embedding = embedding + synonym_embedding
+
+        embedding = torch.cat(
+            [synonym_embedding, self.padding[0:len(ids), :]],
+            dim=1)
+        embedding = self.embed_out_dropout(embedding)
+        embedding = self.reverse_embedding(embedding)
+
+        return embedding
+
+torch.autograd.set_detect_anomaly(True)
 setting = OTHER_SETTINGS()
-model = TestModule(config, tokenizer)
+model = SynonymModule(config, tokenizer)
 model.to(config.device)  # no assignment model = model.to(device) necessary for nn.Module classes
 optimizer = torch.optim.AdamW(
     model.parameters(), lr=setting.learning_rate, weight_decay=setting.weight_decay
 )
-batch_size = 128
+
+# model save exists
+if os.path.exists(f"{config.model_path}/embed_2_model_saved.pt"):
+    checkpoint = torch.load(f"{config.model_path}/embed_2_model_saved.pt")
+    model.load_state_dict(checkpoint['model_state_dict'])
+    optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
+    # copy model save to temp directory with overwrite
+    os.system(f"cp {config.model_path}/embed_2_model_200.pt {config.model_path}/embed_2_model_200_temp.pt")
+    model.to(config.device)
+
+
+batch_size = 1024*16*4
 dataset = []
 for i in range(0, len(symbol_synonyms.symbols), batch_size):
     ids = []
-    for j in range(i, i + batch_size):
+    for j in range(i, i + config.context_len):
         if j >= len(symbol_synonyms.symbols):
             ids.append(0)
         else:
@@ -150,9 +260,11 @@ for i in range(0, len(symbol_synonyms.symbols), batch_size):
 dataset_tensor = torch.tensor(dataset).to(config.device)
 
 model.train()  # Set model to training mode
-for j in range(100):
+for j in range(201):
 
     for i, _ in enumerate(dataset):
+        # progress
+        print(f"epoch: {j}, batch: {i}/{len(dataset)}")
         ids = dataset_tensor[i]
 
         optimizer.zero_grad()  # Reset loss gradients from previous batch iteration
@@ -175,5 +287,12 @@ for j in range(100):
                 accracy = torch.sum(torch.argmax(embedding, dim=1) == ids).float() / len(ids)
                 accracy_sum += accracy
                 times += 1
-        print(f"loss: {loss_sum / times}, accracy: {accracy_sum / times}")
+        print(f"loss: {loss_sum / times}, accuracy: {accracy_sum / times}")
         model.train()
+        # save model with optimizer
+        torch.save({
+            'model_state_dict': model.state_dict(),
+            'optimizer_state_dict': optimizer.state_dict()
+        }, f"{config.model_path}/embed_2_model_{j}.pt")
+
+
