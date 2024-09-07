@@ -3,7 +3,7 @@ os.environ['PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION'] = 'python'
 
 from base.embedding.token.FeatureEmbeddingTokenizerMaker import get_symbol_synonyms
 from base.embedding.feature.FeatureTokenizer import VirtualTokenizer
-from base.embedding.feature.VirtualEmbedding import ReverseEmbedding
+from base.embedding.feature.VirtualEmbedding import ReverseEmbedding, VirtualEmbedding
 from base.prim.Linear import Linear
 
 
@@ -13,17 +13,15 @@ from base.config.Config import FeatureEmbeddingLLM, OTHER_SETTINGS
 from base.prim.Embedding import Embedding
 
 
-class SynonymModule(torch.nn.Module):
+class SynonymManualModule(torch.nn.Module):
     def __init__(self, config, tokenizer):
         super().__init__()
-        self.embedding = Embedding(tokenizer.vocab_size, config.voca_embed_dim)
-        self.embed_in_dropout = torch.nn.Dropout(config.drop_rate)
+        self.embedding = VirtualEmbedding(tokenizer.vocab_size, config.voca_embed_dim, tokenizer)
         self.to_synonym_embedding = Embedding(tokenizer.vocab_size, config.additional_context_dim)
-        self.synonym_dropout = torch.nn.Dropout(config.drop_rate)
-        self.embed_out_dropout = torch.nn.Dropout(config.drop_rate)
-        self.synonym_id_recovers = Linear(config.additional_context_dim, tokenizer.max_id()-config.embed_dim)
-        self.synonym_embedding = Linear(config.additional_context_dim, config.voca_embed_dim)
+        self.synonym_embedding = Embedding(config.additional_context_dim, config.voca_embed_dim)
         self.reverse_embedding = ReverseEmbedding(tokenizer.max_id(), config.embed_dim)
+        self.synonym_dropout = torch.nn.Dropout(config.drop_rate)
+
         self.config = config
         self.tokenizer = tokenizer
         self.padding = (torch.tensor([0.1] * config.additional_context_dim * config.context_len)
@@ -60,35 +58,20 @@ class SynonymModule(torch.nn.Module):
         return state_dict
 
     def forward(self, ids):
-        embedding = self.embedding.forward(ids)
+        embedding = self.embedding.super().forward(ids)
         embedding = self.embed_in_dropout(embedding)
         synonym_embedding = self.to_synonym_embedding(ids)
-        synonym_embedding = self.synonym_dropout(synonym_embedding)
-        if self.training:
-            synonym_hot = self.synonym_id_recovers(synonym_embedding).to(self.config.device)
-            expected_synonym_hots = None
-            for i in range(len(ids)):
-                input_id = ids[i]
-                synonym_ids = self.tokenizer.id_to_synonym_id(input_id)
-                synonym_ids = [id - self.config.embed_dim for id in synonym_ids]
-                synonym_ids = torch.tensor(synonym_ids).to(self.config.device)
-                expected_synonym_hot = torch.zeros_like(synonym_hot[0])
-                expected_synonym_hot.scatter_(0, synonym_ids, 1.0)
-                expected_synonym_hots = torch.cat([expected_synonym_hots, expected_synonym_hot.unsqueeze(0)]) if expected_synonym_hots is not None else expected_synonym_hot.unsqueeze(0)
-
         synonym_embedding = self.synonym_embedding(synonym_embedding)
         synonym_embedding = embedding + synonym_embedding
-
         embedding = torch.cat(
             [synonym_embedding, self.padding[0:len(ids), :]],
             dim=1)
-        embedding = self.embed_out_dropout(embedding)
         embedding = self.reverse_embedding(embedding)
-
         return embedding
 
 # if main
 if __name__ == "__main__":
+    module_name='SynonymManualModule'
     config = FeatureEmbeddingLLM()
 
     tokenizer = VirtualTokenizer(config)
@@ -96,24 +79,23 @@ if __name__ == "__main__":
 
     torch.autograd.set_detect_anomaly(True)
     setting = OTHER_SETTINGS()
-    model = SynonymModule(config, tokenizer)
+    model = SynonymManualModule(config, tokenizer)
     model.to(config.device)  # no assignment model = model.to(device) necessary for nn.Module classes
     optimizer = torch.optim.AdamW(
         model.parameters(), lr=setting.learning_rate, weight_decay=setting.weight_decay
     )
 
     # model save exists
-    model_file = f"{config.model_path}/embed_2_model_200.pt"
+    model_file = f"{config.model_path}/{module_name}_model_200.pt"
     if os.path.exists(model_file):
         checkpoint = torch.load(model_file)
         model.load_state_dict(checkpoint['model_state_dict'])
         optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
         # copy model save to temp directory with overwrite
-        os.system(f"cp {model_file} {config.model_path}/embed_2_model_200_temp.pt")
+        os.system(f"cp {model_file} {config.model_path}/{module_name}_model_200_temp.pt")
         model.to(config.device)
 
-
-    batch_size = 1024*16*4
+    batch_size = 1024 * 16 * 4
     dataset = []
     for i in range(0, len(get_symbol_synonyms().symbols), batch_size):
         ids = []
@@ -160,6 +142,4 @@ if __name__ == "__main__":
             torch.save({
                 'model_state_dict': model.state_dict(),
                 'optimizer_state_dict': optimizer.state_dict()
-            }, f"{config.model_path}/embed_2_model_{j}.pt")
-
-
+            }, f"{config.model_path}/{module_name}_model_{j}.pt")

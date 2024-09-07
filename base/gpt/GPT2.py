@@ -1,11 +1,10 @@
 import os
 
-from base.gpt.MultiHeadAttention import MultiHeadAttention
-from base.gpt.SimpleGPT2Embedding import SimpleGPT2Embedding
 
 os.environ['PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION'] = 'python'
 from torch import nn
-
+from base.gpt.MultiHeadAttention import MultiHeadAttention
+from base.gpt.SimpleGPT2Embedding import SimpleGPT2Embedding
 from base.gpt.BPETokenizer import GPT2TikTokenizer
 from base.config.GPTConfig import GPT2_CONFIG_124M
 from base.util.Util import *

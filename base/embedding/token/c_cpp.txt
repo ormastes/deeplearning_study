@@ -24,6 +24,10 @@ _	connect variable underline
 {	Block start curly brace
 }	Block end curly brace
 ;	Statement end semicolon
+//	Line comment
+/*	Comment block start
+*/	Comment block end
+#	Prepocessor directive
 auto	auto coversion
 static_cast 	static cast conversion
 dynamic_cast	dynamic cast conversion

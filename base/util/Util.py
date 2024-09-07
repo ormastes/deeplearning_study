@@ -3,7 +3,10 @@ import os
 from base.config.CommonConstants import CommonConstants
 
 
-def train(model, gpt_config, settings, tokenizer, global_attention_mask=None, no_train=False):
+def train(model, gpt_config, settings, tokenizer, global_attention_mask=None, no_train=False,
+            file_path="the-verdict.txt",
+            url="https://raw.githubusercontent.com/rasbt/LLMs-from-scratch/main/ch02/01_main-chapter-code/the-verdict.txt"
+          ):
     import urllib.request
     from base.gpt.GPT2 import GPT2Model
     from base.dataset.SimpleDataset import create_dataloader_with_worker
@@ -16,9 +19,6 @@ def train(model, gpt_config, settings, tokenizer, global_attention_mask=None, no
     ##############################
     # Download data if necessary
     ##############################
-
-    file_path = "the-verdict.txt"
-    url = "https://raw.githubusercontent.com/rasbt/LLMs-from-scratch/main/ch02/01_main-chapter-code/the-verdict.txt"
 
     if not os.path.exists(file_path):
         with urllib.request.urlopen(url) as response:

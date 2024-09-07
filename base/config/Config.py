@@ -1,8 +1,10 @@
 import enum
 import torch
+
+from base.config.Language import Language
 from base.gpt.MultiHeadAttention import MultiHeadAttention
 from base.gpt.TransformerBlockSequence import SimpleTransformerBlockSequence
-
+import pandas as pd
 
 class ModelName(enum.Enum):
     gpt2_small_124M = "openai-community/gpt2"
@@ -79,3 +81,17 @@ class OTHER_SETTINGS(object):
         self.batch_size = batch_size
         self.weight_decay = weight_decay
 
+class FeatureEmbeddingLLM(GPT2_CONFIG_124M):
+    def __init__(self):
+        super().__init__()
+        self.feature_embedding_dir = f"{self.data_path}/feature_embedding"
+        self.synonyms = pd.read_csv(f"{self.data_path}/feature_embedding/synonyms.csv")
+        self.language = Language()
+        self.vocab_size = 90000
+        self.additional_context_dim = 0
+        self.num_batches = 1
+        self.core_embed_dim = self.embed_dim
+        voca_embed_dim = self.core_embed_dim - self.additional_context_dim
+        self.voca_embed_dim = voca_embed_dim
+        self.syno_embed_dim = voca_embed_dim # will be cahnged
+        self.embed_dim = self.voca_embed_dim + self.additional_context_dim + self.language.TOTAL_SIZE + self.syno_embed_dim

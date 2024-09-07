@@ -50,6 +50,12 @@
 '''	Text close triple single quote
 """	Text close triple double quote
 ```	Text close triple back quote
+'	Text open a single quote
+"	Text open a double quote
+`	Text open a back quote
+'	Text close a single quote
+"	Text close a double quote
+`	Text close a back quote
 is	same
 and	and
 or	or
