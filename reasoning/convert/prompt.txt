@@ -1,0 +1,124 @@
+Complete "Result JSON" section by given "Input JSON". "Result JSON" will given next conversation.
+
+### Prompt:
+Given a JSON object containing C++ code and its corresponding unit tests, transform it into a structured JSON format with the following fields:
+Stop after a generation of "### Result JSON:" done which may end with "```". Only one generation is allowed.
+
+1. Test Target: An array of strings representing the exact lines of code under test.
+
+2. Test Object: A textual description inferred from the unit test, describing what is being tested and its objective.
+
+3. Input Data: An array of strings containing relevant input data for the test target, if applicable.
+
+4. Expected Output: An array of strings transforming the 'EXPECT_XXX()' assertions into a standardized format:
+
+ * 'EXPECT_EQ(A, B)' ==> '">>> %<< A == B;//EXPECT_EQ(A, B)", "true"'
+ * 'EXPECT_EQ(A, "B")' ==> '">>> %<< A;//EXPECT_EQ(A, "B")", "B"'
+   * Do not add unnecessary backslash quotation (\") in result after "%<< ....."
+ * 'EXPECT_TRUE(A)' ==> '">>> %<< (A)==true;//EXPECT_TRUE(A)", "true"'
+ * 'EXPECT_FALSE(A)' ==> '">>> %<< (A)==false;//EXPECT_FALSE(A)", "true"'
+ * 'EXPECT_NE(A, B)' ==> '">>> %<< (A)!=(B);//EXPECT_NE(A, B)", "true"'
+
+For example, if the unit test contains:
+```cpp
+EXPECT_EQ(A, B);
+EXPECT_TRUE(A);
+```
+The expected output should be:
+```json
+[">>> %<< A;//EXPECT_EQ(A, B)", "B", ">>> %<< (A)==true;//EXPECT_TRUE(A)", "true"]
+```
+5. Clang-repl Test: A transformed version of the unit test in a Clang-repl compatible format:
+
+ * Preserve all global settings and relevant configurations under '// Global Setting'.
+  - Do not include header files that are already included in the "Test Target" or source json "Code"
+ * Structure test cases as:
+  - '// Test Object: <description>'
+  - '// Test Case: <test_name>'
+ * Convert 'EXPECT_XXX()' assertions into their respective transformed format from "Expected Output".
+ * Maintain relevant unit test logic while commenting out non-essential parts:
+  - Replace 'namespace aname {' with '/*namespace aname {*/'
+  - Replace closing braces '}' for namespaces with '/*}*/'
+  - For functions that cannot be used, add comments like '// Next function cannot be called: canNOtCalled();'
+  - For irrelevant statements, add '// Next statement is useless: useLessStatement();'
+ * Test generated must runnable in Clang-repl. which has special commend "%<<" which is same as "std::cout <<"
+  - Clang-repl prompt is ">>> " rather than "clang-repl> "
+ * "Clang-repl Test" include header files of "Test Target" automatically. So, include header files which "Test Target" does not include.
+ * Close "```json" with "```" at the end of the JSON object.
+ * Do not make multiline comments (/* */)
+ * Do not make multiline statements or block which need to ends with "\" in Clang-repl.
+ * Do not add unnecessary backslash quotation (\") in result after "%<< ....."
+Ensure that most of the "Unit Test - (Ground Truth)" content remains in "Clang-repl Test." If certain parts are omitted, provide a comment explaining the reason.
+
+
+### Input JSON:
+```json
+{
+  "Code": "int add(int a, int b) {\n    return a + b;\n}\nbool isPositive(int x) {\n    return x > 0;\n}",
+  "Unit Test - (Ground Truth)": "#include <gtest/gtest.h>\n\nTEST(AddFunctionWorks) \n{int result = add(2, 3);\\nEXPECT_EQ(result, 5);\n}\n\nTEST(IsPositiveTest) {\nEXPECT_TRUE(isPositive(10));\nEXPECT_FALSE(isPositive(-5));\n}"
+}
+```
+
+### Result JSON:
+```json
+[
+{
+  "Test Target": [
+    "int add(int a, int b) {",
+    "    return a + b;",
+    "}"
+  ],
+  "Test Object": "Verify Calculator add returns correct sum and isPositive identifies positive vs negative numbers.",
+  "Input Data": [
+    ">>> int add_a = 2",
+    ">>> int add_b = 3"
+  ],
+  "Expected Output": [
+    ">>> %<< result;\\EXPECT_EQ(result, 5)",
+    "5"
+  ],
+  "Clang-repl Test": [
+    ">>> // Global Settings:",
+    ">>> #include <gtest/gtest.h>",
+    ">>> ",
+    ">>> // Test Object: Verify Calculator add returns correct sum and isPositive identifies positive vs negative numbers.",
+    ">>> // Test Case: AddFunctionWorks // TEST(AddFunctionWorks) {",
+    ">>> int add_a = 2",
+    ">>> int add_b = 3",
+    ">>> int result = add(add_a, add_b);",
+    ">>> %<< result; //EXPECT_EQ(result, 5)",
+    "5",
+    ">>> /*}*/"
+  ]
+},
+{
+  "Test Target": [
+    "int add(int a, int b) {",
+    "    return a + b;",
+    "}"
+  ],
+  "Test Object": "Verify Calculator add returns correct sum and isPositive identifies positive vs negative numbers.",
+  "Input Data": [
+    ">>> // isPositive 10",
+    ">>> // isPositive -5"
+  ],
+  "Expected Output": [
+    ">>> %<< isPositive(10);//EXPECT_TRUE(isPositive(10))",
+    "true",
+    ">>> %<< isPositive(-5);//EXPECT_FALSE(isPositive(-5))",
+    "false"
+  ],
+  "Clang-repl Test": [
+    ">>> // Global Settings:",
+    ">>> #include <gtest/gtest.h>",
+    ">>> ",
+    ">>> // Test Case: IsPositiveTest // TEST(IsPositiveTest) {",
+    ">>> %<< isPositive(10);//EXPECT_TRUE(isPositive(10))",
+    "true",
+    ">>> %<< isPositive(-5);//EXPECT_FALSE(isPositive(-5))",
+    "false",
+    "/*}*/"
+  ]
+}
+]
+```

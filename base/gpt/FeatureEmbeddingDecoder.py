@@ -149,9 +149,9 @@ optimizer = torch.optim.AdamW(
 
 from datasets import load_dataset
 # Load the dataset with a specified cache directory
-dataset_textbook = load_dataset("nampdn-ai/tiny-textbooks", cache_dir="/workspace/data/tiny")
-dataset_codes = load_dataset("nampdn-ai/tiny-codes", cache_dir="/workspace/data/tiny")
-#dataset_math = load_dataset("nampdn-ai/tiny-math-textbooks", cache_dir="/workspace/data/tiny")
+dataset_textbook = load_dataset("nampdn-actionitem/tiny-textbooks", cache_dir="/workspace/data/tiny")
+dataset_codes = load_dataset("nampdn-actionitem/tiny-codes", cache_dir="/workspace/data/tiny")
+#dataset_math = load_dataset("nampdn-actionitem/tiny-math-textbooks", cache_dir="/workspace/data/tiny")
 dataset_korean_wiki = load_dataset("eaglewatch/Korean_Wikipedia_Dataset_for_GPT2_August_2022", cache_dir="/workspace/data/korean")
 
 
