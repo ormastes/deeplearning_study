@@ -1,0 +1,390 @@
+<Test Cases>
+<Test Case>
+<Test Target>
+int add(int a, int b) {
+    return a + b;
+}
+</Test Target>
+<Test Object>
+Verify that add returns the correct sum.
+</Test Object>
+<Input Data>
+>>> int a = 4;
+>>> int b = 6;
+</Input Data>
+<Expected Output>
+>>> %<< result == 10;
+true
+</Expected Output>
+<Clang-repl Test>
+>>> // Global Settings:
+>>>
+>>> // Test Object: Verify that add returns the correct sum.
+>>> // Test Case: AddFunctionTest
+>>> int a = 4;
+>>> int b = 6;
+>>> int result = add(a, b);
+>>> %<< result == 10;
+true
+</Clang-repl Test>
+</Test Case>
+
+<Test Case>
+<Test Target>
+std::string getGreeting() {
+    return "Hello";
+}
+</Test Target>
+<Test Object>
+Verify that getGreeting returns "Hello".
+</Test Object>
+<Input Data>
+>>> // No input needed for getGreeting
+</Input Data>
+<Expected Output>
+>>> %<< greeting;
+Hello
+</Expected Output>
+<Clang-repl Test>
+>>> // Global Settings:
+>>>
+>>> // Test Object: Verify that getGreeting returns "Hello".
+>>> // Test Case: GetGreetingTest
+>>> std::string greeting = getGreeting();
+>>> %<< greeting;
+Hello
+</Clang-repl Test>
+</Test Case>
+
+<Test Case>
+<Test Target>
+bool isEven(int x) {
+    return (x % 2) == 0;
+}
+</Test Target>
+<Test Object>
+Verify that isEven returns true for even numbers.
+</Test Object>
+<Input Data>
+>>> int num = 4;
+</Input Data>
+<Expected Output>
+>>> %<< (isEven(num))==true;
+true
+</Expected Output>
+<Clang-repl Test>
+>>> // Global Settings:
+>>>
+>>> // Test Object: Verify that isEven returns true for even numbers.
+>>> // Test Case: IsEvenTest
+>>> int num = 4;
+>>> %<< (isEven(num))==true;
+true
+</Clang-repl Test>
+</Test Case>
+
+<Test Case>
+<Test Target>
+bool isNegative(int x) {
+    return x < 0;
+}
+</Test Target>
+<Test Object>
+Verify that isNegative returns false for positive numbers.
+</Test Object>
+<Input Data>
+>>> int num = 3;
+</Input Data>
+<Expected Output>
+>>> %<< (isNegative(num))==false;
+true
+</Expected Output>
+<Clang-repl Test>
+>>> // Global Settings:
+>>>
+>>> // Test Object: Verify that isNegative returns false for positive numbers.
+>>> // Test Case: IsNegativeTest
+>>> int num = 3;
+>>> %<< (isNegative(num))==false;
+true
+</Clang-repl Test>
+</Test Case>
+
+<Test Case>
+<Test Target>
+int compareNumbers(int a, int b) {
+    return a - b;
+}
+</Test Target>
+<Test Object>
+Verify that compareNumbers returns a non-zero result when numbers differ.
+</Test Object>
+<Input Data>
+>>> int a = 5;
+>>> int b = 10;
+</Input Data>
+<Expected Output>
+>>> %<< (compareNumbers(a, b))!=(0);
+true
+</Expected Output>
+<Clang-repl Test>
+>>> // Global Settings:
+>>>
+>>> // Test Object: Verify that compareNumbers returns a non-zero result when numbers differ.
+>>> // Test Case: CompareNumbersTest
+>>> int a = 5;
+>>> int b = 10;
+>>> %<< (compareNumbers(a, b))!=(0);
+true
+</Clang-repl Test>
+</Test Case>
+
+<Test Case>
+<Test Target>
+/*namespace mynamespace {*/
+int multiply(int a, int b) {
+    return a * b;
+}
+bool isPositive(int x) {
+    return x > 0;
+}
+// Next function cannot be called: canNOtCalled();
+</Test Target>
+<Test Object>
+Verify that multiply returns correct product and isPositive identifies positive numbers.
+</Test Object>
+<Input Data>
+>>> int x = 2;
+>>> int y = 3;
+>>> int num = 2;
+</Input Data>
+<Expected Output>
+>>> %<< multiply(x, y) == 6;
+true
+>>> %<< (isPositive(num))==true;
+true
+</Expected Output>
+<Clang-repl Test>
+>>> // Global Settings:
+>>>
+>>> // Test Object: Verify that multiply returns correct product and isPositive identifies positive numbers.
+>>> // Test Case: MultiplyAndIsPositiveTest
+>>> int x = 2;
+>>> int y = 3;
+>>> int num = 2;
+>>> int product = multiply(x, y);
+>>> %<< product == 6;
+true
+>>> %<< (isPositive(num))==true;
+true
+</Clang-repl Test>
+</Test Case>
+
+<Test Case>
+<Test Target>
+int sumArray(int arr[], int n) {
+    int sum = 0;
+    for (int i = 0; i < n; i++) {
+        sum += arr[i];
+    }
+    return sum;
+}
+</Test Target>
+<Test Object>
+Verify that sumArray correctly computes the sum when the array has elements.
+</Test Object>
+<Input Data>
+>>> int arr[5] = {1, 2, 3, 4, 5};
+>>> int n = 5;
+</Input Data>
+<Expected Output>
+>>> %<< sum == 15;
+true
+</Expected Output>
+<Clang-repl Test>
+>>> // Global Settings:
+>>>
+>>> // Test Object: Verify that sumArray correctly computes the sum when the array has elements.
+>>> // Test Case: SumArray_NonEmptyTest
+>>> int arr[5] = {1, 2, 3, 4, 5};
+>>> int n = 5;
+>>> int sum = sumArray(arr, n);
+>>> %<< sum == 15;
+true
+</Clang-repl Test>
+</Test Case>
+
+<Test Case>
+<Test Target>
+int sumArray(int arr[], int n) {
+    int sum = 0;
+    for (int i = 0; i < n; i++) {
+        sum += arr[i];
+    }
+    return sum;
+}
+</Test Target>
+<Test Object>
+Verify that sumArray returns 0 when the loop is not entered (n is 0).
+</Test Object>
+<Input Data>
+>>> int arr[1] = {100}; // Array provided but n=0 means loop is not entered.
+>>> int n = 0;
+</Input Data>
+<Expected Output>
+>>> %<< sum == 0;
+true
+</Expected Output>
+<Clang-repl Test>
+>>> // Global Settings:
+>>>
+>>> // Test Object: Verify that sumArray returns 0 when the loop is not entered (n is 0).
+>>> // Test Case: SumArray_EmptyLoopTest
+>>> int arr[1] = {100};
+>>> int n = 0;
+>>> int sum = sumArray(arr, n);
+>>> %<< sum == 0;
+true
+</Clang-repl Test>
+</Test Case>
+
+<Test Case>
+<Test Target>
+int max(int a, int b) {
+    if (a > b) {
+        return a;
+    } else {
+        return b;
+    }
+}
+</Test Target>
+<Test Object>
+Verify that max returns the first argument when it is greater than the second.
+</Test Object>
+<Input Data>
+>>> int a = 15;
+>>> int b = 10;
+</Input Data>
+<Expected Output>
+>>> %<< max_val == 15;
+true
+</Expected Output>
+<Clang-repl Test>
+>>> // Global Settings:
+>>>
+>>> // Test Object: Verify that max returns the first argument when it is greater than the second.
+>>> // Test Case: Max_FirstGreaterTest
+>>> int a = 15;
+>>> int b = 10;
+>>> int max_val = max(a, b);
+>>> %<< max_val == 15;
+true
+</Clang-repl Test>
+</Test Case>
+
+<Test Case>
+<Test Target>
+int max(int a, int b) {
+    if (a > b) {
+        return a;
+    } else {
+        return b;
+    }
+}
+</Test Target>
+<Test Object>
+Verify that max returns the second argument when it is greater than or equal to the first.
+</Test Object>
+<Input Data>
+>>> int a = 8;
+>>> int b = 20;
+</Input Data>
+<Expected Output>
+>>> %<< max_val == 20;
+true
+</Expected Output>
+<Clang-repl Test>
+>>> // Global Settings:
+>>>
+>>> // Test Object: Verify that max returns the second argument when it is greater than or equal to the first.
+>>> // Test Case: Max_SecondGreaterTest
+>>> int a = 8;
+>>> int b = 20;
+>>> int max_val = max(a, b);
+>>> %<< max_val == 20;
+true
+</Clang-repl Test>
+</Test Case>
+
+<Test Case>
+<Test Target>
+int countPositives(int arr[], int n) {
+    int count = 0;
+    for (int i = 0; i < n; i++) {
+        if (arr[i] > 0) {
+            count++;
+        }
+    }
+    return count;
+}
+</Test Target>
+<Test Object>
+Verify that countPositives correctly counts positive numbers in a non-empty array.
+</Test Object>
+<Input Data>
+>>> int arr[6] = {-2, 0, 3, 5, -1, 4};
+>>> int n = 6;
+</Input Data>
+<Expected Output>
+>>> %<< count == 3;
+true
+</Expected Output>
+<Clang-repl Test>
+>>> // Global Settings:
+>>>
+>>> // Test Object: Verify that countPositives correctly counts positive numbers in a non-empty array.
+>>> // Test Case: CountPositives_NonEmptyTest
+>>> int arr[6] = {-2, 0, 3, 5, -1, 4};
+>>> int n = 6;
+>>> int count = countPositives(arr, n);
+>>> %<< count == 3;
+true
+</Clang-repl Test>
+</Test Case>
+
+<Test Case>
+<Test Target>
+int countPositives(int arr[], int n) {
+    int count = 0;
+    for (int i = 0; i < n; i++) {
+        if (arr[i] > 0) {
+            count++;
+        }
+    }
+    return count;
+}
+</Test Target>
+<Test Object>
+Verify that countPositives returns 0 when the loop is not entered (n is 0).
+</Test Object>
+<Input Data>
+>>> int arr[1] = {-5}; // Array provided but n=0 means loop is not entered.
+>>> int n = 0;
+</Input Data>
+<Expected Output>
+>>> %<< count == 0;
+true
+</Expected Output>
+<Clang-repl Test>
+>>> // Global Settings:
+>>>
+>>> // Test Object: Verify that countPositives returns 0 when the loop is not entered (n is 0).
+>>> // Test Case: CountPositives_EmptyLoopTest
+>>> int arr[1] = {-5};
+>>> int n = 0;
+>>> int count = countPositives(arr, n);
+>>> %<< count == 0;
+true
+</Clang-repl Test>
+</Test Case>
+</Test Cases>

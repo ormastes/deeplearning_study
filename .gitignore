@@ -41,3 +41,13 @@ htmlcov/
 # Operating system files
 .DS_Store
 Thumbs.db
+reasoning/class/data/air_quality_uci.csv
+reasoning/class/data/heart.csv
+reasoning/class/data/house_prices.csv
+reasoning/class/data/iris.csv
+reasoning/class/data/performance.csv
+reasoning/class/data/sales.csv
+reasoning/class/data/sales1.csv
+reasoning/class/data/sales2.csv
+reasoning/class/data/sales3.csv
+reasoning/class/data/wine_data.csv

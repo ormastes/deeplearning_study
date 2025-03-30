@@ -1,0 +1,83 @@
+// 0. Test Target Object: Optional to provide a description of the test target.
+{'Q': "What is \"Test Target Object\"?", "A": "A description of the test target."},
+{'Q': "Is \"Test Target Object\" optional during create \"Test Case\"?", "A": "Optinal"},
+{'Q': "Where do we specify \"Test Target Object\" in the unit test?", "A": "In a separate field to document the target for clarity."},
+{'Q': "Do we need to provide any code snippet here?", "A": "No, it's purely descriptive and optional."},
+
+// 1. Test Target: An array of strings representing the exact lines of code under test.
+{'Q': "What does 'Test Target' refer to?", "A": "An array of strings with the code under test."},
+{'Q': "Why is it an array of strings?", "A": "It captures exact lines of code."},
+{'Q': "Can 'Test Target' contain non-C++ lines?", "A": "Yes, if it matches the exact lines relevant to the test."},
+{'Q': "Is 'Test Target' mandatory to run the test?", "A": "Yes, it identifies the code under test."},
+
+// 2. Test Object: A textual description inferred from the unit test, describing what is being tested and its objective.
+{'Q': "What is 'Test Object'?", "A": "It's a description of what's being tested and the objective."},
+{'Q': "How is 'Test Object' obtained?", "A": "It's inferred from the unit test."},
+{'Q': "Should 'Test Object' detail dependencies or just the main purpose?", "A": "Primarily the main purpose, though minor dependencies can be mentioned."},
+
+// 3. Input Data: An array of strings containing relevant input data for the test target, if applicable.
+{'Q': "What is 'Input Data'?", "A": "An array of strings with relevant test input."},
+{'Q': "When is 'Input Data' used?", "A": "When the test target needs data to run."},
+{'Q': "Can 'Input Data' be empty?", "A": "Yes, if no inputs are required for the test."},
+
+// 4. Expected Output: An array of strings transforming the 'EXPECT_XXX()' assertions into a standardized format:
+// * 'EXPECT_EQ(A, B)' ==> '">>> %<< A == B;", "true"'
+// * 'EXPECT_EQ(A, "B")' ==> '">>> %<< A;", "B"'
+//   * Do not add unnecessary backslash quotation (") in result after "%<< ....."
+// * 'EXPECT_TRUE(A)' ==> '">>> %<< (A)==true;", "true"'
+// * 'EXPECT_FALSE(A)' ==> '">>> %<< (A)==false;", "true"'
+// * 'EXPECT_NE(A, B)' ==> '">>> %<< (A)!=(B);", "true"'
+// For example, if the unit test contains:
+// ```cpp
+// EXPECT_EQ(A, B);
+// EXPECT_TRUE(A);
+// ```
+// The expected output should be:
+// ```json
+// [">>> %<< A;", "B", ">>> %<< (A)==true;", "true"]
+// ```
+{'Q': "What is 'Expected Output'?", "A": "An array of standardized strings from the test assertions."},
+{'Q': "How are 'EXPECT_EQ(A, B)' transformations handled?", "A": "'>>> %<< A == B;', 'true'"},
+{'Q': "How are 'EXPECT_EQ(A, \"B\")' transformations handled?", "A": "'>>> %<< A;', 'B'"},
+{'Q': "How are 'EXPECT_TRUE(A)' transformations handled?", "A": "'>>> %<< (A)==true;', 'true'"},
+{'Q': "How are 'EXPECT_FALSE(A)' transformations handled?", "A": "'>>> %<< (A)==false;', 'true'"},
+{'Q': "How are 'EXPECT_NE(A, B)' transformations handled?", "A": "'>>> %<< (A)!=(B);', 'true'"},
+{'Q': "Why should we not add unnecessary backslash quotes after '%<<'?", "A": "To keep the output clean in Clang-repl."},
+{'Q': "What is the example transformation for 'EXPECT_EQ(A, B); EXPECT_TRUE(A);'?", "A": "[\">>> %<< A == B;\", \"true\", \">>> %<< (A)==true;\", \"true\"]"},
+{'Q': "How do we handle an 'EXPECT_XXX()' that references a function call?", "A": "We still transform it similarly, as long as it matches one of the known patterns."},
+
+// 5. Clang-repl Test: A transformed version of the unit test in a Custom Clang-repl compatible format:
+// * Preserve all global settings and relevant configurations under '// Global Setting'.
+// * Do not include header files that are already included in the 'Test Target' or source json 'Code'
+// * Structure test cases as:
+//   - '// Test Object: <description>'
+//   - '// Test Case: <test_name>'
+// * Convert 'EXPECT_XXX()' assertions into their respective transformed format from "Expected Output".
+// * Maintain relevant unit test logic while commenting out non-essential parts:
+//   - Replace 'namespace a_name {' with '//namespace a_name {'
+//   - Just delete closing braces '}' for namespaces or test cases.
+//   - For functions that cannot be used, add comments like '// Next function cannot be called: canNOtCalled();'
+//   - For irrelevant statements, add '// Next statement is useless: useLessStatement();'
+// * Test generated must be runnable in Custom Clang-repl. which has special command '%<<' which is same as 'std::cout <<'
+//   - Custom Clang-repl prompt is '>>> ' rather than 'clang-repl> '
+// * 'Clang-repl Test' includes header files of 'Test Target' automatically. So, include header files which 'Test Target' does not include.
+// * Close ```json with ``` at the end of the JSON object.
+// * Do not make multiline comments (/* */)
+// * Do not make multiline statements or block which need to ends with "\\" in Custom Clang-repl.
+// * Do not add unnecessary backslash quotation (\") in result after '%<< .....'
+// * 'condition' or 'loop' statement needs multiple 'Test Case' or multiple verification on the same 'Test Case'.
+//   - if loop in 'Test Target', not enter loop must be tested.
+//   - if condition in 'Test Target', both cases must be tested.
+{'Q': "What is 'Clang-repl Test'?", "A": "A Custom Clang-repl compatible version of the unit test."},
+{'Q': "What is the purpose of '%<<'?", "A": "It's the output operator in Custom Clang-repl."},
+{'Q': "Why do we preserve all global settings under '// Global Setting'?", "A": "To ensure essential environment configurations remain intact."},
+{'Q': "Why do we not include headers already in 'Test Target'?", "A": "To avoid duplicate includes and potential redefinition errors."},
+{'Q': "How do we structure test cases within 'Clang-repl Test'?", "A": "Use '// Test Object: <description>' and '// Test Case: <test_name>'."},
+{'Q': "How do we transform 'EXPECT_XXX()' in 'Clang-repl Test'?", "A": "Use the standardized strings from 'Expected Output'."},
+{'Q': "Why do we comment out non-essential parts?", "A": "To keep the test focused and avoid irrelevant code in Clang-repl."},
+{'Q': "How are unreachable functions or statements handled?", "A": "They are replaced with comments like '// Next function cannot be called: canNOtCalled();'."},
+{'Q': "What is the prompt in Custom Clang-repl?", "A": "```\n>>> (prompt)\n```"},
+{'Q': "Do we allow multiline comments or backslash-extended lines in Custom Clang-repl Test?", "A": "No, they are not permitted."},
+{'Q': "How do we handle loops or conditionals in Custom Clang-repl Test?", "A": "Multiple test cases should cover both branching paths."},
+{'Q': "Can we add custom macros or definitions in 'Custom Clang-repl Test'?", "A": "Yes, but ensure they don't conflict with existing code or includes."},
+{'Q': "What if there's an if-else with multiple branches?", "A": "You create multiple test cases, each covering a different path."},

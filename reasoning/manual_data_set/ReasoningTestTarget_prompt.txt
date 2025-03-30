@@ -1,0 +1,39 @@
+Least 15 sample functions for (Must be simple and short)
+# simple arithmatic calculation function
+# simple if statement function
+# simple loop statement function
+# loop and if statement function
+# simple state function
+# recursive function
+# pointer manipulation function
+# string manipulation function
+# sort algorithm function
+
+memory allocation/deallocation function
+multithreaded function
+exception handling function
+template function
+class inheritance function
+file I/O function
+string manipulation function
+data structure implementation
+
+Using next form
+[
+{
+"category": "simple arithmatic",
+"content": "<Test Case>
+<Test Target Object>
+Add two integers. and return the sum.
+</Test Target Object>
+<Test Target>
+int add(int a, int b) {
+    return a + b;
+}
+</Test Target>
+<Test Case>"
+}
+]
+Least 15 famous sort algorithm function for (Must be simple and short)
+
+(must one function with its needed varialbe)

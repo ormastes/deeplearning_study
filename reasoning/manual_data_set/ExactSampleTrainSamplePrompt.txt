@@ -1,0 +1,49 @@
+0. Test Target Object: Optional to provide a description of the test target.
+
+1. Test Target: An array of strings representing the exact lines of code under test.
+
+2. Test Object: A textual description inferred from the unit test, describing what is being tested and its objective.
+
+3. Input Data: An array of strings containing relevant input data for the test target, if applicable.
+
+4. Expected Output: An array of strings transforming the 'EXPECT_XXX()' assertions into a standardized format:
+
+ * 'EXPECT_EQ(A, B)' ==> '">>> %<< A == B;", "true"'
+ * 'EXPECT_EQ(A, "B")' ==> '">>> %<< A;", "B"'
+   * Do not add unnecessary backslash quotation (\") in result after "%<< ....."
+ * 'EXPECT_TRUE(A)' ==> '">>> %<< (A)==true;", "true"'
+ * 'EXPECT_FALSE(A)' ==> '">>> %<< (A)==false;", "true"'
+ * 'EXPECT_NE(A, B)' ==> '">>> %<< (A)!=(B);", "true"'
+
+For example, if the unit test contains:
+```cpp
+EXPECT_EQ(A, B);
+EXPECT_TRUE(A);
+```
+The expected output should be:
+```json
+[">>> %<< A;", "B", ">>> %<< (A)==true;", "true"]
+```
+5. Clang-repl Test: A transformed version of the unit test in a Clang-repl compatible format:
+
+ * Preserve all global settings and relevant configurations under '// Global Setting'.
+  - Do not include header files that are already included in the "Test Target" or source json "Code"
+ * Structure test cases as:
+  - '// Test Object: <description>'
+  - '// Test Case: <test_name>'
+ * Convert 'EXPECT_XXX()' assertions into their respective transformed format from "Expected Output".
+ * Maintain relevant unit test logic while commenting out non-essential parts:
+  - Replace 'namespace a_name {' with '/*namespace a_name {*/'
+  - Just delete closing braces '}' for namespaces or test cases.
+  - For functions that cannot be used, add comments like '// Next function cannot be called: canNOtCalled();'
+  - For irrelevant statements, add '// Next statement is useless: useLessStatement();'
+ * Test generated must runnable in Clang-repl. which has special commend "%<<" which is same as "std::cout <<"
+  - Clang-repl prompt is ">>> " rather than "clang-repl> "
+ * "Clang-repl Test" include header files of "Test Target" automatically. So, include header files which "Test Target" does not include.
+ * Close "```json" with "```" at the end of the JSON object.
+ * Do not make multiline comments (/* */)
+ * Do not make multiline statements or block which need to ends with "\" in Clang-repl.
+ * Do not add unnecessary backslash quotation (\") in result after "%<< ....."
+ * "condition" or "loop" statement needs multiple "Test Case" or multiple verification on the same "Test Case".
+  - if loop in "Test Target", not enter loop must be tested.
+  - if condition in "Test Target", both cases must be tested.
