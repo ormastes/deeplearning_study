@@ -28,18 +28,17 @@ class ReasoningConfig(SimpleConfig):
         self.learning_rate = 1e-6
         self.weight_decay = 0.1
         self.num_epochs = 1200
-        self.max_new_tokens = 12000
+        self.max_new_tokens = 1200
         self.temperature = 0.1,
         current_src_file_dir = os.path.dirname(os.path.abspath(__file__))
         self.context_len = 1024  # Maximum sequence length
         self.num_batches = 2  # Batch size for DataLoader
         self.exact_example_config = ExactSampleConfig()
         if os.name == 'nt':
-            self.original_model_path =  os.path.join(current_src_file_dir, "/raw/WizardCoderModel")
             self.dataset_file = os.path.join(current_src_file_dir, "/manual_data_set/exact_manual_dataset.json")
         else:
-            self.original_model_path  = "/workspace/data/model/reasoning/raw/WizardCoderModel"
             self.dataset_file = "/workspace/data/model/reasoning/raw/cpp_ut_bench_json/train.json"
+
 
 
     def load(self):
@@ -72,7 +71,7 @@ class Logger:
 # --------------------------
 # Instantiate Config and Settings
 # --------------------------
-config = SimpleConfig()
+config = ReasoningConfig()
 
 os.makedirs(config.model_path, exist_ok=True)
 os.makedirs(config.cache_dir, exist_ok=True)
@@ -80,11 +79,9 @@ os.makedirs(config.cache_dir, exist_ok=True)
 # --------------------------
 # Load Model and Tokenizer
 # --------------------------
-model, optimizer = config.load()
-tokenizer = AutoTokenizer.from_pretrained(config.original_model_path)
+model, optimizer, tokenizer = config.load()
 max_id = tokenizer.vocab_size
 torch.autograd.set_detect_anomaly(True)
-
 
 # --------------------------
 # TensorBoard SummaryWriter
@@ -92,8 +89,7 @@ torch.autograd.set_detect_anomaly(True)
 tb_log_dir = os.path.join(config.model_path, "tensorboard_logs")
 writer = SummaryWriter(log_dir=tb_log_dir)
 
-
-dataset = ExactSampleDataset(config.dataset_file)
+dataset = ExactSampleDataset(tokenizer, config)
 train_loader = DataLoader(dataset, batch_size=8, shuffle=True)
 
 # --------------------------

@@ -17,7 +17,6 @@ def train_reason(
         chat,                   # Function to generate output
         train_loader,           # Training questions
         reward_fn,              # Function to calculate rewards
-        num_epochs,             # Number of training epochs
         group_size=16,          # Number of outputs to sample per question
         learning_rate=1e-6,     # Learning rate
         validation_batches=10,  # Number of batches to use for validation
@@ -27,13 +26,12 @@ def train_reason(
         beta=0.04               # KL penalty coefficient
 ):
     # Store the current policy as the old policy
-    #old_policy = copy.deepcopy(model)
-    prams_to_train = get_training_layers(model)
-    optimizer = AdamW(prams_to_train, lr=learning_rate)
     model.train()
+
+    train_layers = get_training_layers(model)
     
     global_step = 0
-    for epoch in range(num_epochs):
+    for epoch in range(config.num_epochs):
         idx = 0
         epoch_loss = 0.0
         for item_idx, question_idx, answer_idx in enumerate(train_loader):
@@ -62,8 +60,11 @@ def train_reason(
 
             # Update policy model
             loss.backward()
+            torch.nn.utils.clip_grad_norm_(train_layers, max_norm=0.1)
+
             if idx % group_size == 0:
                 optimizer.step()
+                optimizer.zero_grad()
 
             writer.add_scalar("Train/BatchLoss", loss.item(), global_step)
             global_step += 1

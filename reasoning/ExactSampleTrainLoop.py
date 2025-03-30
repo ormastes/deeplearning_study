@@ -1,12 +1,7 @@
 import torch
 import os
 from transformers import AdamW
-
-def get_training_layers(model):
-    # get first and last layer's parameters
-    params = list(model.parameters())
-    # merge first and last layer's parameters
-    return params[0:2] + params[-2:]
+import torch.nn.functional as F
 
 def train_exact(
         model,           # The model being trained
@@ -16,8 +11,7 @@ def train_exact(
         writer,
         chat,                   # Function to generate output
         train_loader,           # Training questions
-        reward_fn,              # Function to calculate rewards
-        num_epochs,             # Number of training epochs
+        reward_fn = None,              # Function to calculate rewards
         group_size=16,          # Number of outputs to sample per question
         learning_rate=1e-6,     # Learning rate
         validation_batches=10,  # Number of batches to use for validation
@@ -27,31 +21,72 @@ def train_exact(
         beta=0.04               # KL penalty coefficient
 ):
     # Store the current policy as the old policy
-    #old_policy = copy.deepcopy(model)
-    prams_to_train = get_training_layers(model)
-    optimizer = AdamW(prams_to_train, lr=learning_rate)
     model.train()
-    
+    train_layers = config.get_training_layers(model)
     global_step = 0
-    for epoch in range(num_epochs):
-        idx = 0
+    for epoch in range(config.num_epochs):
         epoch_loss = 0.0
-        for item_idx, question_ids, answer_ids in enumerate(train_loader):
-            if idx % group_size == 0:
-                optimizer.zero_grad()
-            idx += 1
+        optimizer.zero_grad()
+        for idx, qa in enumerate(train_loader):
+            qa = qa.to(model.device)
+            cur_in = qa[:, start:end]
+            lengths = [qa[i].shape[0] for i in range(len(qa))]
+            cur_in = qa[:, start:end]
+            max_len = max(lengths)
+            for i in range(max_len-1):
+                current_context = min(config.context_len, i + 1)
+                start = i - current_context + 1  # so that the window has 'current_context' tokens
+                end = i + 1  # input window is [start, end) => length = current_context
+                context_size = end - start
 
-            outputs = model(input_ids=question_ids, labels=answer_ids)
-            loss = outputs.loss
+                cur_in = qa[:, start:end]
+                cur_mask = torch.ones_like(cur_in).to(model.device)
+                expected = qa[:, i + 1]
 
-            # Update policy model
-            loss.backward()
-            if idx % group_size == 0:
-                optimizer.step()
+                logits = model(input_ids=cur_in, attention_mask=cur_mask).logits
 
-            writer.add_scalar("Train/BatchLoss", loss.item(), global_step)
-            global_step += 1
-            epoch_loss += loss.item()
+                loss = torch.nn.functional.cross_entropy(logits.flatten(0, 1), expected.flatten())
+
+                input_text = tokenizer.decode(qa[0], skip_special_tokens=True)
+                out_text = tokenizer.decode(max_indices[0], skip_special_tokens=True)
+
+
+                # get last logits
+                last_logit = logits[..., -1, :].contiguous()
+                last_logit = last_logit.clamp(min=-100, max=100)
+
+                # Flatten the tokens for loss computation
+                loss = F.cross_entropy(
+                    last_logit,
+                    expected,
+                    ignore_index=tokenizer.pad_token_id  # ignore pad tokens if applicable
+                )
+
+
+                if torch.isnan(loss):
+                    print("Loss is NaN!")
+                    input_text = tokenizer.decode(question_ids[0], skip_special_tokens=True)
+                    print(f"Input text: {input_text}")
+                    chars_out_onehot = torch.nn.functional.one_hot(last_logit, num_classes=tokenizer.vocab_size)
+                    chars_out = torch.argmax(chars_out_onehot, dim=-1)
+                    output_text = tokenizer.decode(chars_out[0], skip_special_tokens=True)
+                    print(f"Output text: {output_text}")
+                    print(f"Answer text: {tokenizer.decode(answer_ids[0], skip_special_tokens=True)}")
+                    continue
+
+                loss_factor = max(1.0, context_size / 12)
+                loss = loss * loss_factor
+                # Update policy model
+                loss.backward()
+                torch.nn.utils.clip_grad_norm_(train_layers, max_norm=0.1)
+                if idx % group_size == 0:
+                    optimizer.step()
+                    optimizer.zero_grad()
+
+                    writer.add_scalar("Train/BatchLoss", loss.item(), global_step)
+                    global_step += 1
+                    epoch_loss += loss.item()
+
 
         avg_epoch_loss = epoch_loss / len(train_loader)
         writer.add_scalar("Train/EpochLoss", avg_epoch_loss, epoch)
