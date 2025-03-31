@@ -43,5 +43,6 @@ htmlcov/
 Thumbs.db
 reasoning/class/data/
 reasoning/saved_models/
+reasoning/runs/
 
 .virtual_documents/

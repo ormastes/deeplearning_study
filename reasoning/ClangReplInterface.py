@@ -146,16 +146,30 @@ class ClangReplInterface:
             self.execution_count = 0
             self.ok = True
         except Exception as e:
-            print("ClangReplInterface creation error:", e)
-
-            if getattr(self, "kernel", None) is None:
-                print("self.kernel is None")
-            elif getattr(self.kernel, "my_shell", None) is None:
-                print("self.kernel.my_shell is None")
-            else:
-                print("ClangReplInterface command line:", self.kernel.my_shell.program_with_args)
-                print("ClangReplInterface args:", self.kernel.my_shell.args)
-                print("ClangReplInterface env:", self.kernel.my_shell.env)
+            try:
+                with open("runs/clange_repl_dump.pkl", "wb") as f:
+                    pickle.dump(self, f)
+                print("ClangReplInterface creation error:", e)
+    
+                if getattr(self, "kernel", None) is None:
+                    print("self.kernel is None")
+                elif getattr(self.kernel, "my_shell", None) is None:
+                    print("self.kernel.my_shell is None")
+                else:
+                    if getattr(self.kernel.my_shell, "program_with_args", None) is None:
+                        print("self.kernel.my_shell.program_with_args is None")
+                    else:
+                        print("ClangReplInterface command line:", self.kernel.my_shell.program_with_args)
+                    if getattr(self.kernel.my_shell, "args", None) is None:
+                        print("self.kernel.my_shell.args is None")
+                    else:
+                        print("ClangReplInterface args:", self.kernel.my_shell.args)
+                    if getattr(self.kernel.my_shell, "env", None) is None:
+                        print("self.kernel.my_shell.env is None")
+                    else:
+                        print("ClangReplInterface env:", self.kernel.my_shell.env)
+            except Exception as e2:
+                print("ClangReplInterface creation error in exception block:", e2)
 
             self.ok = False
 
@@ -195,7 +209,7 @@ class ClangReplInterface:
                 
 class ClangReplInterfacePool(ObjectPool):     
     def __init__(self, batch_size):
-        self.super().__init__(self, ClangReplInterface, ClangReplInterface.run_verify, batch_size)
+        super().__init__(self, ClangReplInterface, ClangReplInterface.run_verify, batch_size)
 
     def run_verify(self, codes):
         self.start_tasks(codes)
