@@ -14,6 +14,16 @@ The core innovation in reasoning training is that it doesn't follow predefined t
    - Sufficiency of chain of thought or reasoning process
    - Correctness of the final parsed answer
 
+## Project Goals
+The main goals of this project are:
+
+1. Develop an LLM that can automatically generate test cases for cdoctest, a tool for C/C++ unit testing
+2. Enhance LLM reasoning capabilities using Group Relative Policy Optimization (GRPO) methodology
+3. Improve LLM performance in low-level language code generation
+4. Support test case generation through a VSCode extension
+
+cdoctest is a C/C++ unit testing tool inspired by Python's doctest, allowing REPL (Read-Eval-Print Loop) code embedded in comments to be run as test cases in both IDE and CLI environments.
+
 ## Project Outline
 
 While Deepseek focused on mathematics for training, this project uses C/C++ programming with specific test case generation.
@@ -146,40 +156,28 @@ where:
 
 **Code Implementation:**
 ```python
-print_logits_ids("model response", response_truncated_logits, respone_ids)
-model_log_logits = selective_log_softmax(response_truncated_logits, respone_ids, tokenizer).check_shape(RESPONSE_IDS)
-model_log_logits.log()
+model_log_logits = selective_log_softmax(response_truncated_logits, respone_ids, tokenizer)
+old_model_log_logits = selective_log_softmax(old_response_truncated_logits, respone_ids, tokenizer)
 
-print_logits_ids("old model response", old_response_truncated_logits, respone_ids)
-old_model_log_logits = selective_log_softmax(old_response_truncated_logits, respone_ids, tokenizer).check_shape(RESPONSE_IDS)
-old_model_log_logits.log() 
-
-probability_ratio = torch.exp(model_log_logits - old_model_log_logits).check_shape(RESPONSE_IDS)
-probability_ratio.log() 
+probability_ratio = torch.exp(model_log_logits - old_model_log_logits)
 
 # Calculate mean and std per batch (along dim=1) and repeat to match original size
-mean_rewards = advantages.mean(dim=1).repeat_interleave(group_size).check_shape([batch_size]).check_range(0, 2.24)
-mean_rewards.log()
-std_rewards = advantages.std(dim=1).repeat_interleave(group_size).check_shape([batch_size]).check_range(0, float('inf'))
-std_rewards.log() 
+mean_rewards = advantages.mean(dim=1).repeat_interleave(group_size)
+std_rewards = advantages.std(dim=1).repeat_interleave(group_size)
 
 # Reshape back to original form
 advantages = advantages.view(-1)
-advantages.check_shape([batch_size]).log("advantages before A_hat")
-A_hat = ((advantages - mean_rewards) / (std_rewards + 1e-4)).unsqueeze(1).check_shape([batch_size, 1]) 
+A_hat = ((advantages - mean_rewards) / (std_rewards + 1e-4)).unsqueeze(1)
 A_hat = torch.clamp(A_hat, -5, 5) # Clipping added since small samples cause too much variation
 
 # 5. grouped_ppo Loss Calc
 print_step("5. Grouped ppo Loss Calc")            
 # PPO objective calculations.
 unclipped_objective = probability_ratio
-unclipped_objective.check_shape(RESPONSE_IDS).log()
 epsilon_high = torch.full_like(unclipped_objective, 1 + epsilon).check_shape(RESPONSE_IDS)
 _grouped_ppo_loss = - torch.minimum(unclipped_objective, epsilon_high)
-_grouped_ppo_loss.check_shape(RESPONSE_IDS).log("before A_hat multiply")
 _grouped_ppo_loss = _grouped_ppo_loss * A_hat
-grouped_ppo_loss = _grouped_ppo_loss.mean(dim=-1).check_shape([batch_size])
-grouped_ppo_loss.log() # sample epsilon=0.2
+grouped_ppo_loss = _grouped_ppo_loss.mean(dim=-1)
 ```
 
 where the mean and variance over a batch of $G$ samples are given by:
@@ -252,15 +250,11 @@ $$
 print_step("3. kl_div Loss Calc")    
 # Calculate token-level log probabilities.
 model_log_probs = selective_log_softmax(full_shift_logits, full_shift_ids, tokenizer)
-model_log_probs.log() # RESPONSE_IDS
 ref_log_probs = selective_log_softmax(ref_full_shift_logits, full_shift_ids, tokenizer)
-ref_log_probs.log() # RESPONSE_IDS
 
 # Compute token-level KL divergence.
-token_kl_div = F.kl_div(model_log_probs, ref_log_probs, reduction='none', log_target=True).check_shape(FULL_IDS)
-token_kl_div.log()
-kl_div = token_kl_div.mean(dim=-1).check_shape([batch_size])
-kl_div.log() # average over tokens. range (0, infite) but for output of similar model. It is very small. sample: kl_div=0.09
+token_kl_div = F.kl_div(model_log_probs, ref_log_probs, reduction='none', log_target=True)
+kl_div = token_kl_div.mean(dim=-1) # average over tokens. range (0, infite) but for output of similar model. It is very small. sample: kl_div=0.09
 ```
 
 **References:**
@@ -296,9 +290,7 @@ $$
 ```python
 # kl_lambda is a scaling factor for the KL term
 _combined_loss = grouped_ppo_loss + kl_lambda * kl_div
-_combined_loss.check_shape([batch_size]).log() 
-combined_loss = _combined_loss.mean()
-combined_loss.log() # []
+combined_loss = _combined_loss.mean() # []
 ```
 
 #### Equation Tweaks
@@ -352,8 +344,6 @@ with torch.no_grad():
     full_ids, truncated_ids, respone_ids, prompt_lengths = generate_ids(model, batch, tokenizer, temperature)
     full_text_lists = tokenizer.batch_decode(truncated_ids, skip_special_tokens=True)
     reward_work.reward(full_text_lists, writer, log_group, global_step)
-    # Release unused tensors from generation.
-    full_text_lists = None
 ```
 
 ### Run Model to Train and Take Logits

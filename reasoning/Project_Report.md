@@ -15,7 +15,7 @@
 1. C/C++ 단위 테스트를 위한 cdoctest 도구의 테스트 케이스를 자동으로 생성할 수 있는 LLM 개발
 2. Group Relative Policy Optimization(GRPO) 방법론을 적용하여 LLM의 reasoning 능력 향상
 3. 저수준 언어 코드 생성에서 LLM의 성능 개선
-4. VSCode 확장 프로그램을 통한 테스트 케이스 생성 지원
+4. VSCode 확장 프로그램을 통한 테스트 케이스 생성 지원(향후)
 
 cdoctest는 Python의 doctest에서 영감을 받아 개발된 C/C++ 단위 테스트 도구로, 주석에 내장된 REPL(Read-Eval-Print Loop) 코드를 IDE와 CLI 환경에서 테스트 케이스로 실행할 수 있게 합니다. 본 프로젝트는 이 cdoctest 도구를 위한 테스트 케이스를 LLM을 통해 자동 생성하는 것을 목표로 합니다.
 
@@ -35,6 +35,24 @@ cdoctest는 Python의 doctest에서 영감을 받아 개발된 C/C++ 단위 테�
    - clang-repl 실행 훈련 추가 (실습 단계 추가)
 5. Mixture of Expert (MoE) 적용
 
+### 1.4 파일 구조
+1. 단계별 Train 진행을 위한 파일
+0.xxxx.ipynb ~ 3.reasoning_training.ipynb 
+2. 중간 확인을 위한 Test 파일
+99.check_xxx.ipynb
+3. 기타 Utility 등 파일
+....
+
+가장 중요한 파일
+** 3.reasoning_training.ipynb **
+   
+### 1.5 디랙토리 구조
+1. 만들어지고 사용된 Dataset
+./manual_data_set
+2. 만들어졌으나 버려지거나 사용되지 않은 코드 및 파일
+./old_files
+
+
 ## 2. 데이터 생성/수집
 
 ### 2.1 데이터 소스
@@ -47,7 +65,10 @@ cdoctest는 Python의 doctest에서 영감을 받아 개발된 C/C++ 단위 테�
 2. **CompCodeVet**: 컴파일러 검증 데이터 큐레이션
    - 출처: https://huggingface.co/datasets/Elfsong/Mercury
    
-그러나 이 데이터셋들은 초기 평가 후 너무 원시적이고 정제되지 않은 데이터였기 때문에 최종 훈련에는 사용하지 않았습니다. 대신, 이러한 데이터셋의 구조와 형식을 참고하여 직접 맞춤형 데이터를 생성하는 방식을 선택했습니다.
+그러나 이 데이터셋들은 초기 평가 후 너무 원시적이고 정제되지 않은 데이터였기 때문에 최종 훈련에는 사용하지 않았습니다. 
+ChatGPT를 통해 Data를 생성하고 이를 확인하는 형태로 하였습니다.
+
+해당 Data를 가공하기 위해 작업을 하던 파일들은 'old_files' directory에서 확인할 수 있습니다.
 
 ### 2.2 데이터 정제 및 준비
 
@@ -82,11 +103,15 @@ cdoctest는 Python의 doctest에서 영감을 받아 개발된 C/C++ 단위 테�
 {'Q': "Do we need to provide any code snippet here?", "A": "No, it's purely descriptive and optional."}
 ```
 
-이러한 QA 데이터는 모델이 cdoctest 형식과 규칙을 이해하는 데 도움을 주었습니다.
+다음과 같은 파일이 이용되었습니다.
+```
+0.Prepare_SaveSampleData.ipynb
+```
+
 
 #### 2.2.2 Reasoning 훈련용 데이터 형식
 
-Reasoning 훈련을 위해서는 더 복잡한 형태의 데이터가 필요했습니다. 다음은 reasoning 훈련용 데이터의 구조입니다:
+Reasoning 훈련을 위해서는 더 복잡한 형태의 데이터가 필요했습니다. ChatGPT를 통해 준비하고 눈과 실제 빌드를 통해 문법적 오류가 없는 것을 확인하였습니다. 다음은 reasoning 훈련용 데이터의 구조입니다:
 
 ```json
 [
@@ -100,8 +125,7 @@ Reasoning 훈련을 위해서는 더 복잡한 형태의 데이터가 필요했�
     int add(int a, int b) {
         return a + b;
     }
-    </Test Target>
-    <Test Case>"
+    </Test Target>"
   },
   {
     "category": "simple arithmetic",
@@ -113,13 +137,17 @@ Reasoning 훈련을 위해서는 더 복잡한 형태의 데이터가 필요했�
     int subtract(int a, int b) {
         return a - b;
     }
-    </Test Target>
-    <Test Case>"
+    </Test Target>"
   }
 ]
 ```
 
 이 데이터는 미완성된 테스트 케이스를 제공하고, 모델이 적절한 테스트 객체, 입력 데이터, 예상 출력, 그리고 Clang-repl 테스트 코드를 생성하도록 유도합니다.
+
+이 데이터를 위해 다음 파일들이 사용되었습니다.
+```
+2.reasoning_testsample_check.ipynb
+```
 
 #### 2.2.3 완전한 훈련 샘플 예시
 
@@ -169,7 +197,7 @@ true
 - **Expected Output**: 예상되는 출력 결과
 - **Clang-repl Test**: Clang-repl 환경에서 실행 가능한 테스트 코드
 
-프롬프트 훈련에는 이 형식에 관한 규칙과 지침을 질의응답 형태로 변환하여 사용했으며, reasoning 훈련에는 Test Target과 Target Object만 제공하고 나머지를 모델이 생성하도록 했습니다.
+프롬프트 훈련에는 이 형식에 관한 규칙과 지침을 질의응답 형태로 변환하여 사용했으며, reasoning 훈련에는 Test Target과 Test Target Object만 제공하고 나머지를 모델이 생성하도록 했습니다.
 
 ## 3. EDA(데이터 전처리, 기초 통계, 데이터 시각화)
 
@@ -177,10 +205,12 @@ true
 
 원본 데이터는 다음과 같은 전처리 과정을 거쳤습니다:
 
-1. 코드 표준화: 일관된 코딩 스타일 적용
-2. 주석 정리: 테스트 케이스 생성에 유용한 주석만 남기고 불필요한 주석 제거
-3. 복잡도 분류: 코드 복잡도에 따라 초급, 중급, 고급으로 분류
-4. 토큰화: LLM 훈련에 적합한 형태로 토큰화
+1. 주석 정리: 테스트 케이스 생성에 유용한 주석만 남기고 불필요한 주석 제거
+2. 복잡도 분류: 코드 복잡도에 따라 초급, 중급, 고급으로 분류
+3. 토큰화: LLM 훈련에 적합한 형태로 토큰화
+4. 프롬프트 추가: 기존 훈련 방식에 사용된 Prompt를 확인하여 최대한 비슷한 프롬프트를 구성하였습니다.
+
+코드 표준화는 ChatGPT를 통해서만 생성되어 따로 필요하지 않았습니다.
 
 ### 3.2 기초 통계
 
@@ -197,7 +227,7 @@ true
 | 상태 관리 | 32.1 | 57.4 | 27 | 107 | 26.9 | 높음 |
 | 재귀 함수 | 24.3 | 66.0 | 24 | 214 | 57.3 | 높음 |
 | 포인터 조작 | 27.8 | 90.6 | 32 | 232 | 61.8 | 높음 |
-| 문자열 조작 | 23.1 | 49.8 | 34 | 95 | 14.7 | 중간 |
+| 문자열 조작 | 23.1 | 49.8 | 34 | 95 | 14.7 | 높음 |
 | 정렬 알고리즘 | 35.4 | 73.3 | 53 | 85 | 10.3 | 높음 |
 
 이 통계에서 주목할 점은 다음과 같습니다:
@@ -230,8 +260,8 @@ for data in reasoning_dataset:
 
 훈련 과정에서 수집된 주요 측정치는 다음과 같습니다:
 
-초기 Test에서 KL Divergence저하로 인한 정확성 하락 Check
-![kl diversance low and reward not recover]('img/kl diversance low and reward not recover.png')
+초기 Test에서 KL Divergence저하로 인한 정확성 하락 Check (KL Divergence저하후 실제 성능저하 경향)
+![kldiv](img/kldiversance.png)
 
 수십번의 Training과 Data 수집으로 7번 Tag를 붙인 Trial이 가장 좋은 성능을 보여준다는 것을 찾았습니다.
 ![overall_trial](img/overall_trial.png)
@@ -242,7 +272,7 @@ for data in reasoning_dataset:
 7번의 KL Divergence Loss등을 보면 안정적으로 유지하는 것을 확인할 수 있습니다.
 ![final_summary](img/final_summary.png)
 
-## 4. 모델 아키텍처 및 훈련 방법론
+## 4. 모델 아키텍처 및 훈련
 
 ### 4.1 모델 아키텍처
 
@@ -290,6 +320,14 @@ $$
    - Clang-repl 테스트 작성 규칙
    ```
 
+Prompt 훈련에는 다음 파일들이 사용되었습니다.
+```
+1.Train Exact Sample.ipynb
+ReasoningChat.py
+ExactSampleDataset.py
+ExactSampleTrainLoop.py
+```
+
 2. **Reasoning 훈련(GRPO 적용)**: 
    - 미완성 테스트 케이스 제공 (Test Target과 Target Object만 포함)
    - 모델이 나머지 섹션(Test Object, Input Data, Expected Output, Clang-repl Test)을 생성
@@ -297,12 +335,18 @@ $$
    - 성공적인 응답과 실패한 응답 간의 상대적 보상 계산
    - GRPO 방법론을 통한 모델 파라미터 업데이트
 
-3. **평가 및 피드백 루프**: 생성된 테스트 케이스 실행 결과에 기반한 피드백 제공 및 모델 조정
-   - 컴파일 오류: 낮은 보상
-   - 런타임 오류: 매우 낮은 보상
-   - 실행 성공, 검증 실패: 중간 보상
+Reasoning 훈련에서는 다음 파일들이 사용되었습니다.
+```
+3.reasoning_training.ipynb
+Config.py
+ClangReplInterface.py
+```
+
+4. **평가 및 피드백 루프**: 생성된 테스트 케이스 실행 결과에 기반한 피드백 제공 및 모델 조정
+   - 컴파일/런타임 오류: 낮은 보상
+   - Timeout: 중간 보상(진행도에 따라 보상, System 과부하에 의해 일어나는 경우도 있음)
    - 실행 성공, 검증 성공: 높은 보상
-   - 엣지 케이스 포함: 추가 보상
+   - 엣지 케이스 포함: 추가 보상 (향후)
 
 모델의 reasoning 훈련을 위해 다음과 같은 보상 체계를 설계하고 적용했습니다:
 
@@ -328,7 +372,7 @@ $$
 전체 훈련 과정은 다음과 같은 단계로 계획되었습니다:
 
 1. **샘플 데이터 정확 매칭 훈련**:
-   - 약 1,000개의 샘플 데이터를 사용하여 기본 형식과 패턴을 학습 하려고 하였으나 품질이 낮아 수십개 수준의 조정된 Sample Data 생성.
+   - 약 1,000개의 샘플 데이터를 사용하여 기본 형식과 패턴을 학습 하려고 하였으나 품질이 낮아 수십개 수준의 조정된 Sample Data 생성(141 아이템)
 
 2. **태그 및 결과 확인 훈련**:
    - 태그("Target Object", "Input Data", "Expected Output")의 존재 확인
@@ -354,6 +398,7 @@ CUDA 드라이버 버그로 인해 여러 버전을 시도해야 했으며, 최�
 - AdaFactor 최적화 사용 시: 20GB~28GB
 
 Memory Leak과 비효율적인 사용을 확인하여 (무한노가다)를 통하여여 다음과 같이 안정적인 Memory 사용량(46GB)을 보이도록 하였습니다.
+(최종적으로 Adam optimizer도 사용가능해짐)
 
 ![nvidia_memory](img/nvidia_memory.png)
 
@@ -362,8 +407,8 @@ Memory Leak과 비효율적인 사용을 확인하여 (무한노가다)를 통�
 이론적 수식을 실제 구현으로 옮기는 과정에서 여러 오류가 발생했습니다. 특히, advantage 계산과 clipping 과정에서 숫자적 불안정성을 발견하여 다음과 같이 수정했습니다:
 
 1. advantage 값에 clipping 적용 (-5에서 5 사이로 제한)
+ - 작은 배치에서 발생하는 과도한 변동성 완화
 2. objective에 상한값만 적용하는 방식으로 변경
-3. 작은 배치에서 발생하는 과도한 변동성 완화
 
 ```python
 # 원래 코드:
@@ -384,7 +429,8 @@ ChatGPT의 도움을 받아 코드를 작성하는 과정에서 여러 오류 �
 
 #### 5.1.5 데이터 확보 및 정제 문제
 
-초기에는 적절한 테스트 데이터를 구하거나 생성하는 것이 어려울 것으로 예상했으나, CPP-UT-Bench와 CompCodeVet 데이터셋 확인 후 적절한 데이터 소스를 확보할 수 있었습니다. 그러나 이 데이터셋들이 너무 원시적이고 정제되지 않은 상태였기 때문에, 추가적인 정제 작업이 필요했습니다.
+초기에는 적절한 테스트 데이터를 구하거나 생성하는 것이 어려울 것으로 예상했으나, CPP-UT-Bench와 CompCodeVet 데이터셋 확인 후 적절한 데이터 소스를 확보할 수 있어서 기뻤으나.... 
+이 데이터셋들이 너무 원시적이고 정제되지 않은 상태였기 때문에 ChatGPT를 통해 하나 하나 생성하고 문제가 없는 Data인지 Script를 통해 확인해야 했습니다.
 
 #### 5.1.6 Fine-tuning 안정성 문제
 
@@ -461,26 +507,8 @@ A_hat_clipping = 5  # A_hat 클리핑 값
 
 이러한 최적화는 모델이 더 안정적으로 훈련되면서도 더 높은 품질의 테스트 케이스를 생성할 수 있게 해주었습니다.
 
-### 5.3 보상 체계 설계
-
-모델의 reasoning 훈련을 위해 다음과 같은 보상 체계를 설계하고 적용했습니다:
-
-| 평가 기준 | 보상 점수 | 설명 |
-|-----------|-----------|------|
-| 텍스트 형식 정확성 | 0.24 | 요구된 형식(Test Object, Input Data 등)에 맞게 생성된 경우 |
-| 컴파일 성공 | 1.0 | 생성된 테스트 코드가 오류 없이 컴파일될 경우 |
-| 실행 결과 정확성 | 1.0 | 실행 결과가 예상 출력과 일치할 경우 |
-| **최대 가능 보상** | **2.24** | 모든 기준을 충족했을 때의 총점 |
-
-이 보상 체계는 GRPO 훈련 과정에서 다음과 같이 활용되었습니다:
-
-1. 동일한 프롬프트에 대해 여러 응답 생성
-2. 각 응답에 대한 보상 점수 계산
-3. 그룹 내 응답들의 평균 및 표준편차 계산
-4. 각 응답의 상대적 advantage 계산: $(reward - mean) / std$
-5. advantage 값에 기반한 모델 파라미터 업데이트
-
-특히 보상의 최대값을 2.24로 설정한 이유는 형식 정확성보다 기능적 정확성(컴파일 및 실행 성공)에 더 높은 가중치를 부여하기 위함이었습니다. 이 보상 체계를 통해 모델은 단순히 형식적으로 올바른 코드가 아닌, 실제로 동작하는 테스트 케이스를 생성하는 방향으로 훈련되었습니다.
+#### 5.3 추가 발견 사항
+Training 중 old model의 업데이트를 한번의 epoch에서 epoch중에도 수차래 진행하면 현 Dataset에서는 더 성능이 좋아지는 것을 발견 Epoch중 한차례이상의 Update를 하도록 수정하였습니다.
 
 ## 6. 최종 결론
 
@@ -498,7 +526,7 @@ A_hat_clipping = 5  # A_hat 클리핑 값
 
 1. **리소스 제약**: 대규모 모델 훈련에 필요한 컴퓨팅 리소스 부족
 2. **데이터 다양성**: 더 많은 실제 C/C++ 코드 사례 필요
-3. **테스트 케이스 복잡성**: 복잡한 테스트 시나리오 생성 능력 여전히 제한적
+3. **테스트 케이스 복잡성**: 복잡한 테스트 시나리오 생성 능력를 Study하기위해 GPU의 메모리 부족.
 
 ### 6.3 향후 연구 방향
 

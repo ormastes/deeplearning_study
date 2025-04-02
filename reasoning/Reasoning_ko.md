@@ -14,6 +14,16 @@ Reasoning 훈련의 핵심 혁신은 미리 정의된 훈련 데이터 경로를
    - Chain of thought 또는 reasoning 과정의 충분성
    - 최종 구문 분석된 답변의 정확성
 
+## 프로젝트 목표
+본 프로젝트의 주요 목표는 다음과 같습니다:
+
+1. C/C++ 단위 테스트를 위한 cdoctest 도구의 테스트 케이스를 자동으로 생성할 수 있는 LLM 개발
+2. Group Relative Policy Optimization(GRPO) 방법론을 적용하여 LLM의 reasoning 능력 향상
+3. 저수준 언어 코드 생성에서 LLM의 성능 개선
+4. VSCode 확장 프로그램을 통한 테스트 케이스 생성 지원
+
+cdoctest는 Python의 doctest에서 영감을 받아 개발된 C/C++ 단위 테스트 도구로, 주석에 내장된 REPL(Read-Eval-Print Loop) 코드를 IDE와 CLI 환경에서 테스트 케이스로 실행할 수 있게 합니다.
+
 ## 프로젝트 개요
 
 Deepseek가 훈련을 위해 수학에 초점을 맞춘 반면, 이 프로젝트는 특정 테스트 케이스 생성과 함께 C/C++ 프로그래밍을 사용합니다.
@@ -27,6 +37,7 @@ REPL(Read-Eval-Print Loop)은 테스트 케이스를 생성하고 검증하기 �
 최종 목표는 cdoctest(Python의 doctest에서 영감을 받은 C/C++ 단위 테스팅 도구)를 위한 간단한 테스트 케이스를 생성할 수 있는 LLM을 만드는 것입니다. Cdoctest는 주석에 C/C++ REPL 코드를 내장하여 IDE와 CLI 환경 모두에서 테스트 케이스로 실행할 수 있게 합니다.
 
 이 프로젝트는 Windows와 Linux 플랫폼 모두를 위한 cdoctest를 만들었으며, VS Code 확장 프로그램도 개발했습니다. Cdoctest를 위한 테스트 케이스 생성 명령이 이 확장 프로그램에 추가될 예정이며, 통합은 몇 개월 내에 완료될 것으로 예상됩니다.
+
 
 ## 훈련 데이터
 
