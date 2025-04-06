@@ -8,6 +8,93 @@ from concurrent.futures import ThreadPoolExecutor, Future
 import threading
 import time
 import pickle
+import subprocess
+import tempfile
+import os
+import re
+
+import string
+
+def is_cpp_basic_charset(s: str) -> bool:
+    """
+    Check if every character in the string `s` is part of the C++ basic source character set.
+    
+    This set includes:
+      - All letters (A–Z, a–z)
+      - All digits (0–9)
+      - Punctuation: ! " # $ % & ' ( ) * + , - . / : ; < = > ? @ [ \ ] ^ _ ` { | } ~
+      - Whitespace: space, \t, \n, \r, \f, \v
+    """
+    allowed = set(string.printable)
+    return all(c in allowed for c in s)
+
+def is_source_compilable(source: str) -> bool:
+    # Create a temporary file for the source code
+    with tempfile.NamedTemporaryFile(suffix=".cpp", delete=False, mode="w", encoding="utf-8") as src_file:
+        src_file.write(source)
+        src_file_path = src_file.name
+
+    # Prepare a temporary filename for the output executable
+    output_path = src_file_path + ".out"
+
+    try:
+        # Invoke clang++ to compile the source file.
+        # You may adjust the command-line options as needed.
+        result = subprocess.run(
+            ["clang++", src_file_path, "-o", output_path],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True
+        )
+
+        if result.returncode == 0:
+            return True
+        else:
+            print("Compilation failed with errors:")
+            print(result.stderr)
+            return False
+    finally:
+        # Clean up the temporary files
+        os.remove(src_file_path)
+        if os.path.exists(output_path):
+            os.remove(output_path)
+
+def check_preprocess_and_tokenize(source: str):
+    # Write source code to a temporary file.
+    with tempfile.NamedTemporaryFile(suffix=".cpp", delete=False, mode="w", encoding="utf-8") as src_file:
+        src_file.write(source)
+        src_file_path = src_file.name
+
+    try:
+        # Run clang++ with flags to perform syntax checking and dump tokens.
+        result = subprocess.run(
+            ["clang++", "-fsyntax-only", "-Xclang", "-dump-tokens", src_file_path],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True
+        )
+        
+        # If compilation succeeds, return True.
+        if result.returncode == 0:
+            return (True, None)
+        else:
+            # Try to parse the error message for line and column information.
+            # Clang error messages typically look like:
+            # "filename:line:col: error: <message>"
+            pattern = r"^(.*):(?P<line>\d+):(?P<col>\d+):\s+(?:error|fatal error):\s+(?P<msg>.*)$"
+            match = re.search(pattern, result.stderr, re.MULTILINE)
+            if match:
+                error_info = {
+                    "line": int(match.group("line")),
+                    "col": int(match.group("col")),
+                    "message": match.group("msg").strip()
+                }
+            else:
+                error_info = {"message": result.stderr.strip()}
+            return (False, error_info)
+    finally:
+        # Clean up temporary file.
+        os.remove(src_file_path)
 
 class ObjectPool:
     def __init__(self, cls, method, batch_size, *args, **kwargs):
