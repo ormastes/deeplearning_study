@@ -110,13 +110,13 @@ It need to change little bit since there is only limited resource to train it.
    - Initialize an empty list 'iteration_rewards'.
    - **For** $m = 1, \ldots, M$:
      - Sample a batch $D_b$ from $D$.
-     - If $m \bmod \text{update_interval} = 0$ , set $\theta_{\text{old}} \leftarrow \theta$.
+     - If $m \bmod \text{update}\_\text{interval} = 0$ , set $\theta_{\text{old}} \leftarrow \theta$.
      - For each $x \in D_b$:
         - sample $N$ outputs $\{y_i\}_{i=1}^{N} \sim \theta(\cdot \mid x)$.
      - Compute rewards $\{r_i\}_{i=1}^{N}$ for each $y_i$ using $R$ and extend 'iteration_rewards' with these values.
      - Compute the group relative advantage $\hat{A}_{i,t}$ for the $t$-th token of $y_i$.
      - Update $\theta$ by maximizing the GRPO objective with logits of $\theta_{\text{old}}$ and $\theta_{\text{ref}}$.
-   - If $\text{mean(iteration_rewards)} \> \text{reward\_threshold}$, set the reference model $\theta_{\text{ref}} \leftarrow \theta$.
+   - If $\text{mean(}\text{iteration}\_\text{rewards)} \> \text{reward\_threshold}$, set the reference model $\theta_{\text{ref}} \leftarrow \theta$.
 
 **Output:** $\theta$.
 
