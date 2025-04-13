@@ -116,7 +116,7 @@ It need to change little bit since there is only limited resource to train it.
      - Compute rewards $\{r_i\}_{i=1}^{N}$ for each $y_i$ using $R$ and extend 'iteration_rewards' with these values.
      - Compute the group relative advantage $\hat{A}_{i,t}$ for the $t$-th token of $y_i$.
      - Update $\theta$ by maximizing the GRPO objective with logits of $\theta_{\text{old}}$ and $\theta_{\text{ref}}$.
-   - If $\text{mean(}\text{iteration}\_\text{rewards)} \> \text{reward{\_\text{threshold}$, set the reference model $\theta_{\text{ref}} \leftarrow \theta$.
+   - If $\text{mean(}\text{iteration}\_\text{rewards)} \> \text{reward}\_\text{threshold}$, set the reference model $\theta_{\text{ref}} \leftarrow \theta$.
 
 **Output:** $\theta$.
 
