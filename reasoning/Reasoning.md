@@ -2,7 +2,7 @@
 
 ## Key Concept of LLM Training for Reasoning
 
-Large Language Models (LLMs) have been enhanced with various methods to improve their reasoning capabilities. While chain of thought prompting showed significant performance gains, it wasn't sufficient to achieve true reasoning abilities.
+Large Language Models (LLMs) have been enhanced with various methods to improve their reasoning capabilities. While chain‐of‐thought prompting showed significant performance gains, it wasn't sufficient to achieve true reasoning abilities.
 
 OpenAI developed advanced training methods for reasoning that heavily rely on reinforcement learning. Following their lead, Deepseek recently announced their approach to training LLM models for reasoning.
 
@@ -15,7 +15,8 @@ The core innovation in reasoning training is that it doesn't follow predefined t
    - Correctness of the final parsed answer
 
 ## Project Goals
-The main goals of this project are:
+
+The LLM reasoning project is a subcomponent of the broader cdoctest generation initiative. Its main goals are:
 
 1. Develop an LLM that can automatically generate test cases for cdoctest, a tool for C/C++ unit testing
 2. Enhance LLM reasoning capabilities using Group Relative Policy Optimization (GRPO) methodology
@@ -26,7 +27,7 @@ cdoctest is a C/C++ unit testing tool inspired by Python's doctest, allowing REP
 
 ## Project Outline
 
-While Deepseek focused on mathematics for training, this project uses C/C++ programming with specific test case generation.
+While Deepseek focused on mathematical training, this project employs C/C++ programming specifically for test case generation.
 
 A REPL (Read-Eval-Print Loop) provides an ideal programming playground for creating and verifying test cases. Rather than using Python REPL (where LLMs already perform well), this project employs a Clang-based REPL for C/C++ programming. The rationale is:
 
@@ -40,28 +41,22 @@ The project has created cdoctest for both Windows and Linux platforms, with a VS
 
 ## Training Data
 
-Data sources for the project include:
-
-1. **CPP-UT-Bench**:  
-   https://huggingface.co/datasets/Nutanix/CPP-UNITTEST-BENCH
-
-2. **CompCodeVet: Compiler-Validated Data Curation**:  
-   https://huggingface.co/datasets/Elfsong/Mercury  
-   https://github.com/Elfsong/Mercury/blob/main/src/dpo_train.py  
-   https://github.com/Elfsong/Mercury/blob/main/src/sft_train.py
-
-3. ~~**CITYWALK: Enhancing LLM-Based C++ Unit Test Generation**~~:  
-   ~~https://zenodo.org/records/14022506~~ (Not a dataset, but its logic can be used for sample data and training data refinement)
-
 The raw datasets were large and messy, so custom training and validation data were created using ChatGPT, with manual evaluation for content validity and syntax correctness through scripted testing.
 
 When preparing data for training, it's crucial to use the same format that the model was trained on to reduce errors and improve results.
 
 ### Prompt Training (Fine-tuning)
 
-To minimize initial effort, the approach adds a few layers at the front of the model and trains only those layers, even with limited resources. The front layers were chosen because they can effectively steer overall results.
+To minimize initial effort, I have added two layers at the front of the model and trained only those layers. The front layers were chosen because they can effectively steer overall results.
 
 The process began by creating prompts for test case generation and verifying their functionality. These were then converted into question-and-answer training datasets to embed the prompt rules into the model.
+
+1. Layer Integration: Add two dedicated front layers to the model, strategically positioned to guide overall performance.
+2. Prompt Creation: Develop specific prompts aimed at generating test cases.
+3. Functionality Testing: Verify that the created prompts yield correct and effective test cases.
+4. Prompt Conversion: Transform the verified prompts into question-and-answer pairs, directly embedding the prompt guidelines into the training data.
+5. Fine-Tuning: Use the Q&A training data to fine-tune the model, ensuring that the prompt rules are effectively implemented.
+6. Performance Evaluation: Conduct additional tests to ensure the model reliably adheres to the embedded prompt rules.
 
 ### Training Reasoning
 
@@ -77,6 +72,97 @@ The training data comprises nine categories, each with 15 items. For each catego
 - String manipulation
 - Sort algorithms
 
+## Pseudo code and changes
+
+During adjust training on a limited resource, I have made few changes on Pseudo code.
+
+### Algorithm 1: Iterative Group Relative Policy Optimization
+
+**Input:** initial policy model $\theta_{\text{init}}$, reward models $R$, task prompts $D$, hyperparameters $\alpha$, $\beta$, $K$.
+
+1. **Initialize:** Set $\theta \leftarrow \theta_{\text{init}}$.
+2. **For** $i = 1, \ldots, I$:  
+   - Set reference model $\theta_{\text{ref}} \leftarrow \theta$.  
+   - **For** $m = 1, \ldots, M$:  
+     - Sample batch $D_b \subset D$.  
+     - Update old model: set $\theta_{\text{old}} \leftarrow \theta$.  
+     - **For each** $x \in D_b$:
+        - sample $N$ outputs $\{y_i\}_{i=1}^{N} \sim \theta_{\text{old}}(\cdot \mid x)$
+        - compute rewards $\{r_i\}$ using $R$.  
+     - Compute group relative advantage $\hat{A}_{i,t}$ for the tokens of $y_i$.  
+     - **For** $k = 1, \ldots, K$:
+        - update $\theta$ by maximizing the GRPO objective with logits of $\theta_{\text{old}}$ and $\theta_{\text{ref}}$. 
+     - NOT NEEDED: Update $R$ using continuous training with replay.
+
+**Output:** $\theta$.
+
+It need to change little bit since there is only limited resource to train it.
+
+1. Update reference model and older model seldomely to stable training.
+2. Remove GRPOiteration to train base on the recent sample.
+
+### Algorithm 2: Modified Iterative Group Relative Policy Optimization
+
+**Input:** initial policy model $\theta_{\text{init}}$, reward models $R$, task prompts $D$, hyperparameters $\alpha$, $\beta$, reward\_threshold, update\_interval.
+
+1. **Initialize:** Set $\theta \leftarrow \theta_{\text{init}}$ and create an empty list for mean rewards.
+2. **For** $i = 1, \ldots, I$:
+   - Initialize an empty list 'iteration_rewards'.
+   - **For** $m = 1, \ldots, M$:
+     - Sample a batch $D_b$ from $D$.
+     - If $m \mod \text{update\_interval} = 0$, set $\theta_{\text{old}} \leftarrow \theta$.
+     - For each $x \in D_b$:
+        - sample $N$ outputs $\{y_i\}_{i=1}^{N} \sim \theta(\cdot \mid x)$.
+     - Compute rewards $\{r_i\}_{i=1}^{N}$ for each $y_i$ using $R$ and extend 'iteration_rewards' with these values.
+     - Compute the group relative advantage $\hat{A}_{i,t}$ for the $t$-th token of $y_i$.
+     - Update $\theta$ by maximizing the GRPO objective with logits of $\theta_{\text{old}}$ and $\theta_{\text{ref}}$.
+   - If $\text{mean(iteration\_rewards)} > \text{reward\_threshold}$, set the reference model $\theta_{\text{ref}} \leftarrow \theta$.
+
+**Output:** $\theta$.
+
+I've made the following changes:
+
+1. Change Reference model to prevent reference model instability
+
+    - update Moved the reference model update outside the inner step loop to the outer iteration loop.
+    - The reference model is only updated if the mean reward for the entire iteration exceeds the threshold
+
+2. Calculate reward and GRPO with Current Model for better learning
+
+    - $\theta$ generate outputs for rewards
+    - Generated outputs used once to calculate the loss
+
+## Training flow in image
+
+### Generate QA IDs
+
+Let the current model generate IDs that include both the prompt and the answer.
+
+![generate_qa_ids](img/generate_qa_ids.svg)
+
+### Calculate Group base Advantages
+
+Calculate group-based advantages. Each advantage reflects how much better a sequence performs compared to others in its group.
+
+![calc_advantage](img/calc_advantage.svg)
+
+
+### Calculate Critic-free Grouped PPO Loss
+
+Calculate Critic-free Grouped PPO Loss from Old model and Current model's logits with advantage.
+
+![calc_critic_free_ppo](img/calc_critic_free_ppo.svg)
+
+### Caculate CL Divergence Loss
+
+Calculate KL Divergence Loss between Reference model and Current model.
+
+![calc_kl_div](img/calc_kl_div.svg)
+
+### GRPO Loss (Final Loss)
+
+**GRPO Loss = Critic-free Grouped PPO Loss + KL Diverence Loss**
+
 ## Equations
 
 Both **GRPO** (Group Relative Policy Optimization) and **PPO** (Proximal Policy Optimization) share the fundamental concept of using a clipped surrogate objective to constrain policy updates. However, GRPO adapts this approach specifically for LLM fine-tuning by replacing the per-token advantage computed with a critic (value network) with a group-relative advantage calculated from multiple sampled completions per prompt.
@@ -86,7 +172,7 @@ Both **GRPO** (Group Relative Policy Optimization) and **PPO** (Proximal Policy 
 In **PPO**, the objective is typically expressed as:
 
 $$
-J_{PPO}(\theta) = \mathbb{E}\Bigg[\min\Bigg(\frac{\pi_\theta(a_t|s_t)}{\pi_{\theta_{old}}(a_t|s_t)}\,A_t,\; \text{clip}\Big(\frac{\pi_\theta(a_t|s_t)}{\pi_{\theta_{old}}(a_t|s_t)},\,1-\epsilon,\,1+\epsilon\Big) A_t\Bigg)\Bigg],
+J_{PPO}(\theta) = \min\Bigg(\frac{\pi_\theta(a_t|s_t)}{\pi_{\theta_{old}}(a_t|s_t)}\,A_t,\; \text{clip}\Big(\frac{\pi_\theta(a_t|s_t)}{\pi_{\theta_{old}}(a_t|s_t)},\,1-\epsilon,\,1+\epsilon\Big) A_t\Bigg)
 $$
 
 where:
@@ -95,13 +181,13 @@ where:
 - $A_t$ is the advantage, typically estimated via Generalized Advantage Estimation (GAE) using a learned value function
 - $\epsilon$ is the clipping parameter to keep updates "proximal"
 
-This formulation requires maintaining a separate value network (critic) to compute $$A_t$$ at each timestep, which becomes challenging for LLMs when rewards are sparse or only provided at the end of generated sequences.
+This formulation requires maintaining a separate value network (critic) to compute $A_t$ at each timestep, which becomes challenging for LLMs when rewards are sparse or only provided at the end of generated sequences.
 
 ### GRPO Objective and Its Differences
 
 In **GRPO** (Group Relative Policy Optimization), the key innovation is eliminating the need for an extra value network by computing a group-relative advantage from multiple responses generated for the same prompt using a simple evaluator (not a neural network).
 
-For a given prompt $$p$$, the system samples a group of $$G$$ responses and obtains their rewards $$\{r_1, r_2, \dots, r_G\}$$. The advantage for each sample is calculated as:
+For a given prompt $p$, the system samples a group of $G$ responses and obtains their rewards $\{r_1, r_2, \dots, r_G\}$. The advantage for each sample is calculated as:
 
 $$
 \hat{A}_i = \frac{r_i - \text{mean}(r_1,\dots,r_G)}{\text{std}(r_1,\dots,r_G)}.
@@ -115,18 +201,21 @@ $$
 J_{GRPO}(\theta) = \frac{1}{G}\sum_{i=1}^G \min\!\Bigg(\frac{\pi_\theta(r_i|p)}{\pi_{\theta_{old}}(r_i|p)}\,\hat{A}_i,\; \text{clip}\!\Big(\frac{\pi_\theta(r_i|p)}{\pi_{\theta_{old}}(r_i|p)},\,1-\epsilon,\,1+\epsilon\Big)\hat{A}_i\Bigg) - \beta\, D_{KL}\big(\pi_\theta \,\|\, \pi_{ref}\big).
 $$
 
-This applies the advantage to grouped PPO outputs for normalization, and uses KL regularization to prevent catastrophic forgetting.
+This applies the advantage to critic-free grouped PPO outputs for normalization, and uses KL regularization to prevent catastrophic forgetting.
 
-#### Key Differences Compared to PPO:
+#### Key Differences Compared to PPO
 
-**1. Advantage Estimation:**
-- *PPO*: Computes $$A_t$$ at each token using a critic (value network) over a trajectory
+*1. Advantage Estimation:*
+
+- *PPO*: Computes $A_t$ at each token using a critic (value network) over a trajectory
 - *GRPO*: Computes a single advantage per generated response by normalizing its reward relative to the group's mean and standard deviation—particularly useful for LLMs where rewards (e.g., for correctness or formatting) often come only at the end of a sequence
 
-**2. No Extra Value Network:**
+*2. No Extra Value Network:*
+
 - By deriving the advantage directly from group rewards, GRPO eliminates the need for a separate value function, simplifying the training pipeline and reducing memory and computational overhead
 
-**3. KL Regularization:**
+*3. KL Regularization:*
+
 - Both methods incorporate a KL divergence term to keep the updated policy close to a reference policy
 - In GRPO, this is integrated directly into the loss rather than into the reward signal, maintaining stability without complicating advantage estimation
 
@@ -140,21 +229,25 @@ $$
 \hat{A}_i = \frac{r_i - \mu}{\sigma + \epsilon},
 $$
 
-where:
-- $r_i$ is the reward for the $i$th response
+*Where:*
+
+- $r_i$ is the reward for the $i$ th response
 - $\mu$ is the mean reward for the group
 - $\sigma$ is the standard deviation of the rewards
 - $\epsilon$ is a small constant added for numerical stability
 
-**Theoretical Range:**
+*Theoretical Range:*
+
 - Theoretically, since $r_i - \mu$ can be any real number and $\sigma > 0$ (assuming rewards aren't all identical), the normalized advantage $\hat{A}$ can take any value in $(-\infty, +\infty)$
 
-**Practical Range:**
+*Practical Range:*
+
 - In practice, when rewards follow a roughly normal distribution, $\hat{A}$ behaves like a z-score
 - For a normal distribution, approximately 99.7% of values fall within $[-3, 3]$
 - Thus, most $\hat{A}$ values typically range from about $-3$ to $3$
 
-**Code Implementation:**
+*Code Implementation:*
+
 ```python
 model_log_logits = selective_log_softmax(response_truncated_logits, respone_ids, tokenizer)
 old_model_log_logits = selective_log_softmax(old_response_truncated_logits, respone_ids, tokenizer)
@@ -170,8 +263,8 @@ advantages = advantages.view(-1)
 A_hat = ((advantages - mean_rewards) / (std_rewards + 1e-4)).unsqueeze(1)
 A_hat = torch.clamp(A_hat, -5, 5) # Clipping added since small samples cause too much variation
 
-# 5. grouped_ppo Loss Calc
-print_step("5. Grouped ppo Loss Calc")            
+# 5. Critic-free Grouped PPO Loss Calc
+print_step("5. Critic-free Grouped ppo Loss Calc")            
 # PPO objective calculations.
 unclipped_objective = probability_ratio
 epsilon_high = torch.full_like(unclipped_objective, 1 + epsilon).check_shape(RESPONSE_IDS)
@@ -194,12 +287,15 @@ $$
 r_i(\theta) = \exp\left(\log \pi_\theta(r_i \mid p) - \log \pi_{\theta_{\text{old}}}(r_i \mid p)\right).
 $$
 
-**Value Ranges:**
+*Value Ranges:*
+
 - ${\pi_\theta(r_i \mid p)}\in(0,1]$
 - $\log {\pi_\theta(r_i \mid p)}\in(−\infty,0]$
 
-**After Exponentiation:**
+*After Exponentiation:*
+
 The operation $r(\theta) = \exp(\Delta \ell)$ gives:
+
 - Range: $\Delta \ell \in (-\infty, +\infty)$, $r(\theta) \in (0, \infty)$
 - If $\Delta \ell = 0$, then $r(\theta) = \exp(0) = 1$
 - If $\Delta \ell > 0$ (new policy assigns higher probability), then $r(\theta) > 1$
@@ -213,7 +309,7 @@ $$
 
 The log space formulation is used for mathematical stability.
 
-#### Grouped PPO Loss
+#### Critic-free Grouped PPO Loss
 
 The individual surrogate loss (PPO) is given by:
 
@@ -238,13 +334,24 @@ $$
 \text{loss} = - L_i(\theta)
 $$
 
-**Theoretical Range:**
+*Theoretical Range:*
+
 - $L_i(\theta)\in(0, (1+\epsilon) A^{\pi_{\theta_t}}(s,a_i)]\text{ if } A^{\pi_{\theta_t}}(s,a_i) > 0$
 - $L_i(\theta)\in(0, (1-\epsilon) A^{\pi_{\theta_t}}(s,a_i)]\text{ if } A^{\pi_{\theta_t}}(s,a_i) < 0$
 
-(Note: The author questions if it should be $(-1-\epsilon)$ rather than $(1-\epsilon)$ and why clipping exists here, suggesting only the higher bound seems more efficient)
+(Note: My questions, isn't it should be $(-1-\epsilon)$ rather than $(1-\epsilon)$ and why clipping exists here? suggesting only the higher bound seems more efficient?)
 
-**Code Implementation for KL Divergence:**
+I have changed equation little bit
+When I have stepped back from final loss to the loss clipping during debugging, The values after clipping seems inadequate and equation is confusing me when I see its details.
+So, I have changing the equation way I can undertand and the change makes results better.
+I just put range $r_i(\theta)$ under $1+\epsilon$ to limit PPO Loss ranges.
+
+$$
+L_i(\theta) = \hat{A}_i \cdot \min\left(r_i(\theta), 1 + \epsilon\right)
+$$
+
+*Code Implementation for KL Divergence:*
+
 ```python
 # 3. kl_div Loss Calc
 print_step("3. kl_div Loss Calc")    
@@ -257,10 +364,10 @@ token_kl_div = F.kl_div(model_log_probs, ref_log_probs, reduction='none', log_ta
 kl_div = token_kl_div.mean(dim=-1) # average over tokens. range (0, infite) but for output of similar model. It is very small. sample: kl_div=0.09
 ```
 
-**References:**
+*References:*
 OpenAI Spinning Up in Deep RL, Proximal Policy Optimization: [Proximal Policy Optimization](https://spinningup.openai.com/en/latest/algorithms/ppo.html)
 
-The overall surrogate loss (Grouped PPO) is computed as:
+The overall surrogate loss (Critic-free Grouped PPO) is computed as:
 
 $$
 L_{\text{grouped\_PPO}}(\theta) = \frac{1}{G} \sum_{i=1}^{G} L_i(\theta).
@@ -274,57 +381,63 @@ $$
 L_{KL}(\theta) = \beta \, D_{KL}\big(\pi_\theta \,\|\, \pi_{\text{ref}}\big).
 $$
 
-**Theoretical Range:** $L_{KL}(\theta)\in[0, \infty)$
+*Theoretical Range:* $L_{KL}(\theta)\in[0, \infty)$
 
-**Practical Range:** In practice, KL values are often small (e.g., 0.01 to 0.1) when policies are similar.
+*Practical Range:* In practice, KL values are often small (e.g., 0.01 to 0.1) when policies are similar.
 
-#### Total Loss
+#### GRPO Loss
 
-The total loss function combines the surrogate loss (Grouped PPO) and the KL penalty:
+The GRPO loss function combines the surrogate loss (Critic-free Grouped PPO) and the KL penalty:
 
 $$
-L_{\text{total}}(\theta) = L_{\text{grouped\_PPO}}(\theta) + L_{KL}(\theta).
+L_{\text{GRPO}}(\theta) = L_{\text{grouped\_PPO}}(\theta) + L_{KL}(\theta).
 $$
 
-**Code Implementation:**
+*Code Implementation:*
+
 ```python
 # kl_lambda is a scaling factor for the KL term
 _combined_loss = grouped_ppo_loss + kl_lambda * kl_div
 combined_loss = _combined_loss.mean() # []
 ```
 
-#### Equation Tweaks
+## Equation and Psuedo code Tweaks
 
-The author notes two key modifications:
-1. Added clipping since small samples cause too much variation
-2. Instead of clipping the objective, they use an upper bound which produces better results
+The key modifications:
+
+1. Added clipping on $\hat{A}$ since small samples cause too much variation
+2. Instead of clipping the objective, I used an upper bound which produces better results in this sample.
+3. Current model generations are used and the the generations are used only once for training.
+4. Old model NOT updates at every iterations. (Not every ireration) because batch is too small update old model every time cause unstable learning.
+5. Refence model update very seldom when only meet avergae high reward met.
 
 ## Technical Difficulties
 
 The project encountered several challenges:
 
-1. **CUDA issues**: Despite being better than AMD products, CUDA had numerous bugs, requiring rollback to older driver versions and full GPU-based running
+1. **CUDA issues**: Requiring rollback to older driver versions and full GPU-based running
 
-2. **ChatGPT inconsistencies**: While helpful, ChatGPT often provided buggy code. Examples include:
-   - Unnecessary alignment between IDs and logits
-   - Incorrect code snippets with misleading comments about tensor dimensions
-   - Removal of critical parameters when updating functions
-   - Mismatches between API documentation and actual behavior
+2. **Limited GPU memory**: Even 49GB VRAM proved insufficient for simple LLM training, requiring line-by-line memory optimization in efficient code. Initially planned to train a 7B model, but had to settle for a 3B model. The optimizer and irregular structure of current LLM models require substantially more memory than expected.
 
-3. **Limited GPU memory**: Even 49GB VRAM proved insufficient for simple LLM training, requiring line-by-line memory optimization in efficient code. Initially planned to train a 7B model, but had to settle for a 3B model with partial layer training. The optimizer and irregular structure of current LLM models require substantially more memory than expected.
-
-4. **Buggy equations**: Even well-known code implementations often contain equation bugs. With substantial computing power and large sample sizes, these might not affect final results, but with limited resources and low precision, small mistakes significantly impact outcomes.
-
-5. **Time constraints**: One epoch takes too long, and there are too many hyperparameters to configure. Tools like Optuna can eliminate some hyperparameter ranges, but the process remains time-consuming.
+3. **Buggy equations**: Even well-known code implementations often contain equation bugs. With substantial computing power and large sample sizes, these might not affect final results, but with limited resources and low precision, small mistakes significantly impact outcomes.
 
 ## Lessons Learned
 
 1. **Fully understand equations**: Comprehend why and how equations should be applied to training
-2. **Verify, don't trust ChatGPT**: It often provides answers with fake evidence. Run the code, log results, and verify independently
-3. **Use hand-crafted data**: Custom data often works better than existing datasets from the wild
-4. **Find the right prompt format**: The format that the model was trained on often works dramatically better than even well-known formats
+2. **Use hand-crafted data**: Custom data often works better than existing datasets from the wild
+3. **Find the right prompt format**: The format that the model was trained on often works dramatically better than well-known formats
 
-## Helpful Materials
+## Future works
+
+1. Tool arguments generation to exercise final code answer
+2. TDD base chain of thought
+3. Train bitcode generation on both python and c++. then train to generate equivalent code generation.
+
+## Current limitation
+
+Even small model can not fit in consumer gpu like 5090 (35gb) which needs least 37GB. May need to train half of layers on a model.
+
+## Reference and Helpful Materials
 
 - [DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via Reinforcement Learning](https://arxiv.org/abs/2501.12948)
 - [DeepSeekMath: Pushing the Limits of Mathematical Reasoning in Open Language Models](https://arxiv.org/abs/2402.03300)
