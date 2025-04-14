@@ -1,4 +1,4 @@
-# LLM Reasoning with Programming
+# LLM Reasoning with Programming (In a single gpu)
 
 ## Key Concept of LLM Training for Reasoning
 
