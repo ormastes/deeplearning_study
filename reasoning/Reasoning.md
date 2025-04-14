@@ -171,7 +171,9 @@ Both **GRPO** (Group Relative Policy Optimization) and **PPO** (Proximal Policy 
 
 In **PPO**, the objective is typically expressed as:
 
-$J_{PPO}(\theta) = \min\Bigg($ $\frac{\pi_\theta(a_t|s_t)}{\pi_{\theta_{old}}(a_t|s_t)}\,A_t,$ $\text{clip}\Big(\frac{\pi_\theta(a_t|s_t)}{\pi_{\theta_{old}}(a_t|s_t)},\,1-\epsilon,\,1+\epsilon\Big) A_t$ $\Bigg)$
+$$
+J_{PPO}(\theta) = \min\Bigg(\frac{\pi_\theta(a_t|s_t)}{\pi_{\theta_{old}}(a_t|s_t)}\,A_t, \text{clip}\Big(\frac{\pi_\theta(a_t|s_t)}{\pi_{\theta_{old}}(a_t|s_t)},\,1-\epsilon,\,1+\epsilon\Big) A_t\Bigg)
+$$
 
 where:
 
@@ -312,7 +314,7 @@ The log space formulation is used for mathematical stability.
 The individual surrogate loss (PPO) is given by:
 
 $$
-L_i(\theta) = \min\Big( r_i(\theta) \, \hat{A}_i, \, \text{clip}\big(r_i(\theta),\, 1-\epsilon_{\text{clip}},\, 1+\epsilon_{\text{clip}}\big) \, \hat{A}_i \Big).
+L_i(\theta) = \min\Big( r_i(\theta) \, \hat{A}_i, \, \text{clip}\big(r_i(\theta),\, 1-\epsilon,\, 1+\epsilon\big) \, \hat{A}_i \Big).
 $$
 
 This can cause misconceptions about how clipping works. The actual intent is:
@@ -329,7 +331,7 @@ $$
 
 The PPO loss is:
 $$
-\text{loss} = - L_i(\theta)
+\text{loss}=-L_i(\theta)
 $$
 
 *Theoretical Range:*
