@@ -165,7 +165,7 @@ Calculate KL Divergence Loss between Reference model and Current model.
 
 ## Equations
 
-Both **GRPO** (Group Relative Policy Optimization) and **PPO** (Proximal Policy Optimization) share the fundamental concept of using a clipped surrogate objective to constrain policy updates. However, GRPO adapts this approach specifically for LLM fine-tuning by replacing the per-token advantage computed with a critic (value network) with a group-relative advantage calculated from multiple sampled completions per prompt.
+Both **GRPO** (Group Relative Policy Optimization) and **PPO** (Proximal Policy Optimization) share the fundamental concept of using a clipped surrogate objective to constrain policy updates. However, GRPO adapts a group-relative advantage calculated from multiple sampled completions per prompt with a method used in fine tunning to prevent radical changes on traing model.
 
 ### PPO Objective
 
