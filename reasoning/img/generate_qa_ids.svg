@@ -1,0 +1,107 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 680">
+    <!-- Background -->
+    <rect width="800" height="680" fill="#f5f5f5" rx="10" ry="10"/>
+    
+    <!-- Prompt Text Container -->
+    <rect x="50" y="80" width="700" height="80" rx="10" ry="10" fill="#ffffff" stroke="#333333" stroke-width="2"/>
+    <text x="70" y="125" font-family="Arial" font-size="24" fill="#333333">"make add test case"</text>
+    <text x="375" y="60" font-family="Arial" font-size="18" font-weight="bold" text-anchor="middle" fill="#333333">Prompt Text</text>
+    
+    <!-- Tokenizer Box -->
+    <rect x="200" y="210" width="400" height="60" rx="10" ry="10" fill="#a0a0a0" stroke="#333333" stroke-width="2"/>
+    <text x="400" y="245" font-family="Arial" font-size="20" font-weight="bold" text-anchor="middle" fill="#ffffff">TOKENIZER</text>
+    
+    <!-- Arrows from Input to Tokenizer -->
+    <path d="M 400 160 L 400 210" stroke="#333333" stroke-width="3" fill="none" marker-end="url(#arrowhead)"/>
+    
+    <!-- Arrows from Tokenizer to Tokens -->
+    <path d="M 400 270 L 400 320" stroke="#333333" stroke-width="3" fill="none" marker-end="url(#arrowhead)"/>
+    
+    <!-- Train Model Box -->
+    <rect x="200" y="460" width="400" height="70" rx="10" ry="10" fill="#a0a0a0" stroke="#333333" stroke-width="2"/>
+    <text x="400" y="490" font-family="Arial" font-size="20" font-weight="bold" text-anchor="middle" fill="#ffffff">TRAIN MODEL</text>
+    <text x="400" y="510" font-family="Arial" font-size="14" text-anchor="middle" fill="#ffffff">(inference mode)</text>
+    
+    <!-- Arrow from Tokens to Train Model -->
+    <path d="M 400 400 L 400 460" stroke="#333333" stroke-width="3" fill="none" marker-end="url(#arrowhead)"/>
+    
+    <!-- Generated Response Container -->
+    <rect x="50" y="570" width="700" height="80" rx="10" ry="10" fill="#ffffff" stroke="#333333" stroke-width="2"/>
+    
+    <!-- Prompt Tokens (Copied) -->
+    <rect x="70" y="585" width="65" height="50" rx="5" ry="5" fill="#9fc5e8" stroke="#333333" stroke-width="1.5"/>
+    <text x="102" y="615" font-family="Courier New" font-size="16" text-anchor="middle" fill="#333333">make</text>
+    
+    <rect x="140" y="585" width="65" height="50" rx="5" ry="5" fill="#9fc5e8" stroke="#333333" stroke-width="1.5"/>
+    <text x="172" y="615" font-family="Courier New" font-size="16" text-anchor="middle" fill="#333333">add</text>
+    
+    <rect x="210" y="585" width="65" height="50" rx="5" ry="5" fill="#9fc5e8" stroke="#333333" stroke-width="1.5"/>
+    <text x="242" y="615" font-family="Courier New" font-size="16" text-anchor="middle" fill="#333333">test</text>
+    
+    <rect x="280" y="585" width="65" height="50" rx="5" ry="5" fill="#9fc5e8" stroke="#333333" stroke-width="1.5"/>
+    <text x="312" y="615" font-family="Courier New" font-size="16" text-anchor="middle" fill="#333333">case</text>
+    
+    <!-- Response Tokens -->
+    <rect x="355" y="585" width="65" height="50" rx="5" ry="5" fill="#d5a6bd" stroke="#333333" stroke-width="1.5"/>
+    <text x="387" y="615" font-family="Courier New" font-size="16" text-anchor="middle" fill="#333333">add</text>
+    
+    <rect x="425" y="585" width="65" height="50" rx="5" ry="5" fill="#d5a6bd" stroke="#333333" stroke-width="1.5"/>
+    <text x="457" y="615" font-family="Courier New" font-size="14" text-anchor="middle" fill="#333333">(1,2)</text>
+    
+    <rect x="495" y="585" width="65" height="50" rx="5" ry="5" fill="#d5a6bd" stroke="#333333" stroke-width="1.5"/>
+    <text x="527" y="615" font-family="Courier New" font-size="14" text-anchor="middle" fill="#333333">==</text>
+    
+    <rect x="565" y="585" width="65" height="50" rx="5" ry="5" fill="#d5a6bd" stroke="#333333" stroke-width="1.5"/>
+    <text x="597" y="615" font-family="Courier New" font-size="16" text-anchor="middle" fill="#333333">3</text>
+    
+    <!-- Token IDs - smaller to fit -->
+    <text x="102" y="645" font-family="Courier New" font-size="10" text-anchor="middle" fill="#333333">ID: 4</text>
+    <text x="172" y="645" font-family="Courier New" font-size="10" text-anchor="middle" fill="#333333">ID: 2</text>
+    <text x="242" y="645" font-family="Courier New" font-size="10" text-anchor="middle" fill="#333333">ID: 5</text>
+    <text x="312" y="645" font-family="Courier New" font-size="10" text-anchor="middle" fill="#333333">ID: 1</text>
+    <text x="387" y="645" font-family="Courier New" font-size="10" text-anchor="middle" fill="#333333">ID: 2</text>
+    <text x="457" y="645" font-family="Courier New" font-size="10" text-anchor="middle" fill="#333333">ID: 7</text>
+    <text x="527" y="645" font-family="Courier New" font-size="10" text-anchor="middle" fill="#333333">ID: 3</text>
+    <text x="597" y="645" font-family="Courier New" font-size="10" text-anchor="middle" fill="#333333">ID: 6</text>
+    
+    <!-- Label for Generated IDs Section -->
+    <text x="375" y="665" font-family="Arial" font-size="18" font-weight="bold" text-anchor="middle" fill="#333333">Generated IDs</text>
+    
+    <!-- Arrow from Model to Response -->
+    <path d="M 400 530 L 400 570" stroke="#333333" stroke-width="3" fill="none" marker-end="url(#arrowhead)"/>
+    
+    <!-- Tokens Container -->
+    <rect x="50" y="320" width="700" height="80" rx="10" ry="10" fill="#ffffff" stroke="#333333" stroke-width="2"/>
+    
+    <!-- Individual Tokens -->
+    <rect x="70" y="335" width="90" height="50" rx="5" ry="5" fill="#9fc5e8" stroke="#333333" stroke-width="1.5"/>
+    <text x="115" y="365" font-family="Courier New" font-size="18" text-anchor="middle" fill="#333333">make</text>
+    
+    <rect x="180" y="335" width="90" height="50" rx="5" ry="5" fill="#9fc5e8" stroke="#333333" stroke-width="1.5"/>
+    <text x="225" y="365" font-family="Courier New" font-size="18" text-anchor="middle" fill="#333333">add</text>
+    
+    <rect x="290" y="335" width="90" height="50" rx="5" ry="5" fill="#9fc5e8" stroke="#333333" stroke-width="1.5"/>
+    <text x="335" y="365" font-family="Courier New" font-size="18" text-anchor="middle" fill="#333333">test</text>
+    
+    <rect x="400" y="335" width="90" height="50" rx="5" ry="5" fill="#9fc5e8" stroke="#333333" stroke-width="1.5"/>
+    <text x="445" y="365" font-family="Courier New" font-size="18" text-anchor="middle" fill="#333333">case</text>
+    
+    <!-- Prompt Token IDs under Prompt Tokens -->
+    <text x="115" y="400" font-family="Courier New" font-size="12" text-anchor="middle" fill="#333333">ID: 4</text>
+    <text x="225" y="400" font-family="Courier New" font-size="12" text-anchor="middle" fill="#333333">ID: 2</text>
+    <text x="335" y="400" font-family="Courier New" font-size="12" text-anchor="middle" fill="#333333">ID: 5</text>
+    <text x="445" y="400" font-family="Courier New" font-size="12" text-anchor="middle" fill="#333333">ID: 1</text>
+    
+    <!-- Label for Tokens Section -->
+    <text x="375" y="425" font-family="Arial" font-size="18" font-weight="bold" text-anchor="middle" fill="#333333">Prompt Tokens</text>
+    
+    <!-- Arrow Marker Definition -->
+    <defs>
+      <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+        <polygon points="0 0, 10 3.5, 0 7" fill="#333333"/>
+      </marker>
+    </defs>
+    
+    <!-- Title -->
+    <text x="400" y="30" font-family="Arial" font-size="22" font-weight="bold" text-anchor="middle" fill="#333333">Generate QA IDs</text>
+  </svg>
