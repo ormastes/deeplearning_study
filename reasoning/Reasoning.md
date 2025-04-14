@@ -323,13 +323,14 @@ $$
 L_i(\theta) =
 \begin{cases}
 \min\Bigl(r_i(\theta) \, A^{\pi_{\theta_t}}(s,a_i),\, (1+\epsilon) \, A^{\pi_{\theta_t}}(s,a_i)\Bigr)
-& \text{if } A^{\pi_{\theta_t}}(s,a_i) > 0, \\[1ex]
+& \text{if } A^{\pi_{\theta_t}}(s,a_i) > 0, \\
 \max\Bigl(r_i(\theta) \, A^{\pi_{\theta_t}}(s,a_i),\, (1-\epsilon) \, A^{\pi_{\theta_t}}(s,a_i)\Bigr)
 & \text{if } A^{\pi_{\theta_t}}(s,a_i) < 0.
 \end{cases}
 $$
 
 The PPO loss is:
+
 $$
 \text{loss}=-L_i(\theta)
 $$
