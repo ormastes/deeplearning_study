@@ -171,9 +171,8 @@ Both **GRPO** (Group Relative Policy Optimization) and **PPO** (Proximal Policy 
 
 In **PPO**, the objective is typically expressed as:
 
-$$
-J_{PPO}(\theta) = \min\Bigg(\frac{\pi_\theta(a_t|s_t)}{\pi_{\theta_{old}}(a_t|s_t)}\,A_t,\; \text{clip}\Big(\frac{\pi_\theta(a_t|s_t)}{\pi_{\theta_{old}}(a_t|s_t)},\,1-\epsilon,\,1+\epsilon\Big) A_t\Bigg)
-$$
+$J_{PPO}(\theta) = \min\Bigg($ $\frac{\pi_\theta(a_t|s_t)}{\pi_{\theta_{old}}(a_t|s_t)}\,A_t,$ $\text{clip}\Big(\frac{\pi_\theta(a_t|s_t)}{\pi_{\theta_{old}}(a_t|s_t)},\,1-\epsilon,\,1+\epsilon\Big) A_t$ $\Bigg)
+$
 
 where:
 
