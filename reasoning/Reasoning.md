@@ -370,7 +370,7 @@ OpenAI Spinning Up in Deep RL, Proximal Policy Optimization: [Proximal Policy Op
 The overall surrogate loss (Critic-free Grouped PPO) is computed as:
 
 $$
-L_{\text{grouped\_PPO}}(\theta) = \frac{1}{G} \sum_{i=1}^{G} L_i(\theta).
+L_{\text{groupedPPO}}(\theta) = \frac{1}{G} \sum_{i=1}^{G} L_i(\theta).
 $$
 
 #### KL Penalty
@@ -390,7 +390,7 @@ $$
 The GRPO loss function combines the surrogate loss (Critic-free Grouped PPO) and the KL penalty:
 
 $$
-L_{\text{GRPO}}(\theta) = L_{\text{grouped\_PPO}}(\theta) + L_{KL}(\theta).
+L_{\text{GRPO}}(\theta) = L_{\text{groupedPPO}}(\theta) + L_{KL}(\theta).
 $$
 
 *Code Implementation:*
