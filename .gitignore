@@ -38,6 +38,9 @@ htmlcov/
 # VS Code settings
 .vscode/
 
+# temp
+**/tmp
+
 # Operating system files
 .DS_Store
 Thumbs.db
