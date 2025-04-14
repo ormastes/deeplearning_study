@@ -1,14 +1,14 @@
-# LLM Reasoning with Programming
+# LLM Reasoning with Programming (In a single gpu)
 
 ## LLM의 Reasoning 학습을 위한 핵심 개념
 
-Large Language Models(LLM)은 reasoning 능력을 향상시키기 위해 다양한 방법으로 강화되어 왔습니다. Chain-of-thought prompting은 상당한 성능 향상을 보여주었지만, 진정한 reasoning 능력을 달성하기에는 충분하지 않았습니다.
+Large Language Models(LLM)은 reasoning 능력을 향상시키기 위해 다양한 방법으로 강화되어 왔습니다. Chain-of-thought prompting은 상당한 성능 향상을 보여주었지만, 이것만으로 진정한 reasoning 능력을 달성하기에는 충분하지 않았습니다.
 
-OpenAI는 reinforcement learning에 크게 의존하는 reasoning을 위한 고급 학습 방법을 개발했습니다. 이에 따라 Deepseek은 최근 reasoning을 위한 LLM 모델 학습 접근 방식을 발표했습니다.
+OpenAI는 reinforcement learning에 크게 의존하는 reasoning을 위한 고급 학습 방법을 개발했습니다. 이를 근거하여 Deepseek은 최근 reasoning을 위한 LLM 모델 학습 접근 방식을 발표했습니다.
 
 Reasoning 학습의 핵심 혁신은 미리 정의된 학습 데이터 경로를 따르지 않는다는 것입니다. 대신, 시행착오를 통해 모델이 답을 찾을 수 있도록 합니다. Deepseek이 모든 세부 사항을 공개하지는 않았지만, 다음과 같이 학습 접근 방식을 개략적으로 설명할 수 있습니다:
 
-1. 프로그래밍 방식으로 계산할 수 있는 수학적 질문을 생성
+1. 프로그래밍으로 계산할 수 있는 수학적 질문을 생성
 2. 학습 중에 이러한 질문(때로는 값을 수정하여)을 모델에 제시
 3. 모델의 응답은 다음을 기준으로 평가됨:
    - Chain of thought 또는 reasoning 과정의 충분성
@@ -16,7 +16,7 @@ Reasoning 학습의 핵심 혁신은 미리 정의된 학습 데이터 경로를
 
 ## 프로젝트 목표
 
-LLM reasoning 프로젝트는 더 넓은 cdoctest 생성 이니셔티브의 하위 구성 요소입니다. 주요 목표는 다음과 같습니다:
+LLM reasoning 프로젝트는 더 넓은 cdoctest project의 하위 구성 요소입니다. 주요 목표는 다음과 같습니다:
 
 1. C/C++ 단위 테스트 도구인 cdoctest를 위한 테스트 케이스를 자동으로 생성할 수 있는 LLM 개발
 2. Group Relative Policy Optimization(GRPO) 방법론을 사용하여 LLM reasoning 능력 향상
@@ -165,7 +165,7 @@ REPL(Read-Eval-Print Loop)은 테스트 케이스를 생성하고 검증하기 �
 
 ## 방정식
 
-**GRPO**(Group Relative Policy Optimization)와 **PPO**(Proximal Policy Optimization) 모두 정책 업데이트를 제한하기 위해 클리핑된 대리 목표를 사용하는 기본 개념을 공유합니다. 그러나 GRPO는 비평가(value network)로 계산된 토큰별 이점을 프롬프트당 여러 샘플링된 완성에서 계산된 그룹 상대 이점으로 대체하여 LLM 미세 조정에 특별히 이 접근 방식을 적용합니다.
+**GRPO**(Group Relative Policy Optimization)와 **PPO**(Proximal Policy Optimization) 모두 정책 업데이트를 제한하기 위해 클리핑된 Surrogate Object(대리 목표)를 사용하는 기본 개념을 공유합니다. 그러나 GRPO는 비평가(value network)대신 여러 샘플링된 그룹에서 각 샘플에 대해 Reward가 단순 계산되고 Group상 상대적 이점으로 대체하며 참조 모델과의 KL Divergence를 통해 학습 모델의 극단적 변경을 방지합니다.
 
 ### PPO 목표
 
@@ -413,7 +413,7 @@ combined_loss = _combined_loss.mean() # []
 
 ## 기술적 어려움
 
-프로젝트는 여러 가지 과제에 직면했습니다:
+프로젝트는 여러 가지 과제에 직면했었습니다:
 
 1. **CUDA 문제**: 이전 드라이버 버전으로의 롤백과 전체 GPU 기반 실행이 필요했습니다.
 
