@@ -195,7 +195,7 @@ This effectively measures how much better (or worse) each response is compared t
 
 The **GRPO** objective then becomes:
 
-$J_{GRPO}(\theta) = \frac{1}{G}\sum_{i=1}^G$ $\min\Bigg($ $\frac{\pi_\theta(a_t|s_t)}{\pi_{\theta_{old}}(a_t|s_t)}\,A_t,$ $\text{clip}\Big(\frac{\pi_\theta(a_t|s_t)}{\pi_{\theta_{old}}(a_t|s_t)},\,1-\epsilon,\,1+\epsilon\Big) A_t$ $\Bigg)$ $-$ $\beta\, D_{KL}\big(\pi_\theta \,\|\, \pi_{ref}\big).$
+$J_{GRPO}(\theta) = \frac{1}{G}\sum_{i=1}^G$ $\min\Bigg($ $\frac{\pi_\theta(a_t|s_t)}{\pi_{\theta_{old}}(a_t|s_t)}\,A_t,$ $\text{clip}\Big(\frac{\pi_\theta(a_t|s_t)}{\pi_{\theta_{old}}(a_t|s_t)},\,1-\epsilon,\,1+\epsilon\Big) A_t$ $\Bigg)$ $-$ $\beta\, D_{KL}\big(\pi_\theta \,\|\, \pi_{ref}\big).$ 
 
 This applies the advantage to critic-free grouped PPO outputs for normalization, and uses KL regularization to prevent catastrophic forgetting.
 
