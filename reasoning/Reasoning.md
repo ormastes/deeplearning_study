@@ -87,7 +87,7 @@ During adjust training on a limited resource, I have made few changes on Pseudo 
      - Sample batch $D_b \subset D$.  
      - Update old model: set $\theta_{\text{old}} \leftarrow \theta$.  
      - **For each** $x \in D_b$:
-        - sample $N$ outputs $\{y_i\}_{i=1}^{N} \sim \theta_{\text{old}}(\cdot \mid x)$
+        - sample $N$ outputs $\{y_i\}_{i=1}^{N} \sim \theta(\cdot \mid x)$.
         - compute rewards $\{r_i\}$ using $R$.  
      - Compute group relative advantage $\hat{A}_{i,t}$ for the tokens of $y_i$.  
      - **For** $k = 1, \ldots, K$:
