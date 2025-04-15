@@ -153,7 +153,7 @@ REPL(Read-Eval-Print Loop)은 테스트 케이스를 생성하고 검증하기 �
 
 ![calc_critic_free_ppo](img/calc_critic_free_ppo.svg)
 
-### CL 발산 손실 계산
+### KL 발산 손실 계산
 
 참조 모델과 현재 모델 간의 KL 발산 손실을 계산합니다.
 
