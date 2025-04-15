@@ -314,7 +314,7 @@ $$
 개별 대리 손실(PPO)은 다음과 같이 주어집니다:
 
 $$
-L_i(\theta) = \min\Big( r_i(\theta) \, \hat{A}_i, \, \text{clip}\big(r_i(\theta),\, 1-\epsilon_{\text{clip}},\, 1+\epsilon_{\text{clip}}\big) \, \hat{A}_i \Big).
+L_i(\theta) = \min\Big( r_i(\theta) \, \hat{A}_i, \, \text{clip}\big(r_i(\theta),\, 1-\epsilon,\, 1+\epsilon\big) \, \hat{A}_i \Big).
 $$
 
 이는 클리핑이 어떻게 작동하는지에 대한 오해를 일으킬 수 있습니다. 실제 의도는 다음과 같습니다:
@@ -330,8 +330,9 @@ L_i(\theta) =
 $$
 
 PPO 손실은 다음과 같습니다:
+
 $$
-\text{loss} = - L_i(\theta)
+\text{loss}=-L_i(\theta)
 $$
 
 *이론적 범위:*
