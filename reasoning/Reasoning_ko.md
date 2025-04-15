@@ -323,7 +323,7 @@ $$
 L_i(\theta) =
 \begin{cases}
 \min\Bigl(r_i(\theta) \, A^{\pi_{\theta_t}}(s,a_i),\, (1+\epsilon) \, A^{\pi_{\theta_t}}(s,a_i)\Bigr)
-& \text{if } A^{\pi_{\theta_t}}(s,a_i) > 0, \\[1ex]
+& \text{if } A^{\pi_{\theta_t}}(s,a_i) > 0, \\
 \max\Bigl(r_i(\theta) \, A^{\pi_{\theta_t}}(s,a_i),\, (1-\epsilon) \, A^{\pi_{\theta_t}}(s,a_i)\Bigr)
 & \text{if } A^{\pi_{\theta_t}}(s,a_i) < 0.
 \end{cases}
@@ -346,9 +346,9 @@ $$
 그래서 이해할 수 있는 방식으로 방정식을 변경했고, 이 변경은 결과를 더 좋게 만들었습니다.
 PPO 손실 범위를 제한하기 위해 $r_i(\theta)$ 범위를 $1+\epsilon$ 아래로 설정했습니다.
 
-$
+$$
 L_i(\theta) = \hat{A}_i \cdot \min\left(r_i(\theta), 1 + \epsilon\right)
-$
+$$
 
 *KL 발산에 대한 코드 구현:*
 
@@ -369,9 +369,9 @@ OpenAI Spinning Up in Deep RL, Proximal Policy Optimization: [Proximal Policy Op
 
 전체 대리 손실(비평가 없는 그룹화된 PPO)은 다음과 같이 계산됩니다:
 
-$
-L_{\text{grouped\_PPO}}(\theta) = \frac{1}{G} \sum_{i=1}^{G} L_i(\theta).
-$
+$$
+L_{\text{groupedPPO}}(\theta) = \frac{1}{G} \sum_{i=1}^{G} L_i(\theta).
+$$
 
 #### KL 페널티
 
@@ -390,7 +390,7 @@ $$
 GRPO 손실 함수는 대리 손실(비평가 없는 그룹화된 PPO)과 KL 페널티를 결합합니다:
 
 $$
-L_{\text{GRPO}}(\theta) = L_{\text{grouped\_PPO}}(\theta) + L_{KL}(\theta).
+L_{\text{GRPO}}(\theta) = L_{\text{groupedPPO}}(\theta) + L_{KL}(\theta).
 $$
 
 *코드 구현:*
