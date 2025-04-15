@@ -163,7 +163,7 @@ REPL(Read-Eval-Print Loop)은 테스트 케이스를 생성하고 검증하기 �
 
 **GRPO 손실 = 비평가 없는 그룹화된 PPO 손실 + KL 발산 손실**
 
-## 방정식
+## 수식
 
 **GRPO**(Group Relative Policy Optimization)와 **PPO**(Proximal Policy Optimization) 모두 정책 업데이트를 제한하기 위해 클리핑된 Surrogate Object(대리 목표)를 사용하는 기본 개념을 공유합니다. 그러나 GRPO는 비평가(value network)대신 여러 샘플링된 그룹에서 각 샘플에 대해 Reward가 단순 계산되고 Group상 상대적 이점으로 대체하며 참조 모델과의 KL Divergence를 통해 학습 모델의 극단적 변경을 방지합니다.
 
@@ -219,7 +219,7 @@ $$
 - 두 방법 모두 업데이트된 정책을 참조 정책에 가깝게 유지하기 위해 KL 발산 항을 통합합니다
 - GRPO에서는 보상 신호가 아닌 손실에 직접 통합되어 이점 추정을 복잡하게 하지 않고 안정성을 유지합니다
 
-### 방정식 세부 사항
+### 수식 세부 사항
 
 #### 보상 및 이점
 
