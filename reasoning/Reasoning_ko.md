@@ -377,9 +377,9 @@ $
 
 KL 페널티 항은 다음과 같이 정의됩니다:
 
-$
+$$
 L_{KL}(\theta) = \beta \, D_{KL}\big(\pi_\theta \,\|\, \pi_{\text{ref}}\big).
-$
+$$
 
 *이론적 범위:* $L_{KL}(\theta)\in[0, \infty)$
 
@@ -389,9 +389,9 @@ $
 
 GRPO 손실 함수는 대리 손실(비평가 없는 그룹화된 PPO)과 KL 페널티를 결합합니다:
 
-$
+$$
 L_{\text{GRPO}}(\theta) = L_{\text{grouped\_PPO}}(\theta) + L_{KL}(\theta).
-$
+$$
 
 *코드 구현:*
 
