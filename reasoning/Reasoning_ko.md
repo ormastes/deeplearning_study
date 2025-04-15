@@ -110,13 +110,13 @@ REPL(Read-Eval-Print Loop)은 테스트 케이스를 생성하고 검증하기 �
    - 빈 리스트 'iteration_rewards' 초기화.
    - **For** $m = 1, \ldots, M$:
      - $D$에서 배치 $D_b$ 샘플링.
-     - $m \mod \text{update\_interval} = 0$인 경우, $\theta_{\text{old}} \leftarrow \theta$ 설정.
+     - $m \bmod$ update_interval $= 0$ 인 경우, $\theta_{\text{old}} \leftarrow \theta$ 설정.
      - 각 $x \in D_b$에 대해:
         - $N$ 개의 출력 $\{y_i\}_{i=1}^{N} \sim \theta(\cdot \mid x)$ 샘플링.
      - $R$을 사용하여 각 $y_i$에 대한 보상 $\{r_i\}_{i=1}^{N}$ 계산하고 'iteration_rewards'에 이 값들 추가.
      - $y_i$의 $t$번째 토큰에 대한 그룹 상대 이점 $\hat{A}_{i,t}$ 계산.
      - $\theta_{\text{old}}$와 $\theta_{\text{ref}}$의 로짓으로 GRPO 목표를 최대화하여 $\theta$ 업데이트.
-   - $\text{mean(iteration\_rewards)} > \text{reward\_threshold}$인 경우, 참조 모델 $\theta_{\text{ref}} \leftarrow \theta$ 설정.
+   - $\text{mean}$ (iteration_rewards) $\>$ reward_threshold인 경우, 참조 모델 $\theta_{\text{ref}} \leftarrow \theta$ 설정.
 
 **출력:** $\theta$.
 
@@ -198,8 +198,8 @@ $$
 **GRPO** 목표는 다음과 같이 됩니다:
 
 $$
-J_{GRPO}(\theta) = \frac{1}{G}\sum_{i=1}^G \min\!\Bigg(\frac{\pi_\theta(r_i|p)}{\pi_{\theta_{old}}(r_i|p)}\,\hat{A}_i,\; \text{clip}\!\Big(\frac{\pi_\theta(r_i|p)}{\pi_{\theta_{old}}(r_i|p)},\,1-\epsilon,\,1+\epsilon\Big)\hat{A}_i\Bigg) - \beta\, D_{KL}\big(\pi_\theta \,\|\, \pi_{ref}\big).
-$$
+J_{GRPO}(\theta) = \frac{1}{G}\sum_{i=1}^G\min\Bigg(\frac{\pi_\theta(a_t|s_t)}{\pi_{\theta_{old}}(a_t|s_t)}\,A_t, \text{clip}\Big(\frac{\pi_\theta(a_t|s_t)}{\pi_{\theta_{old}}(a_t|s_t)},\,1-\epsilon,\,1+\epsilon\Big) A_t \Bigg) - \beta\, D_{KL}\big(\pi_\theta \,\|\, \pi_{ref}\big).
+$$ 
 
 이는 정규화를 위해 비평가 없는 그룹화된 PPO 출력에 이점을 적용하고, 재앙적 망각을 방지하기 위해 KL 정규화를 사용합니다.
 
