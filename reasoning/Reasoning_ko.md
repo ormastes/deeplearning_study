@@ -402,7 +402,7 @@ _combined_loss = grouped_ppo_loss + kl_lambda * kl_div
 combined_loss = _combined_loss.mean() # []
 ```
 
-## 방정식 및 의사 코드 조정
+## 수식 및 로직에서의 수정 사항
 
 주요 수정 사항:
 
