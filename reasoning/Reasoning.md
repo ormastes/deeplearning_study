@@ -1,4 +1,4 @@
-# LLM Reasoning with Programming
+# LLM Reasoning with Programming (In a single gpu)
 
 ## Key Concept of LLM Training for Reasoning
 
@@ -87,7 +87,7 @@ During adjust training on a limited resource, I have made few changes on Pseudo 
      - Sample batch $D_b \subset D$.  
      - Update old model: set $\theta_{\text{old}} \leftarrow \theta$.  
      - **For each** $x \in D_b$:
-        - sample $N$ outputs $\{y_i\}_{i=1}^{N} \sim \theta_{\text{old}}(\cdot \mid x)$
+        - sample $N$ outputs $\{y_i\}_{i=1}^{N} \sim \theta(\cdot \mid x)$.
         - compute rewards $\{r_i\}$ using $R$.  
      - Compute group relative advantage $\hat{A}_{i,t}$ for the tokens of $y_i$.  
      - **For** $k = 1, \ldots, K$:
@@ -165,7 +165,7 @@ Calculate KL Divergence Loss between Reference model and Current model.
 
 ## Equations
 
-Both **GRPO** (Group Relative Policy Optimization) and **PPO** (Proximal Policy Optimization) share the fundamental concept of using a clipped surrogate objective to constrain policy updates. However, GRPO adapts this approach specifically for LLM fine-tuning by replacing the per-token advantage computed with a critic (value network) with a group-relative advantage calculated from multiple sampled completions per prompt.
+Both **GRPO** (Group Relative Policy Optimization) and **PPO** (Proximal Policy Optimization) share the fundamental concept of using a clipped surrogate objective to constrain policy updates. However, GRPO adapts a group-relative advantage calculated from multiple sampled completions per prompt with a method used in fine tunning to prevent radical changes on traing model.
 
 ### PPO Objective
 
